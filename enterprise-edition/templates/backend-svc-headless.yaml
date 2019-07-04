@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "name" . }}-backend-headless
+{{- if .Values.backend.headless.annotations }}
+  annotations:
+{{ toYaml .Values.backend.headless.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ template "name" . }}-backend-headless
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.backend.headless.labels }}
+{{ toYaml .Values.backend.headless.labels | indent 4 }}
+{{- end }}
+spec:
+  selector:
+    app: {{ template "name" . }}-backend
+  clusterIP: None
+  publishNotReadyAddresses: {{ .Values.backend.headless.publishNotReadyAddresses }}
+  ports:
+    - name: http
+      port: 8090
+      protocol: TCP
+    - name: hazelcast
+      port: 5701
+      protocol: TCP

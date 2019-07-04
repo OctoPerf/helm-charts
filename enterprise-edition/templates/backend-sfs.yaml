@@ -1,0 +1,132 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "name" . }}-backend
+  labels:
+    app: {{ template "name" . }}-backend
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+{{- with .Values.backend.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end -}}
+    {{/* This forces a restart if the configmap has changed */}}
+    {{- if .Values.backend.env }}
+    configchecksum: {{ include (print .Template.BasePath "/backend-cfg.yaml") . | sha256sum | trunc 63 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  serviceName: {{ template "name" . }}-backend-headless
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-backend
+  podManagementPolicy: {{ .Values.backend.podManagementPolicy }}
+  updateStrategy:
+    type: {{ .Values.backend.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-backend
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ template "name" . }}-backend
+            topologyKey: "kubernetes.io/hostname"
+    {{- if .Values.backend.schedulerName }}
+      schedulerName: "{{ .Values.backend.schedulerName }}"
+    {{- end }}
+    {{- if .Values.backend.imagePullSecrets }}
+      imagePullSecrets:
+      {{ toYaml .Values.backend.imagePullSecrets | indent 2 }}
+    {{- end }}
+    {{- if .Values.backend.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.backend.nodeSelector | indent 2 }}
+    {{- end }}
+    {{- if .Values.backend.securityContext }}
+      securityContext:
+      {{ toYaml .Values.backend.securityContext | indent 2 }}
+    {{- end }}
+    {{- if .Values.backend.tolerations }}
+      tolerations:
+      {{ toYaml .Values.backend.tolerations | indent 2 }}
+    {{- end }}
+    {{- if .Values.backend.affinity }}
+      affinity:
+      {{ toYaml .Values.backend.affinity | indent 2 }}
+    {{- end }}
+      volumes:
+      {{- range .Values.backend.secretMounts }}
+      - name: {{ .name }}
+        secret:
+          secretName: {{ .secretName }}
+      {{- end }}
+      initContainers:
+      - name: chown-data
+        image: busybox
+        command: ["chown", "-R", "9001:9001", "{{ .Values.backend.persistentVolume.mountPath }}"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: octoperf-data
+          mountPath: {{ .Values.backend.persistentVolume.mountPath }}
+      containers:
+      - name: {{ template "name" . }}-backend
+        image: "{{ .Values.registry -}}/{{ .Values.backend.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "name" . }}-backend-config
+        volumeMounts:
+        {{- range .Values.backend.secretMounts }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
+        {{- end }}
+        - name: octoperf-data
+          mountPath: "{{ .Values.backend.persistentVolume.mountPath }}"
+          subPath: "{{ .Values.backend.persistentVolume.subPath }}"
+        ports:
+        - name: http-port
+          containerPort: 8090
+        readinessProbe:
+{{ toYaml .Values.backend.readinessProbe | indent 10 }}
+        livenessProbe:
+{{ toYaml .Values.backend.livenessProbe | indent 10 }}
+        resources:
+{{ toYaml .Values.backend.resources | indent 10 }}
+        
+{{- if .Values.backend.persistentVolume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: octoperf-data
+        {{- if .Values.backend.persistentVolume.annotations }}
+        annotations:
+{{ toYaml .Values.backend.persistentVolume.annotations | indent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+{{ toYaml .Values.backend.persistentVolume.accessModes | indent 10 }}
+        resources:
+          requests:
+            storage: "{{ .Values.backend.persistentVolume.size }}"
+      {{- if .Values.backend.persistentVolume.storageClass }}
+      {{- if (eq "-" .Values.backend.persistentVolume.storageClass) }}
+        storageClassName: ""
+      {{- else }}
+        storageClassName: "{{ .Values.backend.persistentVolume.storageClass }}"
+      {{- end }}
+      {{- end }}
+{{- else }}
+        - name: octoperf-data
+          emptyDir: {}
+{{- end }}

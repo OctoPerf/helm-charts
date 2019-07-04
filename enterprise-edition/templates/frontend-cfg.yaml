@@ -1,0 +1,17 @@
+{{- if .Values.frontend.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-frontend-config
+  labels:
+    app: {{ template "name" . }}-frontend-config
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+{{- range $path, $config := .Values.frontend.config }}
+  {{ $path }}: |
+{{ $config | indent 4 -}}
+{{- end }}
+{{- end }}

@@ -1,0 +1,58 @@
+{{- if .Values.doc.enabled -}}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "name" . }}-doc
+  labels:
+    app: {{ template "name" . }}-doc
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{- with .Values.doc.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-doc
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-doc
+    spec:
+    {{- if .Values.doc.schedulerName }}
+      schedulerName: "{{ .Values.doc.schedulerName }}"
+    {{- end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{ toYaml .Values.imagePullSecrets | indent 2 }}
+    {{- end }}
+    {{- if .Values.doc.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.doc.nodeSelector | indent 2 }}
+    {{- end }}
+    {{- if .Values.doc.securityContext }}
+      securityContext:
+      {{ toYaml .Values.doc.securityContext | indent 2 }}
+    {{- end }}
+    {{- if .Values.doc.tolerations }}
+      tolerations:
+      {{ toYaml .Values.doc.tolerations | indent 2 }}
+    {{- end }}
+    {{- if .Values.doc.affinity }}
+      affinity:
+      {{ toYaml .Values.doc.affinity | indent 2 }}
+    {{- end }}
+      containers:
+      - name: {{ template "name" . }}-doc
+        image: "{{ .Values.registry }}/{{ .Values.doc.image }}:{{ .Values.version }}"
+        ports:
+          - name: http-port
+            containerPort: 80
+        readinessProbe:
+{{ toYaml .Values.doc.readinessProbe | indent 10 }}
+        livenessProbe:
+{{ toYaml .Values.doc.livenessProbe | indent 10 }}
+{{- end }}

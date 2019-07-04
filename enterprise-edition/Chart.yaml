@@ -1,0 +1,10 @@
+description: Official OctoPerf Helm Chart for Enterprise-Edition
+home: https://github.com/OctoPerf/helm-charts
+maintainers:
+- email: support@octoperf.com
+  name: OctoPerf
+  url: https://octoperf.com
+name: enterprise-edition
+version: "11.0.0"
+appVersion: "11.0.0"
+icon: https://octoperf.com/img/octoperf-logo-text.svg

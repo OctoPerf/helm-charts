@@ -1,0 +1,13 @@
+{{ if (.Values.backend.persistentVolume.storageClass) and (eq .Values.backend.persistentVolume.storageClass "local-storage") }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+  labels:
+    app: {{ template "name" . }}-storage-class
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+{{ end }}

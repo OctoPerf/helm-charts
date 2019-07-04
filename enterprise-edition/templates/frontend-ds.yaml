@@ -1,0 +1,67 @@
+{{- if .Values.frontend.enabled -}}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "name" . }}-frontend
+  labels:
+    app: {{ template "name" . }}-frontend
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{- with .Values.frontend.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-frontend
+    spec:
+    {{- if .Values.frontend.schedulerName }}
+      schedulerName: "{{ .Values.frontend.schedulerName }}"
+    {{- end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{ toYaml .Values.imagePullSecrets | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontend.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.frontend.nodeSelector | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontend.securityContext }}
+      securityContext:
+      {{ toYaml .Values.frontend.securityContext | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontend.tolerations }}
+      tolerations:
+      {{ toYaml .Values.frontend.tolerations | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontend.affinity }}
+      affinity:
+      {{ toYaml .Values.frontend.affinity | indent 2 }}
+    {{- end }}
+      volumes:
+      - name: config-ee
+        configMap:
+          name: "{{ template "name" . }}-frontend-config"
+      containers:
+      - name: {{ template "name" . }}-frontend
+        image: "{{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        ports:
+          - name: http-port
+            containerPort: 80
+        volumeMounts:
+          - name: config-ee
+            mountPath: /usr/share/nginx/html/app/config-ee.json
+            subPath: config-ee.json
+        readinessProbe:
+{{ toYaml .Values.frontend.readinessProbe | indent 10 }}
+        livenessProbe:
+{{ toYaml .Values.frontend.livenessProbe | indent 10 }}
+{{- end }}

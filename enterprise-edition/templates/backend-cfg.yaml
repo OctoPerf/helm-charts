@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-backend-config
+  labels:
+    app: {{ template "name" . }}-backend-config
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+{{- range $key, $value := .Values.backend.env }}
+  {{ $key }}: {{ quote $value -}}
+{{- end -}}

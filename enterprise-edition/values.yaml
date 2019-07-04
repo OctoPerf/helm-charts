@@ -1,0 +1,234 @@
+---
+
+registry: "registry.hub.docker.com"
+version: "11.0.0"
+
+imagePullPolicy: IfNotPresent
+imagePullSecrets: []
+# - name: "image-pull-secret"
+
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch-oss
+
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - enterprise-edition.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+  
+doc:
+  enabled: true
+  image: octoperf/enterprise-documentation
+
+  annotations: {}
+
+  readinessProbe:
+    httpGet:
+      path: /doc
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /doc
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+frontend:
+  enabled: true
+  image: octoperf/enterprise-ui
+
+  annotations: {}
+
+  readinessProbe:
+    httpGet:
+      path: /app
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /app
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  config:
+    config-ee.json: |-
+      {
+        "baseUrl": "",
+        "docUrl": "/doc",
+        "adminEmail": "support@octoperf.com",
+        "modules": {
+          "login": true,
+          "register": true
+        }
+      }
+  
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+backend:
+  image: octoperf/enterprise-edition
+  replicas: 1
+  maxUnavailable: 1
+
+  annotations: {}
+
+  env:
+    JAVA_OPTS: "-Xms256m -Xmx256m"
+    server.hostname: "enterprise-edition.local"
+    server.public.port: 80
+    elasticsearch.hostname: elasticsearch-master-headless
+    clustering.driver: hazelcast
+    clustering.quorum: "1"
+
+  readinessProbe:
+    tcpSocket:
+      port: http-port
+    initialDelaySeconds: 30
+    failureThreshold: 3
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  livenessProbe:
+    tcpSocket:
+      port: http-port
+    initialDelaySeconds: 30
+    failureThreshold: 3
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  # scheduler name
+  # schedulerName: ""
+
+  ## priorityClassName
+  ##
+  priorityClassName: ""
+
+  ## Additional backend Secret mounts
+  # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
+  secretMounts: []
+    # - name: secret-files
+    #   mountPath: /etc/secrets
+    #   subPath: ""
+    #   secretName: backend-secret-files
+    #   readOnly: true
+
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+  # The default is to deploy all pods serially. By setting this to parallel all pods are started at
+  # the same time when bootstrapping the cluster
+  podManagementPolicy: Parallel
+
+  updateStrategy: RollingUpdate
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName:
+
+  persistentVolume:
+    ## If true, backend will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
+    enabled: true
+
+    ## backend data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    accessModes:
+      - ReadWriteOnce
+
+    ## backend data Persistent Volume Claim annotations
+    ##
+    annotations: {}
+
+    ## backend data Persistent Volume mount root path
+    ##
+    mountPath: /home/octoperf/data
+
+    ## backend data Persistent Volume size
+    ##
+    size: 1Gi
+
+    ## backend data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
+
+    ## Subdirectory of backend data Persistent Volume to mount
+    ## Useful if the volume's root directory is not empty
+    ##
+    subPath: ""
+
+  ## backend resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 256Mi
+
+  ## Security context to be added to backend pods
+  ##
+  securityContext: {}
+
+  headless:
+    annotations: {}
+    labels: {}
+    publishNotReadyAddresses: true
+
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+
+    ## List of IP addresses at which the backend service is available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    # nodePort: 30000
