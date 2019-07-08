@@ -64,6 +64,11 @@ spec:
       {{ toYaml .Values.backend.affinity | indent 2 }}
     {{- end }}
       volumes:
+      {{- if .Values.backend.licenseFile }}
+      - name: license-l4j
+        configMap:
+          name: "{{ template "name" . }}-backend-license"
+      {{- end }}
       {{- range .Values.backend.secretMounts }}
       - name: {{ .name }}
         secret:
@@ -95,6 +100,11 @@ spec:
         - name: octoperf-data
           mountPath: "{{ .Values.backend.persistentVolume.mountPath }}"
           subPath: "{{ .Values.backend.persistentVolume.subPath }}"
+        {{- if .Values.backend.licenseFile }}
+        - name: license-l4j
+          mountPath: "/home/octoperf/license/license.l4j"
+          subPath: "license.l4j"
+        {{- end }}
         ports:
         - name: http-port
           containerPort: 8090
