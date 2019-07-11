@@ -36,8 +36,8 @@ OctoPerf Enterprise-Edition helm chart depends on [Elasticsearch](https://github
 This chart is tested with the latest supported versions. The currently tested versions are:
 
 | 11.x.x|
-| ----- |
-| 11.0.0|
+| ------|
+| 11.0.1|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
