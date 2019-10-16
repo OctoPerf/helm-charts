@@ -37,7 +37,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 11.x.x|
 | ------|
-| 11.0.1|
+| 11.1.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
