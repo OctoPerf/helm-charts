@@ -28,7 +28,7 @@ OctoPerf Enterprise-Edition helm chart depends on [Elasticsearch](https://github
 * Install it:
 
   ```
-  helm install --name octoperf-ee octoperf/enterprise-edition --version 11.0.0
+  helm install --name octoperf-ee octoperf/enterprise-edition --version 11.1.0
   ```
 
 ## Compatibility
