@@ -11,5 +11,5 @@ package:
 	helm package ./$(CHART)
 
 push:
-	helm plugin install https://github.com/chartmuseum/helm-push
+	-helm plugin install https://github.com/chartmuseum/helm-push
 	helm push --force $(CHART)/ octoperf
