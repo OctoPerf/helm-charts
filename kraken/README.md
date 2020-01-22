@@ -34,6 +34,8 @@ To configure InfluxDB through your own `values.yaml`, prefix the configuration w
   helm install --namespace octoperf --name kraken octoperf/kraken --version 1.0.0
   ```
 
+Please refer to [Kraken's documentation for a complete installation guide](http://kraken.octoperf.com/install/kubernetes/).
+
 ## Versions
 
 | Helm Chart Version | Kraken Version |
@@ -86,9 +88,3 @@ The configuration is splitted in `4` big sections defined by the prefix being us
 | `frontend.gatling.image.tag` | Gatling frontend image tag | Depends on the [Kraken helm chart version](#versions) |
 | `frontend.gatling.image.pullPolicy` | Gatling frontend image pull policy | `IfNotPresent` |
 | `frontend.gatling.port` | Kubernetes port where Gatling service is exposed | `80` |
-
-## Local development
-
-### Kind
-
-TODO
