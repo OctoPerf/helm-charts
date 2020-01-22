@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}-administration-ui
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-administration-ui
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-administration-ui
+    spec:
+      containers:
+        - image: "{{ .Values.frontend.administration.image.repository }}:{{ .Values.frontend.administration.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.administration.image.pullPolicy }}
+          name: {{ template "name" . }}-administration-ui
+          ports:
+            - containerPort: {{ .Values.frontend.administration.port }}

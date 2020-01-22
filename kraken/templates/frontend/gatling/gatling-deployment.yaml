@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}-gatling-ui
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-gatling-ui
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-gatling-ui
+    spec:
+      containers:
+        - image: "{{ .Values.frontend.gatling.image.repository }}:{{ .Values.frontend.gatling.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.gatling.image.pullPolicy }}
+          name: {{ template "name" . }}-gatling-ui
+          ports:
+            - containerPort: {{ .Values.frontend.gatling.port }}

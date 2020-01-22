@@ -1,0 +1,154 @@
+# Default values for kraken.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+default:
+  - &default_tag 2.0.0-rc1
+  - &influxdb_port 8086
+
+# nameOverride: kraken
+
+rbac:
+  create: true
+
+documentation:
+  image:
+    repository: octoperf/kraken-documentation
+    tag: *default_tag
+    pullPolicy: IfNotPresent
+  port: 80
+
+backend:
+  # License file content
+#  licenseFile: |
+#    # kraken community 2.0.0 community License (id: 1574693532324)
+#    8445f5f44c7f964b642a2a0368575854024639480c355888492744416ed0
+#    ....
+#    9d715369689d53150569
+  storage:
+    image:
+      repository: octoperf/kraken-storage
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 8080
+    persistence:
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      ## database data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      # storageClass: "-"
+
+  static:
+    image:
+      repository: octoperf/kraken-static
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 80
+
+  analysis:
+    image:
+      repository: octoperf/kraken-analysis
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 8081
+
+  runtime:
+    image:
+      repository: octoperf/kraken-ee-runtime-kubernetes
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 8082
+    # The runtime server will set the label "com.kraken/hostId=kraken-n" on every available worker node, marking them as usable to run tasks
+    k8s:
+      patchHosts: true
+
+frontend:
+  administration:
+    image:
+      repository: octoperf/kraken-administration-ui
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 80
+  gatling:
+    image:
+      repository: octoperf/kraken-gatling-ui
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 80
+
+grafana:
+  fullnameOverride: kraken-grafana
+  service:
+    port: 80
+  rbac:
+    namespaced: true
+  persistence:
+    enabled: true
+  ingress:
+    # Use grafana/grafana-ingress.yaml instead (does not work with the one of the Grafana helm chart)
+    enabled: false
+  plugins:
+    - grafana-piechart-panel
+    - blackmirror1-singlestat-math-panel
+  adminPassword: kraken
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Gatling
+          orgId: 1
+          type: influxdb
+          access: proxy
+          # update with release name if not kraken (ie. http://my-release-influxdb:8086)
+          url: http://kraken-influxdb:8086
+          database: gatling
+          isDefault: true
+          version: 1
+          editable: false
+          basicAuth: true
+          basicAuthUser: user
+          basicAuthPassword: kraken
+  grafana.ini:
+    server:
+      protocol: "http"
+      domain: "localhost"
+      root_url: "%(protocol)s://%(domain)s/grafana/"
+
+
+# Service name is .Release.Name-influxdb
+influxdb:
+  fullnameOverride: kraken-influxdb
+  env:
+    - name: INFLUXDB_ADMIN_USER
+      value: admin
+    - name: INFLUXDB_ADMIN_PASSWORD
+      value: kraken
+    - name: INFLUXDB_DB
+      value: gatling
+    - name: INFLUXDB_USER
+      value: user
+    - name: INFLUXDB_USER_PASSWORD
+      value: kraken
+  config:
+    http:
+      bind_address: *influxdb_port
+    graphite:
+      enabled: false
+      bind-address: ":2003"
+      database: "gatling"
+      retention-policy: ""
+      protocol: "tcp"
+      batch-size: 5000
+      batch-pending: 10
+      batch-timeout: "1s"
+      consistency-level: "one"
+      separator: "."
+      udp-read-buffer: 0
+      templates: [
+      "gatling.*.*.*.*.*.* measurement.test.injector.simulation.request.status.field",
+      "gatling.*.*.*.users.*.* measurement.test.injector.simulation.measurement.request.field"
+      ]
