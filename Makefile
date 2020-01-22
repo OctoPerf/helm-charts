@@ -26,10 +26,10 @@ install:
 	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
 
 kraken-clean:
-	helm delete $(NAME); true
+	helm delete $(CHART); true
 	kubectl delete namespace $(NAMESPACE); true
-	kubectl delete ClusterRole $(NAME)-runtime; true
-	kubectl delete ClusterRoleBinding $(NAME)-runtime; true
-	kubectl delete PodSecurityPolicy $(NAME)-grafana $(NAME)-grafana-test; true
-	kubectl delete ClusterRole $(NAME)-grafana-clusterrole; true
-	kubectl delete ClusterRoleBinding $(NAME)-grafana-clusterrolebinding; true
+	kubectl delete ClusterRole $(CHART)-runtime; true
+	kubectl delete ClusterRoleBinding $(CHART)-runtime; true
+	kubectl delete PodSecurityPolicy $(CHART)-grafana $(CHART)-grafana-test; true
+	kubectl delete ClusterRole $(CHART)-grafana-clusterrole; true
+	kubectl delete ClusterRoleBinding $(CHART)-grafana-clusterrolebinding; true
