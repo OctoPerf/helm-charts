@@ -52,7 +52,40 @@ The configuration is splitted in `4` big sections defined by the prefix being us
 
 | Parameter | Description | Default |
 | ----------|-------------|---------|
-| TODO | TODO | TODO |
+| `rabc.create` | Create RBAC roles and role bindings | `true` |
+| `documentation.image.repository` | Documentation image repository | `octoperf/kraken-documentation` |
+| `documentation.image.tag` | Documentation image tag | Depends on the [Kraken helm chart version](#versions) |
+| `documentation.image.pullPolicy` | Documentation image pull policy | `IfNotPresent` |
+| `documentation.port` | Kubernetes port where Documentation service is exposed | `80` |
+| `backend.licenseFile` | Kraken license file | `nil` The unlicensed version of Kraken allows you to execute tasks on only one Kubernetes Node |
+| `backend.storage.image.repository` | Storage backend image repository | `octoperf/kraken-storage` |
+| `backend.storage.image.tag` | Storage backend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `backend.storage.image.pullPolicy` | Storage backend image pull policy | `IfNotPresent` |
+| `backend.storage.port` | Kubernetes port where Storage service is exposed | `8080` |
+| `backend.storage.persistence.accessMode` | Storage backend data Persistent Volume access mode | `ReadWriteOnce` |
+| `backend.storage.persistence.size` | Storage backend data Persistent Volume size | `8Gi` |
+| `backend.storage.persistence.storageClass` | Storage backend data Persistent Volume Storage Class | `nil` |
+| `backend.static.image.repository` | Static backend image repository | `octoperf/kraken-static` |
+| `backend.static.image.tag` | Static backend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `backend.static.image.pullPolicy` | Static backend image pull policy | `IfNotPresent` |
+| `backend.static.port` | Kubernetes port where Static service is exposed | `80` |
+| `backend.analysis.image.repository` | Analysis backend image repository | `octoperf/kraken-analysis` |
+| `backend.analysis.image.tag` | Analysis backend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `backend.analysis.image.pullPolicy` | Analysis backend image pull policy | `IfNotPresent` |
+| `backend.analysis.port` | Kubernetes port where Analysis service is exposed | `8081` |
+| `backend.runtime.image.repository` | Runtime backend image repository | `octoperf/kraken-ee-runtime-kubernetes` |
+| `backend.runtime.image.tag` | Runtime backend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `backend.runtime.image.pullPolicy` | Runtime backend image pull policy | `IfNotPresent` |
+| `backend.runtime.port` | Kubernetes port where Runtime service is exposed | `8082` |
+| `backend.runtime.k8s.patchHosts` | Patch Kubernetes Nodes on startup to add the `com.kraken/hostId` label, making them [available to execute tasks](http://kraken.octoperf.com/administration/hosts-table/) | `true` |
+| `frontend.administration.image.repository` | Administration frontend image repository | `octoperf/kraken-administration-ui` |
+| `frontend.administration.image.tag` | Administration frontend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `frontend.administration.image.pullPolicy` | Administration frontend image pull policy | `IfNotPresent` |
+| `frontend.administration.port` | Kubernetes port where Administration service is exposed | `80` |
+| `frontend.gatling.image.repository` | Gatling frontend image repository | `octoperf/kraken-gatling-ui` |
+| `frontend.gatling.image.tag` | Gatling frontend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `frontend.gatling.image.pullPolicy` | Gatling frontend image pull policy | `IfNotPresent` |
+| `frontend.gatling.port` | Kubernetes port where Gatling service is exposed | `80` |
 
 ## Local development
 
