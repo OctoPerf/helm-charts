@@ -1,4 +1,4 @@
-# OctoPerf Enterprise-Edition Kubernetes Helm Chart
+# OctoPerf Kubernetes Helm Charts
 
 This functionality is in beta status and may be changed or removed completely in a future release. OctoPerf will take a best effort approach to fix any issues, but beta features are not subject to the support SLA of official GA features.
 

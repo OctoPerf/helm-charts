@@ -22,14 +22,14 @@ push:
 	helm push --force $(CHART)/ octoperf
 
 install:
-	kubectl create namespace $(NAMESPACE); true
+	-kubectl create namespace $(NAMESPACE)
 	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
 
 kraken-clean:
-	helm delete $(CHART); true
-	kubectl delete namespace $(NAMESPACE); true
-	kubectl delete ClusterRole $(CHART)-runtime; true
-	kubectl delete ClusterRoleBinding $(CHART)-runtime; true
-	kubectl delete PodSecurityPolicy $(CHART)-grafana $(CHART)-grafana-test; true
-	kubectl delete ClusterRole $(CHART)-grafana-clusterrole; true
-	kubectl delete ClusterRoleBinding $(CHART)-grafana-clusterrolebinding; true
+	-helm delete $(CHART)
+	-kubectl delete namespace $(NAMESPACE)
+	-kubectl delete ClusterRole $(CHART)-runtime
+	-kubectl delete ClusterRoleBinding $(CHART)-runtime
+	-kubectl delete PodSecurityPolicy $(CHART)-grafana $(CHART)-grafana-test
+	-kubectl delete ClusterRole $(CHART)-grafana-clusterrole
+	-kubectl delete ClusterRoleBinding $(CHART)-grafana-clusterrolebinding
