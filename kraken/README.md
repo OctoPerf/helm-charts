@@ -44,7 +44,7 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 
 ## Configuration
 
-The configuration is splitted in `4` big sections defined by the prefix being used:
+[The configuration](https://github.com/OctoPerf/helm-charts/blob/master/kraken/values.yaml) is split in `4` big sections defined by the prefix being used:
 
 - **No prefix**: global configuration settings such as Docker registry,
 - **rbac.** prefix: [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) configuration settings,
