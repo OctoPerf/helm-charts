@@ -26,7 +26,7 @@ install:
 	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
 
 kraken-clean:
-	-helm delete $(CHART)
+	-helm delete $(CHART) --namespace $(NAMESPACE)
 	-kubectl delete namespace $(NAMESPACE)
 	-kubectl delete ClusterRole $(CHART)-runtime
 	-kubectl delete ClusterRoleBinding $(CHART)-runtime

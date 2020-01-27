@@ -1,6 +1,7 @@
 apiVersion: v2
 name: kraken
-description: A Helm chart for Kubernetes
+description: Official OctoPerf Helm Chart for Kraken
+icon: https://kraken.octoperf.com/img/kraken-logo.svg
 
 # A chart can be either an 'application' or a 'library' chart.
 #
