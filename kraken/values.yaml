@@ -12,8 +12,8 @@ rbac:
 
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: web-static-ip
+  annotations: {}
+#    kubernetes.io/ingress.global-static-ip-name: web-static-ip
 
 documentation:
   image:

@@ -44,10 +44,11 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 
 ## Configuration
 
-[The configuration](https://github.com/OctoPerf/helm-charts/blob/master/kraken/values.yaml) is split in `4` big sections defined by the prefix being used:
+[The configuration](https://github.com/OctoPerf/helm-charts/blob/master/kraken/values.yaml) is split in several big sections defined by the prefix being used:
 
 - **No prefix**: global configuration settings such as Docker registry,
 - **rbac.** prefix: [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) configuration settings,
+- **ingres.** prefix: [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) configuration settings,
 - **documentation.** prefix: documentation configuration settings.
 - **backend.** prefix: backends configuration settings,
 - **frontend.** prefix: frontends configuration settings
@@ -55,6 +56,8 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 | Parameter | Description | Default |
 | ----------|-------------|---------|
 | `rabc.create` | Create RBAC roles and role bindings | `true` |
+| `ingress.create` | Create Ingress rules | `true` |
+| `ingress.annotations` | Custom Ingress annotations | `{}}` |
 | `documentation.image.repository` | Documentation image repository | `octoperf/kraken-documentation` |
 | `documentation.image.tag` | Documentation image tag | Depends on the [Kraken helm chart version](#versions) |
 | `documentation.image.pullPolicy` | Documentation image pull policy | `IfNotPresent` |
