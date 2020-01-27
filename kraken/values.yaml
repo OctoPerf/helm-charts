@@ -10,6 +10,11 @@ default:
 rbac:
   create: true
 
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: web-static-ip
+
 documentation:
   image:
     repository: octoperf/kraken-documentation

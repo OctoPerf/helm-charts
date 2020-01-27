@@ -17,6 +17,8 @@ lint:
 debug:
 	helm install --debug --dry-run --namespace $(NAMESPACE) $(CHART) ./$(CHART) > debug.log
 
+
+# helm repo add octoperf https://myuser:mypass@helm.octoperf.com
 push:
 	-helm plugin install https://github.com/chartmuseum/helm-push
 	helm push --force $(CHART)/ octoperf
@@ -26,10 +28,10 @@ install:
 	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
 
 kraken-clean:
-	-helm delete $(CHART) --namespace $(NAMESPACE)
+	-helm delete kraken --namespace $(NAMESPACE)
 	-kubectl delete namespace $(NAMESPACE)
-	-kubectl delete ClusterRole $(CHART)-runtime
-	-kubectl delete ClusterRoleBinding $(CHART)-runtime
-	-kubectl delete PodSecurityPolicy $(CHART)-grafana $(CHART)-grafana-test
-	-kubectl delete ClusterRole $(CHART)-grafana-clusterrole
-	-kubectl delete ClusterRoleBinding $(CHART)-grafana-clusterrolebinding
+	-kubectl delete ClusterRole kraken-runtime
+	-kubectl delete ClusterRoleBinding kraken-runtime
+	-kubectl delete PodSecurityPolicy kraken-grafana kraken-grafana-test
+	-kubectl delete ClusterRole kraken-grafana-clusterrole
+	-kubectl delete ClusterRoleBinding kraken-grafana-clusterrolebinding

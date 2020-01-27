@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enabled -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -6,6 +7,9 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+{{- with .Values.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
   name: {{ template "name" . }}-administration-ui
   labels:
     app: {{ template "name" . }}
@@ -20,3 +24,4 @@ spec:
               serviceName: {{ template "name" . }}-administration-ui
               servicePort: {{ .Values.frontend.administration.port }}
             path: /administration(/|$)(.*)
+{{- end }}
