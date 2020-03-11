@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 default:
-  - &default_tag 2.0.0-rc1
+  - &default_tag 2.1.0-beta
 
 # nameOverride: kraken
 
