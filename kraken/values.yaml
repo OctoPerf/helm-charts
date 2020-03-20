@@ -70,6 +70,13 @@ backend:
     k8s:
       patchHosts: true
 
+  sse:
+    image:
+      repository: octoperf/kraken-sse
+      tag: *default_tag
+      pullPolicy: IfNotPresent
+    port: 8083
+
 frontend:
   administration:
     image:
