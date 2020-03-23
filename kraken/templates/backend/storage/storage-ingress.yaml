@@ -24,10 +24,4 @@ spec:
               serviceName: {{ template "name" . }}-storage
               servicePort: {{ .Values.backend.storage.port }}
             path: /api/storage(/|$)(.*)
-    - http:
-        paths:
-          - backend:
-              serviceName: {{ template "name" . }}-storage
-              servicePort: {{ .Values.backend.static.port }}
-            path: /api/static(/|$)(.*)
 {{- end }}

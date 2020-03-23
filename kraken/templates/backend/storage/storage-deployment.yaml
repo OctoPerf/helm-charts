@@ -32,15 +32,6 @@ spec:
           volumeMounts:
             - mountPath: "/home/kraken/data"
               name: storage-data
-        - image: "{{ .Values.backend.static.image.repository }}:{{ .Values.backend.static.image.tag }}"
-          imagePullPolicy: {{ .Values.backend.static.image.pullPolicy }}
-          name: {{ template "name" . }}-static
-          ports:
-              - containerPort: {{ .Values.backend.static.port }}
-          volumeMounts:
-            - mountPath: "/usr/share/nginx/html"
-              name: storage-data
-              readOnly: true
       volumes:
         - name: storage-data
           persistentVolumeClaim:

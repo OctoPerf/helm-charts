@@ -73,10 +73,6 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 | `backend.storage.persistence.accessMode` | Storage backend data Persistent Volume access mode | `ReadWriteOnce` |
 | `backend.storage.persistence.size` | Storage backend data Persistent Volume size | `8Gi` |
 | `backend.storage.persistence.storageClass` | Storage backend data Persistent Volume Storage Class | `nil` |
-| `backend.static.image.repository` | Static backend image repository | `octoperf/kraken-static` |
-| `backend.static.image.tag` | Static backend image tag | Depends on the [Kraken helm chart version](#versions) |
-| `backend.static.image.pullPolicy` | Static backend image pull policy | `IfNotPresent` |
-| `backend.static.port` | Kubernetes port where Static service is exposed | `80` |
 | `backend.analysis.image.repository` | Analysis backend image repository | `octoperf/kraken-analysis` |
 | `backend.analysis.image.tag` | Analysis backend image tag | Depends on the [Kraken helm chart version](#versions) |
 | `backend.analysis.image.pullPolicy` | Analysis backend image pull policy | `IfNotPresent` |
@@ -86,6 +82,10 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 | `backend.runtime.image.pullPolicy` | Runtime backend image pull policy | `IfNotPresent` |
 | `backend.runtime.port` | Kubernetes port where Runtime service is exposed | `8082` |
 | `backend.runtime.k8s.patchHosts` | Patch Kubernetes Nodes on startup to add the `com.kraken/hostId` label, making them [available to execute tasks](http://kraken.octoperf.com/administration/hosts-table/) | `true` |
+| `backend.sse.image.repository` | SSE backend image repository | `octoperf/kraken-sse` |
+| `backend.sse.image.tag` | SSE backend image tag | Depends on the [Kraken helm chart version](#versions) |
+| `backend.sse.image.pullPolicy` | SSE backend image pull policy | `IfNotPresent` |
+| `backend.sse.port` | Kubernetes port where SSE service is exposed | `8083` |
 | `frontend.administration.image.repository` | Administration frontend image repository | `octoperf/kraken-administration-ui` |
 | `frontend.administration.image.tag` | Administration frontend image tag | Depends on the [Kraken helm chart version](#versions) |
 | `frontend.administration.image.pullPolicy` | Administration frontend image pull policy | `IfNotPresent` |

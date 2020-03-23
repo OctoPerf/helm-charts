@@ -15,7 +15,3 @@ spec:
       protocol: TCP
       port: {{ .Values.backend.storage.port }}
       targetPort: {{ .Values.backend.storage.port }}
-    - name: {{ template "name" . }}-static
-      protocol: TCP
-      port: {{ .Values.backend.static.port }}
-      targetPort: {{ .Values.backend.static.port }}

@@ -46,13 +46,6 @@ backend:
       ##   GKE, AWS & OpenStack)
       # storageClass: "-"
 
-  static:
-    image:
-      repository: octoperf/kraken-static
-      tag: *default_tag
-      pullPolicy: IfNotPresent
-    port: 80
-
   analysis:
     image:
       repository: octoperf/kraken-analysis
