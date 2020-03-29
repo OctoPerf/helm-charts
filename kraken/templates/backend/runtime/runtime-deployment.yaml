@@ -42,7 +42,7 @@ spec:
               value: "http://{{ template "name" . }}-analysis:{{ .Values.backend.analysis.port }}"
             - name: KRAKEN_RUNTIME_URL
               value: "http://{{ template "name" . }}-runtime:{{ .Values.backend.runtime.port }}"
-            - name: KRAKEN_K8S_PATCH_HOSTS
+            - name: KRAKEN_K8S_PATCHHOSTS
               value: "{{ .Values.backend.runtime.k8s.patchHosts }}"
             - name: KRAKEN_K8S_NAMESPACE
               value: "{{ .Release.Namespace }}"
