@@ -37,6 +37,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 11.x.x|
 | ------|
+| 11.9.0|
 | 11.8.0|
 | 11.7.1|
 | 11.6.0|
