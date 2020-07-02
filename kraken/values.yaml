@@ -245,6 +245,7 @@ keycloak:
       key: 6LcPAvkUAAAAAIBM3Ei6mS74W1BUyG4aNFUSpswC
       secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
     mail:
+      enabled: false
 #      password: pwd
 #      starttls: true/false
 #      auth: true/false
