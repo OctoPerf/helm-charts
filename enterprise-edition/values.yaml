@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "11.9.0"
+version: "11.9.1"
 
 imagePullPolicy: IfNotPresent
 imagePullSecrets: []
@@ -59,13 +59,13 @@ frontend:
 
   readinessProbe:
     httpGet:
-      path: /app
+      path: /actuator/health/readiness
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
   livenessProbe:
     httpGet:
-      path: /app
+      path: /actuator/health/liveness
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
