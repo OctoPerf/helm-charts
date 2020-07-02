@@ -70,9 +70,11 @@ spec:
           volumeMounts:
             - mountPath: "/home/kraken/data"
               name: backend-data
+{{- if .Values.backend.licenseFile }}
             - name: license-jwt
               mountPath: "/home/kraken/license.jwt"
               subPath: "license.jwt"
+{{- end }}
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 20
@@ -80,7 +82,7 @@ spec:
             timeoutSeconds: 5
             httpGet:
               path: /actuator/health/readiness
-              port: http-port
+              port: {{ .Values.backend.port }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 30
@@ -88,13 +90,15 @@ spec:
             timeoutSeconds: 5
             httpGet:
               path: /actuator/health/liveness
-              port: http-port
+              port: {{ .Values.backend.port }}
       volumes:
         - name: backend-data
           persistentVolumeClaim:
             claimName: backend-data
+{{- if .Values.backend.licenseFile }}
         - name: license-jwt
           configMap:
             name: "{{ template "name" . }}-backend-license"
+{{- end}}
 
 

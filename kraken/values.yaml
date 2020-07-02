@@ -73,19 +73,9 @@ frontend:
     service:
       port: 80
     ingress:
-      path: /administration
-    readinessProbe:
-      httpGet:
-        path: /
-        port: http-port
-      initialDelaySeconds: 5
-      periodSeconds: 5
-    livenessProbe:
-      httpGet:
-        path: /
-        port: http-port
-      initialDelaySeconds: 5
-      periodSeconds: 5
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      path: /administration(/|$)(.*)
     config:
       config-prod.json: |-
         {
@@ -117,19 +107,9 @@ frontend:
     service:
       port: 80
     ingress:
-      path: /gatling
-    readinessProbe:
-      httpGet:
-        path: /
-        port: http-port
-      initialDelaySeconds: 5
-      periodSeconds: 5
-    livenessProbe:
-      httpGet:
-        path: /
-        port: http-port
-      initialDelaySeconds: 5
-      periodSeconds: 5
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      path: /gatling(/|$)(.*)
     config:
       config-prod.json: |-
         {

@@ -1,4 +1,3 @@
-{{- if .Values.frontend.enabled -}}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -13,5 +12,4 @@ data:
 {{- range $path, $config := .Values.frontend.administration.config }}
   {{ $path }}: |
 {{ $config | indent 4 -}}
-{{- end }}
 {{- end }}

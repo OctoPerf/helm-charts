@@ -26,13 +26,21 @@ spec:
             - containerPort: {{ .Values.frontend.gatling.port }}
           volumeMounts:
             - name: config-prod
-              mountPath: /usr/share/nginx/html/assets/config-ee.json
-              subPath: config-ee.json
+              mountPath: /usr/share/nginx/html/assets/config-prod.json
+              subPath: config-prod.json
           readinessProbe:
-{{ toYaml .Values.frontend.gatling.readinessProbe | indent 12 }}
+            httpGet:
+              path: /
+              port: {{ .Values.frontend.gatling.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
           livenessProbe:
-{{ toYaml .Values.frontend.gatling.livenessProbe | indent 12 }}
+            httpGet:
+              path: /
+              port: {{ .Values.frontend.gatling.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
       volumes:
-        - name: config-ee
+        - name: config-prod
           configMap:
             name: "{{ template "name" . }}-gatling-ui"
