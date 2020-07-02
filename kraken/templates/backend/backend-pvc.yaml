@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: storage-data
+  name: backend-data
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -9,14 +9,14 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   accessModes:
-    - {{ .Values.backend.storage.persistence.accessMode | quote }}
+    - {{ .Values.backend.persistence.accessMode | quote }}
   resources:
     requests:
-      storage: {{ .Values.backend.storage.persistence.size | quote }}
-  {{- if .Values.backend.storage.persistence.storageClass }}
-  {{- if (eq "-" .Values.backend.storage.persistence.storageClass) }}
+      storage: {{ .Values.backend.persistence.size | quote }}
+  {{- if .Values.backend.persistence.storageClass }}
+  {{- if (eq "-" .Values.backend.persistence.storageClass) }}
   storageClassName: ""
   {{- else }}
-  storageClassName: "{{ .Values.backend.storage.persistence.storageClass }}"
+  storageClassName: "{{ .Values.backend.persistence.storageClass }}"
   {{- end }}
   {{- end }}

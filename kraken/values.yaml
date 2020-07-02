@@ -19,6 +19,8 @@ default:
   - &default_storage_class_name null
 
 # nameOverride: kraken
+rbac:
+  create: true
 
 admin:
   username: *default_admin_username
@@ -282,9 +284,9 @@ keycloak:
 #      ssl: null
 #      user: test@mail.com
     client:
-      kraken-web:
+      web:
         secret: ed5974bb-e711-4b8b-9315-6ad315361f32
-      kraken-api:
+      api:
         secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
-      kraken-container:
+      container:
         secret: 6caa811c-5a41-4a53-aa5d-51c575330146

@@ -9,16 +9,9 @@ To learn more about the release, try:
 
 An ingress controller is required to use Kraken on K8S: https://kubernetes.io/docs/concepts/services-networking/ingress/
 
-Frontend applications are available at:
+Applications are available at:
 
-- Gatling ({{ template "name" . }}-gatling-ui:{{ .Values.frontend.gatling.port }}): http://cluster-ip/gatling
-- Administration ({{ template "name" . }}-administration-ui:{{ .Values.frontend.administration.port }}): http://cluster-ip/administration
-
-Backend REST API are available at:
-
-- Storage ({{ template "name" . }}-storage:{{ .Values.backend.storage.port }}): http://cluster-ip/api/storage
-- Static ({{ template "name" . }}-static:{{ .Values.backend.static.port }}): http://cluster-ip/api/static
-- Analysis ({{ template "name" . }}-analysis:{{ .Values.backend.analysis.port }}): http://cluster-ip/api/analysis
-- Runtime ({{ template "name" . }}-runtime:{{ .Values.backend.runtime.port }}): http://cluster-ip/api/runtime
-
-Grafana ({{ .Values.grafana.fullnameOverride }}:{{ .Values.grafana.service.port }} is available at: http://cluster-ip/grafana
+- Gatling: http://{{ .Values.ingress.host }}/gatling/
+- Administration: http://{{ .Values.ingress.host }}/administration/
+- User Management (KeyCloak): http://{{ .Values.ingress.host }}/auth/
+- Documentation: http://{{ .Values.ingress.host }}/doc/

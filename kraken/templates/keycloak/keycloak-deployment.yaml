@@ -57,7 +57,7 @@ spec:
             - name: KRAKEN_SECURITY_API_ID
               value: "kraken-api"
             - name: KRAKEN_SECURITY_API_SECRET
-              value: "c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4"
+              value: "{{ .Values.keycloak.config.client.api.secret }}"
             - name: KRAKEN_SECURITY_REALM
               value: "kraken"
           volumeMounts:
