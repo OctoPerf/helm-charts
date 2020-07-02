@@ -12,5 +12,5 @@ spec:
     app: {{ template "name" . }}-administration-ui
   ports:
     - protocol: TCP
-      port: {{ .Values.frontend.administration.port }}
+      port: {{ .Values.frontend.administration.service.port }}
       targetPort: {{ .Values.frontend.administration.port }}

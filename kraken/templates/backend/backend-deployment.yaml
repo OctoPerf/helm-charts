@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}-backend
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-backend
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-backend
+    spec:
+      containers:
+        - image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          name: {{ template "name" . }}-backend
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          env:
+            # TODO see docker compose
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: SERVER_PORT
+              value: "{{ .Values.backend.runtime.port }}"
+            - name: KRAKEN_GRAFANA_URL
+              value: "http://{{ .Values.grafana.fullnameOverride }}:{{ .Values.grafana.service.port }}"
+            - name: KRAKEN_INFLUXDB_URL
+              value: "http://{{ .Values.influxdb.fullnameOverride }}:{{ .Values.influxdb.config.http.bind_address }}"
+            - name: KRAKEN_BACKEND_URL
+              value: "http://{{ template "name" . }}-backend:{{ .Values.backend.port }}"
+            - name: KRAKEN_K8S_PATCHHOSTS
+              value: "{{ .Values.backend.k8s.patchHosts }}"
+            - name: KRAKEN_K8S_NAMESPACE
+              value: "{{ .Release.Namespace }}"
+            - name: KRAKEN_VERSION
+              value: "{{ .Values.backend.image.tag }}"
+          volumeMounts:
+            - mountPath: "/home/kraken/data"
+              name: backend-data
+            - name: license-jwt
+              mountPath: "/home/kraken/data/license.jwt"
+              subPath: "license.jwt"
+      volumes:
+        - name: backend-data
+          persistentVolumeClaim:
+            claimName: backend-data
+        - name: license-jwt
+          configMap:
+            name: "{{ template "name" . }}-backend-license"
+
+

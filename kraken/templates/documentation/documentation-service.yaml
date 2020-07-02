@@ -12,5 +12,5 @@ spec:
     app: {{ template "name" . }}-documentation
   ports:
     - protocol: TCP
-      port: {{ .Values.documentation.port }}
+      port: {{ .Values.documentation.service.port }}
       targetPort: {{ .Values.documentation.port }}

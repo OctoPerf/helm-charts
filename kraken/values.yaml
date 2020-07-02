@@ -3,72 +3,63 @@
 # Declare variables to be passed into your templates.
 
 default:
-  - &default_tag 3.0.0-rc1
+  - &default_tag 3.0.0-beta
+  - &default_pull_policy IfNotPresent
+  - &default_admin_username "admin"
+  - &default_admin_password "kraken"
+  - &kraken_hostname "kraken-local"
+    ## Storage data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  # storageClass: "-"
+  - &default_storage_class null
+  - &default_storage_class_name null
 
 # nameOverride: kraken
 
-rbac:
-  create: true
+admin:
+  username: *default_admin_username
+  password: *default_admin_password
 
 ingress:
   enabled: true
-  annotations: {}
-#    kubernetes.io/ingress.global-static-ip-name: web-static-ip
-
-documentation:
-  image:
-    repository: octoperf/kraken-documentation
-    tag: *default_tag
-    pullPolicy: IfNotPresent
-  port: 80
+  host: *kraken_hostname
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 
 backend:
-  # License file content
+  image:
+    repository: octoperf/kraken-ee-kubernetes-all
+    tag: *default_tag
+    pullPolicy: IfNotPresent
+  host: *kraken_hostname
+  port: 8080
+  service:
+    port: 80
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+      nginx.ingress.kubernetes.io/proxy-body-size: "200m"
+    path: /api(/|$)(.*)
+# License file content
 #  licenseFile: |
 #    # kraken community 2.0.0 community License (id: 1574693532324)
 #    8445f5f44c7f964b642a2a0368575854024639480c355888492744416ed0
 #    ....
 #    9d715369689d53150569
-  storage:
-    image:
-      repository: octoperf/kraken-storage
-      tag: *default_tag
-      pullPolicy: IfNotPresent
-    port: 8080
-    persistence:
-      accessMode: ReadWriteOnce
-      size: 8Gi
-      ## Storage data Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      # storageClass: "-"
-
-  analysis:
-    image:
-      repository: octoperf/kraken-analysis
-      tag: *default_tag
-      pullPolicy: IfNotPresent
-    port: 8081
-
-  runtime:
-    image:
-      repository: octoperf/kraken-ee-runtime-kubernetes
-      tag: *default_tag
-      pullPolicy: IfNotPresent
-    port: 8082
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    storageClass: *default_storage_class
+    storageClassName: *default_storage_class_name
+  k8s:
     # The runtime server will set the label "com.kraken/hostId=kraken-n" on every available worker node, marking them as usable to run tasks
-    k8s:
-      patchHosts: true
-
-  sse:
-    image:
-      repository: octoperf/kraken-sse
-      tag: *default_tag
-      pullPolicy: IfNotPresent
-    port: 8083
+    patchHosts: true
 
 frontend:
   administration:
@@ -77,82 +68,106 @@ frontend:
       tag: *default_tag
       pullPolicy: IfNotPresent
     port: 80
+    service:
+      port: 80
+    ingress:
+      path: /administration
   gatling:
     image:
       repository: octoperf/kraken-gatling-ui
       tag: *default_tag
       pullPolicy: IfNotPresent
     port: 80
+    service:
+      port: 80
+    ingress:
+      path: /gatling
 
-grafana:
-  fullnameOverride: kraken-grafana
+documentation:
+  image:
+    repository: octoperf/kraken-documentation
+    tag: *default_tag
+    pullPolicy: IfNotPresent
+  port: 80
   service:
     port: 80
-  rbac:
-    namespaced: true
-  persistence:
-    enabled: true
   ingress:
-    # Use grafana/grafana-ingress.yaml instead (does not work with the one of the Grafana helm chart)
-    enabled: false
-  plugins:
-    - grafana-piechart-panel
-    - blackmirror1-singlestat-math-panel
-  adminPassword: kraken
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: Gatling
-          orgId: 1
-          type: influxdb
-          access: proxy
-          # update with release name if not kraken (ie. http://my-release-influxdb:8086)
-          url: http://kraken-influxdb:8086
-          database: gatling
-          isDefault: true
-          version: 1
-          editable: false
-          basicAuth: true
-          basicAuthUser: user
-          basicAuthPassword: kraken
-  grafana.ini:
-    server:
-      protocol: "http"
-      domain: "localhost"
-      root_url: "%(protocol)s://%(domain)s/grafana/"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    path: /doc(/|$)(.*)
 
+grafana:
+  image:
+    repository: grafana/grafana
+    tag: 6.7.1
+    pullPolicy: *default_pull_policy
+  port: 3000
+  service:
+    port: 80
+  admin:
+    username: *default_admin_username
+    password: *default_admin_password
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    storageClass: *default_storage_class
+    storageClassName: *default_storage_class_name
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    path: /grafana(/|$)(.*)
+  plugins: grafana-piechart-panel, blackmirror1-singlestat-math-panel
 
-# Service name is .Release.Name-influxdb
 influxdb:
-  fullnameOverride: kraken-influxdb
-  env:
-    - name: INFLUXDB_ADMIN_USER
-      value: admin
-    - name: INFLUXDB_ADMIN_PASSWORD
-      value: kraken
-    - name: INFLUXDB_DB
-      value: gatling
-    - name: INFLUXDB_USER
-      value: user
-    - name: INFLUXDB_USER_PASSWORD
-      value: kraken
-  config:
-    http:
-      bind_address: 8086
-    graphite:
-      enabled: false
-      bind-address: ":2003"
-      database: "gatling"
-      retention-policy: ""
-      protocol: "tcp"
-      batch-size: 5000
-      batch-pending: 10
-      batch-timeout: "1s"
-      consistency-level: "one"
-      separator: "."
-      udp-read-buffer: 0
-      templates: [
-      "gatling.*.*.*.*.*.* measurement.test.injector.simulation.request.status.field",
-      "gatling.*.*.*.users.*.* measurement.test.injector.simulation.measurement.request.field"
-      ]
+  image:
+    repository: influxdb
+    tag: 1.7.4
+    pullPolicy: *default_pull_policy
+  port: 8086
+  service:
+    port: 8086
+  admin:
+    username: *default_admin_username
+    password: *default_admin_password
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    storageClass: *default_storage_class
+    storageClassName: *default_storage_class_name
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    path: /influxdb(/|$)(.*)
+
+postgres:
+  image:
+    repository: postgres
+    tag: 12.2
+    pullPolicy: *default_pull_policy
+  port: 5432
+  service:
+    port: 5432
+  admin:
+    database: keycloak
+    username: *default_admin_username
+    password: *default_admin_password
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    storageClass: *default_storage_class
+    storageClassName: *default_storage_class_name
+
+keycloak:
+  host: *kraken_hostname
+  image:
+    repository: octoperf/kraken-keycloak
+    tag: *default_tag
+    pullPolicy: *default_pull_policy
+  port: 9080 #Do not change without updating the command in keycloak-deployment.yaml
+  service:
+    port: 80
+  admin:
+    username: *default_admin_username
+    password: *default_admin_password
+  ingress:
+    path: /auth

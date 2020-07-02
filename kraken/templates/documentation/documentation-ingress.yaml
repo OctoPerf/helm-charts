@@ -3,9 +3,9 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+{{- with .Values.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 {{- with .Values.ingress.annotations }}
 {{ toYaml . | indent 4 }}
 {{- end }}
@@ -21,6 +21,7 @@ spec:
         paths:
           - backend:
               serviceName: {{ template "name" . }}-documentation
-              servicePort: {{ .Values.documentation.port }}
-            path: /doc
+              servicePort: {{ .Values.documentation.service.port }}
+            path: {{ .Values.documentation.ingress.path }}
+      host: {{ .Values.ingress.host }}
 {{- end }}

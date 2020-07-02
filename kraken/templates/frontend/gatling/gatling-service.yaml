@@ -12,5 +12,5 @@ spec:
     app: {{ template "name" . }}-gatling-ui
   ports:
     - protocol: TCP
-      port: {{ .Values.frontend.gatling.port }}
+      port: {{ .Values.frontend.gatling.service.port }}
       targetPort: {{ .Values.frontend.gatling.port }}
