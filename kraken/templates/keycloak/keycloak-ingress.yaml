@@ -3,14 +3,13 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 {{- with .Values.ingress.annotations }}
 {{ toYaml . | indent 4 }}
 {{- end }}
-  name: {{ template "name" . }}-sse
+{{- with .Values.keycloak.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+  name: {{ template "name" . }}-keycloak
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -21,7 +20,8 @@ spec:
     - http:
         paths:
           - backend:
-              serviceName: {{ template "name" . }}-sse
-              servicePort: {{ .Values.backend.sse.port }}
-            path: /api/sse(/|$)(.*)
+              serviceName: {{ template "name" . }}-keycloak
+              servicePort: {{ .Values.keycloak.service.port }}
+            path: {{ .Values.keycloak.ingress.path }}
+      host: {{ .Values.ingress.host }}
 {{- end }}

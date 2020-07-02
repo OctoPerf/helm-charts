@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "name" . }}-analysis
+  name: {{ template "name" . }}-grafana
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -9,8 +9,8 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   selector:
-    app: {{ template "name" . }}-analysis
+    app: {{ template "name" . }}-grafana
   ports:
     - protocol: TCP
-      port: {{ .Values.backend.analysis.port }}
-      targetPort: {{ .Values.backend.analysis.port }}
+      port: {{ .Values.grafana.service.port }}
+      targetPort: {{ .Values.grafana.port }}
