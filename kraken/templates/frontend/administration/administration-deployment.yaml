@@ -28,6 +28,10 @@ spec:
             - name: config-prod
               mountPath: /usr/share/nginx/html/assets/config-ee.json
               subPath: config-ee.json
+          readinessProbe:
+{{ toYaml .Values.frontend.administration.readinessProbe | indent 10 }}
+          livenessProbe:
+{{ toYaml .Values.frontend.administration.livenessProbe | indent 10 }}
       volumes:
         - name: config-ee
           configMap:

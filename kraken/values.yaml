@@ -72,6 +72,18 @@ frontend:
       port: 80
     ingress:
       path: /administration
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http-port
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /
+        port: http-port
+      initialDelaySeconds: 5
+      periodSeconds: 5
     config:
       config-prod.json: |-
         {
@@ -104,6 +116,18 @@ frontend:
       port: 80
     ingress:
       path: /gatling
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http-port
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    livenessProbe:
+      httpGet:
+        path: /
+        port: http-port
+      initialDelaySeconds: 5
+      periodSeconds: 5
     config:
       config-prod.json: |-
         {
@@ -166,6 +190,7 @@ grafana:
     repository: grafana/grafana
     tag: 6.7.1
     pullPolicy: *default_pull_policy
+  host: *kraken_hostname
   port: 3000
   service:
     port: 80
@@ -226,11 +251,11 @@ postgres:
 
 keycloak:
   enabled: true
-  host: *kraken_hostname
   image:
     repository: octoperf/kraken-keycloak
     tag: *default_tag
     pullPolicy: *default_pull_policy
+  host: *kraken_hostname
   port: 9080 #Do not change without updating the command in keycloak-deployment.yaml
   service:
     port: 80
@@ -241,7 +266,7 @@ keycloak:
     path: /auth
   config:
     recaptcha:
-      enabled: false #TODO
+      enabled: false
       key: 6LcPAvkUAAAAAIBM3Ei6mS74W1BUyG4aNFUSpswC
       secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
     mail:
@@ -258,11 +283,8 @@ keycloak:
 #      user: test@mail.com
     client:
       kraken-web:
-        id: cc0809b5-6308-4490-9fee-c5d71f3b3f08
         secret: ed5974bb-e711-4b8b-9315-6ad315361f32
       kraken-api:
-        id: 757cb0ac-b8c2-43bb-a623-de9d0bf733c8
         secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
       kraken-container:
-        id: ebe67e46-89c6-4c92-94e1-3ff93bde8a7a
         secret: 6caa811c-5a41-4a53-aa5d-51c575330146

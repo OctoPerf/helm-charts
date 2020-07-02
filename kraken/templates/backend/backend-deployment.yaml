@@ -25,29 +25,70 @@ spec:
           ports:
             - containerPort: {{ .Values.backend.port }}
           env:
-            # TODO see docker compose
             - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes
+              value: "kubernetes"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "http://{{ .Values.keycloak.host }}/auth/realms/kraken"
             - name: SERVER_PORT
-              value: "{{ .Values.backend.runtime.port }}"
-            - name: KRAKEN_GRAFANA_URL
-              value: "http://{{ .Values.grafana.fullnameOverride }}:{{ .Values.grafana.service.port }}"
-            - name: KRAKEN_INFLUXDB_URL
-              value: "http://{{ .Values.influxdb.fullnameOverride }}:{{ .Values.influxdb.config.http.bind_address }}"
+              value: "{{ .Values.backend.port }}"
+            - name: KRAKEN_BACKEND_HOSTNAME
+              value: "{{ .Values.backend.host }}"
+            - name: KRAKEN_VERSION
+              value: "{{ .Values.backend.image.tag }}"
             - name: KRAKEN_BACKEND_URL
-              value: "http://{{ template "name" . }}-backend:{{ .Values.backend.port }}"
+              value: "http://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}"
+            - name: KRAKEN_SECURITY_URL
+              value: "http://{{ .Values.keycloak.host }}/auth"
+            - name: KRAKEN_SECURITY_CONTAINER_SECRET
+              value: "{{ .Values.keycloak.config.client.container.secret }}"
+            - name: KRAKEN_SECURITY_API_SECRET
+              value: "{{ .Values.keycloak.config.client.api.secret }}"
+            - name: KRAKEN_GRAFANA_URL
+              value: "http://{{ template "name" . }}-grafana:{{ .Values.grafana.service.port }}"
+            - name: KRAKEN_GRAFANA_PUBLISHED_URL
+              value: "http://{{ .Values.grafana.host }}/grafana"
+            - name: KRAKEN_GRAFANA_USER
+              value: "{{ .Values.grafana.admin.username }}"
+            - name: KRAKEN_GRAFANA_PASSWORD
+              value: "{{ .Values.grafana.admin.password }}"
+            - name: KRAKEN_INFLUXDB_URL
+              value: "http://{{ template "name" . }}-influcdb:{{ .Values.influxdb.service.port }}"
+            - name: KRAKEN_INFLUXDB_PUBLISHED_URL
+              value: "http://{{ template "name" . }}-influcdb:{{ .Values.influxdb.service.port }}"
+            - name: KRAKEN_INFLUXDB_USER
+              value: "{{ .Values.influxdb.admin.username }}"
+            - name: KRAKEN_INFLUXDB_PASSWORD
+              value: "{{ .Values.influxdb.admin.password }}"
             - name: KRAKEN_K8S_PATCHHOSTS
               value: "{{ .Values.backend.k8s.patchHosts }}"
             - name: KRAKEN_K8S_NAMESPACE
               value: "{{ .Release.Namespace }}"
-            - name: KRAKEN_VERSION
-              value: "{{ .Values.backend.image.tag }}"
+            - name: KRAKEN_DATA
+              value: "/home/kraken/data"
+            - name: KRAKEN_LICENSE_ENTERPRISE
+              value: "/home/kraken/license.jwt"
           volumeMounts:
             - mountPath: "/home/kraken/data"
               name: backend-data
             - name: license-jwt
-              mountPath: "/home/kraken/data/license.jwt"
+              mountPath: "/home/kraken/license.jwt"
               subPath: "license.jwt"
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 5
+            httpGet:
+              path: /actuator/health/readiness
+              port: http-port
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            httpGet:
+              path: /actuator/health/liveness
+              port: http-port
       volumes:
         - name: backend-data
           persistentVolumeClaim:
