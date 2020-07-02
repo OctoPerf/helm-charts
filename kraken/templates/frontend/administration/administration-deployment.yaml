@@ -24,3 +24,11 @@ spec:
           name: {{ template "name" . }}-administration-ui
           ports:
             - containerPort: {{ .Values.frontend.administration.port }}
+          volumeMounts:
+            - name: config-prod
+              mountPath: /usr/share/nginx/html/assets/config-ee.json
+              subPath: config-ee.json
+      volumes:
+        - name: config-ee
+          configMap:
+            name: "{{ template "name" . }}-administration-ui"

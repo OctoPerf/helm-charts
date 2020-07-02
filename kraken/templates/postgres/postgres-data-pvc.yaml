@@ -1,3 +1,4 @@
+{{- if .Values.postgres.enabled -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -20,3 +21,4 @@ spec:
   storageClassName: "{{ .Values.postgres.persistence.storageClass }}"
   {{- end }}
   {{- end }}
+{{- end }}

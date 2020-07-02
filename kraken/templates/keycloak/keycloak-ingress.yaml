@@ -1,3 +1,4 @@
+{{- if .Values.keycloak.enabled -}}
 {{- if .Values.ingress.enabled -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -24,4 +25,5 @@ spec:
               servicePort: {{ .Values.keycloak.service.port }}
             path: {{ .Values.keycloak.ingress.path }}
       host: {{ .Values.ingress.host }}
+{{- end }}
 {{- end }}

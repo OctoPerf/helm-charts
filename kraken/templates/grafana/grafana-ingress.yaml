@@ -1,3 +1,4 @@
+{{- if .Values.grafana.enabled -}}
 {{- if .Values.ingress.enabled -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -24,4 +25,5 @@ spec:
               servicePort: {{ .Values.grafana.service.port }}
             path: {{ .Values.grafana.ingress.path }}
       host: {{ .Values.ingress.host }}
+{{- end }}
 {{- end }}

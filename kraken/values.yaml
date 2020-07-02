@@ -72,6 +72,28 @@ frontend:
       port: 80
     ingress:
       path: /administration
+    config:
+      config-prod.json: |-
+        {
+          "version": "administration-1",
+          "applicationId": "administration",
+          "backendApiUrl": "/api",
+          "docUrl": "/doc",
+          "readmeNode": {
+            "path": "README.md",
+            "type": "FILE",
+            "depth": 0,
+            "length": 0,
+            "lastModified": 0
+          },
+          "keycloakConfiguration": {
+            "url": "/auth",
+            "realm": "kraken",
+            "clientId": "kraken-web"
+          },
+          "expectedRoles": ["ADMIN"]
+        }
+
   gatling:
     image:
       repository: octoperf/kraken-gatling-ui
@@ -82,6 +104,48 @@ frontend:
       port: 80
     ingress:
       path: /gatling
+    config:
+      config-prod.json: |-
+        {
+          "version": "gatling-1",
+          "applicationId": "gatling",
+          "backendApiUrl": "/api",
+          "readmeNode": {
+            "path": "gatling/README.md",
+            "type": "FILE",
+            "depth": 1,
+            "length": 0,
+            "lastModified": 0
+          },
+          "docUrl": "/doc",
+          "analysisRootNode": {
+            "path": "gatling/results",
+            "type": "DIRECTORY",
+            "depth": 1,
+            "length": 0,
+            "lastModified": 0
+          },
+          "gatlingSimulationsRootNode": {
+            "path": "gatling/user-files/simulations",
+            "type": "DIRECTORY",
+            "depth": 2,
+            "length": 0,
+            "lastModified": 0
+          },
+          "gatlingResourcesRootNode": {
+            "path": "gatling/user-files/resources",
+            "type": "DIRECTORY",
+            "depth": 2,
+            "length": 0,
+            "lastModified": 0
+          },
+          "keycloakConfiguration": {
+            "url": "/auth",
+            "realm": "kraken",
+            "clientId": "kraken-web"
+          },
+          "expectedRoles": ["USER"]
+        }
 
 documentation:
   image:
@@ -97,6 +161,7 @@ documentation:
     path: /doc(/|$)(.*)
 
 grafana:
+  enabled: true
   image:
     repository: grafana/grafana
     tag: 6.7.1
@@ -119,6 +184,7 @@ grafana:
   plugins: grafana-piechart-panel, blackmirror1-singlestat-math-panel
 
 influxdb:
+  enabled: true
   image:
     repository: influxdb
     tag: 1.7.4
@@ -140,6 +206,7 @@ influxdb:
     path: /influxdb(/|$)(.*)
 
 postgres:
+  enabled: true
   image:
     repository: postgres
     tag: 12.2
@@ -158,6 +225,7 @@ postgres:
     storageClassName: *default_storage_class_name
 
 keycloak:
+  enabled: true
   host: *kraken_hostname
   image:
     repository: octoperf/kraken-keycloak
@@ -171,3 +239,29 @@ keycloak:
     password: *default_admin_password
   ingress:
     path: /auth
+  config:
+    recaptcha:
+      enabled: false #TODO
+      key: 6LcPAvkUAAAAAIBM3Ei6mS74W1BUyG4aNFUSpswC
+      secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
+    mail:
+#      password: pwd
+#      starttls: true/false
+#      auth: true/false
+#      port: 587
+#      host: smtp.gamil.com
+#      replyTo: test@mail.com
+#      from: test@mail.com
+#      fromDisplayName: Kraken
+#      ssl: null
+#      user: test@mail.com
+    client:
+      kraken-web:
+        id: cc0809b5-6308-4490-9fee-c5d71f3b3f08
+        secret: ed5974bb-e711-4b8b-9315-6ad315361f32
+      kraken-api:
+        id: 757cb0ac-b8c2-43bb-a623-de9d0bf733c8
+        secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
+      kraken-container:
+        id: ebe67e46-89c6-4c92-94e1-3ff93bde8a7a
+        secret: 6caa811c-5a41-4a53-aa5d-51c575330146

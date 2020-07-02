@@ -24,3 +24,11 @@ spec:
           name: {{ template "name" . }}-gatling-ui
           ports:
             - containerPort: {{ .Values.frontend.gatling.port }}
+          volumeMounts:
+            - name: config-prod
+              mountPath: /usr/share/nginx/html/assets/config-ee.json
+              subPath: config-ee.json
+      volumes:
+        - name: config-ee
+          configMap:
+            name: "{{ template "name" . }}-gatling-ui"
