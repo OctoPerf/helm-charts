@@ -6,7 +6,7 @@ metadata:
 {{- with .Values.ingress.annotations }}
 {{ toYaml . | indent 4 }}
 {{- end }}
-{{- with .Values.ingress.annotations }}
+{{- with .Values.frontend.administration.ingress.annotations }}
 {{ toYaml . | indent 4 }}
 {{- end }}
   name: {{ template "name" . }}-administration-ui
