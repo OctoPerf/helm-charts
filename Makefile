@@ -26,9 +26,3 @@ push:
 install:
 	-kubectl create namespace $(NAMESPACE)
 	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
-
-kraken-clean:
-	-helm delete kraken --namespace $(NAMESPACE)
-	-kubectl delete namespace $(NAMESPACE)
-	-kubectl delete ClusterRole kraken-backend
-	-kubectl delete ClusterRoleBinding kraken-backend

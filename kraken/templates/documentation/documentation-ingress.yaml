@@ -23,5 +23,5 @@ spec:
               serviceName: {{ template "name" . }}-documentation
               servicePort: {{ .Values.documentation.service.port }}
             path: {{ .Values.documentation.ingress.path }}
-      host: {{ .Values.ingress.host }}
+      host: {{ .Values.host.name }}
 {{- end }}

@@ -7,7 +7,6 @@ default:
   - &default_pull_policy IfNotPresent
   - &default_admin_username "admin"
   - &default_admin_password "kraken"
-  - &kraken_hostname "kraken-local"
     ## Storage data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -27,9 +26,12 @@ admin:
   username: *default_admin_username
   password: *default_admin_password
 
+host:
+  name: ""
+  ip: ""
+
 ingress:
   enabled: true
-  host: *kraken_hostname
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
@@ -40,9 +42,6 @@ backend:
     repository: octoperf/kraken-ee-kubernetes-all
     tag: *default_tag
     pullPolicy: IfNotPresent
-  host: *kraken_hostname
-#  TODO Remove this
-  ip: 192.168.1.17
   port: 8080
   service:
     port: 80
@@ -175,7 +174,6 @@ grafana:
     repository: grafana/grafana
     tag: 6.7.1
     pullPolicy: *default_pull_policy
-  host: *kraken_hostname
   port: 3000
   service:
     port: 80
@@ -240,9 +238,6 @@ keycloak:
     repository: octoperf/kraken-keycloak
     tag: *default_tag
     pullPolicy: *default_pull_policy
-  #  TODO Remove this
-  ip: 192.168.1.17
-  host: *kraken_hostname
   port: 9080 #Do not change without updating the command in keycloak-deployment.yaml
   service:
     port: 80

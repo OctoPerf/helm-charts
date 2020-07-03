@@ -51,7 +51,7 @@ spec:
             - name: KEYCLOAK_WELCOME_THEME
               value: "kraken"
             - name: KRAKEN_SECURITY_URL
-              value: "http://{{ .Values.keycloak.host }}/auth"
+              value: "http://{{ .Values.host.name }}/auth"
             - name: KRAKEN_URLS
               value: "http://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}/user-events"
             - name: KRAKEN_SECURITY_API_ID
@@ -69,10 +69,10 @@ spec:
         - name: kraken-realm
           secret:
             secretName: {{ template "name" . }}-keycloak
-{{- if .Values.keycloak.ip }}
+{{- if .Values.host.ip }}
       hostAliases:
           - hostnames:
-            - {{ .Values.keycloak.host }}
-            ip: {{ .Values.keycloak.ip }}
+            - {{ .Values.host.name }}
+            ip: {{ .Values.host.ip }}
 {{- end }}
 {{- end }}

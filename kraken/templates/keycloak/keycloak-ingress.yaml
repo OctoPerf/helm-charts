@@ -24,6 +24,6 @@ spec:
               serviceName: {{ template "name" . }}-keycloak
               servicePort: {{ .Values.keycloak.service.port }}
             path: {{ .Values.keycloak.ingress.path }}
-      host: {{ .Values.ingress.host }}
+      host: {{ .Values.host.name }}
 {{- end }}
 {{- end }}

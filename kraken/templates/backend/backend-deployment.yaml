@@ -31,17 +31,17 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "kubernetes"
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "http://{{ .Values.keycloak.host }}/auth/realms/kraken"
+              value: "http://{{ .Values.host.name }}/auth/realms/kraken"
             - name: SERVER_PORT
               value: "{{ .Values.backend.port }}"
             - name: KRAKEN_BACKEND_HOSTNAME
-              value: "{{ .Values.backend.host }}"
+              value: "{{ .Values.host.name }}"
             - name: KRAKEN_VERSION
               value: "{{ .Values.backend.image.tag }}"
             - name: KRAKEN_BACKEND_URL
               value: "http://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}"
             - name: KRAKEN_SECURITY_URL
-              value: "http://{{ .Values.keycloak.host }}/auth"
+              value: "http://{{ .Values.host.name }}/auth"
             - name: KRAKEN_SECURITY_CONTAINER_SECRET
               value: "{{ .Values.keycloak.config.client.container.secret }}"
             - name: KRAKEN_SECURITY_API_SECRET
@@ -49,15 +49,15 @@ spec:
             - name: KRAKEN_GRAFANA_URL
               value: "http://{{ template "name" . }}-grafana:{{ .Values.grafana.service.port }}"
             - name: KRAKEN_GRAFANA_PUBLISHED_URL
-              value: "http://{{ .Values.grafana.host }}/grafana"
+              value: "http://{{ .Values.host.name }}/grafana"
             - name: KRAKEN_GRAFANA_USER
               value: "{{ .Values.grafana.admin.username }}"
             - name: KRAKEN_GRAFANA_PASSWORD
               value: "{{ .Values.grafana.admin.password }}"
             - name: KRAKEN_INFLUXDB_URL
-              value: "http://{{ template "name" . }}-influcdb:{{ .Values.influxdb.service.port }}"
+              value: "http://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
             - name: KRAKEN_INFLUXDB_PUBLISHED_URL
-              value: "http://{{ template "name" . }}-influcdb:{{ .Values.influxdb.service.port }}"
+              value: "http://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
             - name: KRAKEN_INFLUXDB_USER
               value: "{{ .Values.influxdb.admin.username }}"
             - name: KRAKEN_INFLUXDB_PASSWORD
@@ -103,11 +103,11 @@ spec:
           configMap:
             name: "{{ template "name" . }}-backend-license"
 {{- end }}
-{{- if .Values.backend.ip }}
+{{- if .Values.host.ip }}
       hostAliases:
         - hostnames:
-            - {{ .Values.backend.host }}
-          ip: {{ .Values.backend.ip }}
+            - {{ .Values.host.name }}
+          ip: {{ .Values.host.ip }}
 {{- end }}
 
 

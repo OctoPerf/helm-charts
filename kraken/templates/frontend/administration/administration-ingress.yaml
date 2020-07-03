@@ -23,5 +23,5 @@ spec:
               serviceName: {{ template "name" . }}-administration-ui
               servicePort: {{ .Values.frontend.administration.service.port }}
             path: {{ .Values.frontend.administration.ingress.path }}
-      host: {{ .Values.ingress.host }}
+      host: {{ .Values.host.name }}
 {{- end }}
