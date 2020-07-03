@@ -7,11 +7,11 @@ default:
   - &default_pull_policy IfNotPresent
   - &default_admin_username "admin"
   - &default_admin_password "kraken"
-    ## Storage data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ## Storage data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   # storageClass: "-"
   - &default_storage_class null
@@ -50,12 +50,12 @@ backend:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
       nginx.ingress.kubernetes.io/proxy-body-size: "200m"
     path: /api(/|$)(.*)
-# License file content
-#  licenseFile: |
-#    # kraken community 2.0.0 community License (id: 1574693532324)
-#    8445f5f44c7f964b642a2a0368575854024639480c355888492744416ed0
-#    ....
-#    9d715369689d53150569
+  # License file content
+  #  licenseFile: |
+  #    # kraken community 2.0.0 community License (id: 1574693532324)
+  #    8445f5f44c7f964b642a2a0368575854024639480c355888492744416ed0
+  #    ....
+  #    9d715369689d53150569
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
@@ -64,7 +64,10 @@ backend:
   k8s:
     # The runtime server will set the label "com.kraken/hostId=kraken-n" on every available worker node, marking them as usable to run tasks
     patchHosts: true
-
+  ## Allows the specification of additional environment variables
+  extraEnv:
+#    - name: "KEY"
+#      value: "value"
 frontend:
   administration:
     image:
@@ -190,6 +193,10 @@ grafana:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /grafana(/|$)(.*)
   plugins: grafana-piechart-panel, blackmirror1-singlestat-math-panel
+  ## Allows the specification of additional environment variables
+  extraEnv:
+#    - name: "KEY"
+#      value: "value"
 
 influxdb:
   enabled: true
@@ -212,6 +219,10 @@ influxdb:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /influxdb(/|$)(.*)
+  ## Allows the specification of additional environment variables
+  extraEnv:
+#    - name: "KEY"
+#      value: "value"
 
 postgres:
   enabled: true
@@ -231,6 +242,10 @@ postgres:
     size: 8Gi
     storageClass: *default_storage_class
     storageClassName: *default_storage_class_name
+  ## Allows the specification of additional environment variables
+  extraEnv:
+#    - name: "KEY"
+#      value: "value"
 
 keycloak:
   enabled: true
@@ -246,6 +261,10 @@ keycloak:
     password: *default_admin_password
   ingress:
     path: /auth
+  ## Allows the specification of additional environment variables
+  extraEnv:
+  #    - name: "KEY"
+  #      value: "value"
   config:
     recaptcha:
       enabled: false
@@ -253,16 +272,16 @@ keycloak:
       secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
     mail:
       enabled: false
-#      password: pwd
-#      starttls: true/false
-#      auth: true/false
-#      port: 587
-#      host: smtp.gamil.com
-#      replyTo: test@mail.com
-#      from: test@mail.com
-#      fromDisplayName: Kraken
-#      ssl: null
-#      user: test@mail.com
+    #      password: pwd
+    #      starttls: true/false
+    #      auth: true/false
+    #      port: 587
+    #      host: smtp.gamil.com
+    #      replyTo: test@mail.com
+    #      from: test@mail.com
+    #      fromDisplayName: Kraken
+    #      ssl: null
+    #      user: test@mail.com
     client:
       web:
         secret: ed5974bb-e711-4b8b-9315-6ad315361f32

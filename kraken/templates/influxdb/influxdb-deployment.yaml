@@ -32,6 +32,10 @@ spec:
               value: {{ .Values.influxdb.admin.username }}
             - name: INFLUXDB_ADMIN_PASSWORD
               value: {{ .Values.influxdb.admin.password }}
+{{- range .Values.influxdb.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+{{- end }}
           volumeMounts:
             - name: influxdb-conf
               mountPath: "/etc/influxdb/influxdb.conf"

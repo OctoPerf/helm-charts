@@ -32,6 +32,10 @@ spec:
               value: {{ .Values.grafana.admin.username }}
             - name: GF_SECURITY_ADMIN_PASSWORD
               value: {{ .Values.grafana.admin.password }}
+{{- range .Values.grafana.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+{{- end }}
           volumeMounts:
             - name: grafana-ini
               mountPath: "/etc/grafana/grafana.ini"

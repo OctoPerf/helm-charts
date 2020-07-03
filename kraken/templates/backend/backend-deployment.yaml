@@ -70,6 +70,10 @@ spec:
               value: "/home/kraken/data"
             - name: KRAKEN_LICENSE_ENTERPRISE
               value: "../license.jwt"
+{{- range .Values.backend.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+{{- end }}
           volumeMounts:
             - mountPath: "/home/kraken/data"
               name: backend-data

@@ -60,6 +60,10 @@ spec:
               value: "{{ .Values.keycloak.config.client.api.secret }}"
             - name: KRAKEN_SECURITY_REALM
               value: "kraken"
+{{- range .Values.keycloak.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+{{- end }}
           volumeMounts:
             - name: kraken-realm
               mountPath: "/opt/jboss/keycloak/imports/kraken-realm.json"
