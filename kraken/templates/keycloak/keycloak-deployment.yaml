@@ -69,4 +69,10 @@ spec:
         - name: kraken-realm
           secret:
             secretName: {{ template "name" . }}-keycloak
+{{- if .Values.keycloak.ip }}
+      hostAliases:
+          - hostnames:
+            - {{ .Values.keycloak.host }}
+            ip: {{ .Values.keycloak.ip }}
+{{- end }}
 {{- end }}

@@ -19,6 +19,7 @@ default:
   - &default_storage_class_name null
 
 # nameOverride: kraken
+
 rbac:
   create: true
 
@@ -40,6 +41,8 @@ backend:
     tag: *default_tag
     pullPolicy: IfNotPresent
   host: *kraken_hostname
+#  TODO Remove this
+  ip: 192.168.1.17
   port: 8080
   service:
     port: 80
@@ -237,6 +240,8 @@ keycloak:
     repository: octoperf/kraken-keycloak
     tag: *default_tag
     pullPolicy: *default_pull_policy
+  #  TODO Remove this
+  ip: 192.168.1.17
   host: *kraken_hostname
   port: 9080 #Do not change without updating the command in keycloak-deployment.yaml
   service:
