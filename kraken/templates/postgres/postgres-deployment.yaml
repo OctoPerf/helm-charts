@@ -27,7 +27,7 @@ spec:
                 - containerPort: {{ .Values.postgres.port }}
             env:
               - name: POSTGRES_DB
-                value: {{ .Values.postgres.admin.database }}
+                value: {{ .Values.postgres.admin.databaseKeycloak }}
               - name: POSTGRES_USER
                 value: {{ .Values.postgres.admin.username }}
               - name: POSTGRES_PASSWORD
@@ -39,8 +39,13 @@ spec:
             volumeMounts:
               - name: postgres-data
                 mountPath: "/var/lib/postgresql/data"
+              - name: postgres-init-scripts
+                mountPath: "/docker-entrypoint-initdb.d"
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: {{ template "name" . }}-postgres-data
+        - name: postgres-init-scripts
+          configMap:
+            name: {{ template "name" . }}-postgres
 {{- end }}

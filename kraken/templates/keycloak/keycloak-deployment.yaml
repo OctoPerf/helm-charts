@@ -37,7 +37,7 @@ spec:
             - name: DB_ADDR
               value: {{ template "name" . }}-postgres
             - name: DB_DATABASE
-              value: {{ .Values.postgres.admin.database }}
+              value: {{ .Values.postgres.admin.databaseKeycloak }}
             - name: DB_USER
               value: {{ .Values.postgres.admin.username }}
             - name: DB_SCHEMA

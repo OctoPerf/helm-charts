@@ -234,7 +234,8 @@ postgres:
   service:
     port: 5432
   admin:
-    database: keycloak
+    databaseKeycloak: keycloak
+    databaseGrafana: grafana
     username: *default_admin_username
     password: *default_admin_password
   persistence:
