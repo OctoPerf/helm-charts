@@ -1,0 +1,20 @@
+{{- if .Values.postgres.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-postgres
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  create-grafana-db.sh: |-
+    #!/bin/bash
+    set -e
+
+    psql -v ON_ERROR_STOP=1 --username "{{ .Values.postgres.admin.username }}" --dbname "{{ .Values.postgres.admin.databaseKeycloak }}" <<-EOSQL
+        CREATE DATABASE {{ .Values.postgres.admin.databaseGrafana }};
+        GRANT ALL PRIVILEGES ON DATABASE {{ .Values.postgres.admin.databaseGrafana }} TO {{ .Values.postgres.admin.username }};
+    EOSQL
+{{- end }}
