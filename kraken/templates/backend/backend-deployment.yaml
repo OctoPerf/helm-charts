@@ -101,7 +101,7 @@ spec:
       volumes:
         - name: backend-data
           persistentVolumeClaim:
-            claimName: backend-data
+            claimName: {{ .Values.backend.persistence.existingClaim | default "backend-data" | quote }}
 {{- if .Values.backend.licenseFile }}
         - name: license-jwt
           configMap:
