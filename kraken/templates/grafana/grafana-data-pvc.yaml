@@ -1,8 +1,8 @@
-{{- if .Values.grafana.enabled -}}
+{{- if and .Values.grafana.enabled (not .Values.grafana.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "name" . }}-grafana-data
+  name: grafana-data
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"

@@ -49,5 +49,5 @@ spec:
             secretName: {{ template "name" . }}-grafana
         - name: grafana-data
           persistentVolumeClaim:
-            claimName: {{ template "name" . }}-grafana-data
+            claimName: {{ .Values.grafana.persistence.existingClaim | default "grafana-data" | quote }}
 {{- end}}

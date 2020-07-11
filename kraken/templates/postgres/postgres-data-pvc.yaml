@@ -1,8 +1,8 @@
-{{- if .Values.postgres.enabled -}}
+{{- if and .Values.postgres.enabled (not .Values.postgres.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "name" . }}-postgres-data
+  name: postgres-data
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"

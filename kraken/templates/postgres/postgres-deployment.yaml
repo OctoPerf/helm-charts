@@ -44,7 +44,7 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: {{ template "name" . }}-postgres-data
+            claimName: {{ .Values.postgres.persistence.existingClaim | default "postgres-data" | quote }}
         - name: postgres-init-scripts
           configMap:
             name: {{ template "name" . }}-postgres

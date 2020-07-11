@@ -49,5 +49,5 @@ spec:
             secretName: {{ template "name" . }}-influxdb
         - name: influxdb-data
           persistentVolumeClaim:
-            claimName: {{ template "name" . }}-influxdb-data
+            claimName: {{ .Values.influxdb.persistence.existingClaim | default "influxdb-data" | quote }}
 {{- end }}
