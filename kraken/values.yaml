@@ -19,32 +19,43 @@ default:
 
 # nameOverride: kraken
 
+### RBAC CONFIGURATION ###
+
+# https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 rbac:
+  # Create RBAC roles and role bindings
   create: true
 
-admin:
-  username: *default_admin_username
-  password: *default_admin_password
+### INGRESS CONFIGURATION ###
 
 host:
   name: ""
   ip: ""
-
+# https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
+  # Create Ingress rules for enabled services
   enabled: true
+  # Default Ingress annotations, here for ingress-nginx
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 
+### BACKEND CONFIGURATION ###
+
 backend:
+  # Backend image configuration
   image:
     repository: octoperf/kraken-ee-kubernetes-all
     tag: *default_tag
-    pullPolicy: IfNotPresent
+    pullPolicy: *default_pull_policy
+  # Spring boot port
   port: 8080
+  # Service configuration
   service:
+    # Exposed port
     port: 80
+  # Backend Ingress configuration, redirects calls from /api/** to /**
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -53,38 +64,48 @@ backend:
   # License file content
   #  licenseFile: |
   #    # kraken community 2.0.0 community License (id: 1574693532324)
-  #    8445f5f44c7f964b642a2a0368575854024639480c355888492744416ed0
-  #    ....
-  #    9d715369689d53150569
+  #    eyJraWQiOiJrcmFrZW4iLCJhb..zacBZd8ohVArx4g1bYFmou7AEDqO6z9PSgPGkdJIiyFgU67Zbg
+  # Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
     storageClassName: *default_storage_class_name
+    # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
+    # existingClaim: backend-data
   k8s:
-    # The runtime server will set the label "com.kraken/hostId=kraken-n" on every available worker node, marking them as usable to run tasks
+    # The backend server will set the label "com.octoperf/hostId=kraken-n" on every available worker node, marking them as usable to run tasks
     patchHosts: true
   ## Allows the specification of additional environment variables
   extraEnv:
 #    - name: "KEY"
 #      value: "value"
+
+### FRONTEND CONFIGURATION ###
+
 frontend:
   administration:
+    # Administration frontend image configuration
     image:
       repository: octoperf/kraken-administration-ui
       tag: *default_tag
-      pullPolicy: IfNotPresent
+      pullPolicy: *default_pull_policy
+    # NGinx port
     port: 80
+    # Service configuration
     service:
+      # Exposed port
       port: 80
+    # Administration frontend Ingress configuration, redirects calls from /administration/** to /**
     ingress:
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /$2
       path: /administration(/|$)(.*)
+    # Administration frontend Angular configuration
     config:
       config-prod.json: |-
         {
-          "version": "administration-1",
+          "version": "administration-3",
           "applicationId": "administration",
           "backendApiUrl": "/api",
           "docUrl": "/doc",
@@ -104,21 +125,27 @@ frontend:
         }
 
   gatling:
+    # Gatling frontend image configuration
     image:
       repository: octoperf/kraken-gatling-ui
       tag: *default_tag
-      pullPolicy: IfNotPresent
+      pullPolicy: *default_pull_policy
+    # NGinx port
     port: 80
+    # Service configuration
     service:
+      # Exposed port
       port: 80
+    # Gatling frontend Ingress configuration, redirects calls from /gatling/** to /**
     ingress:
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /$2
       path: /gatling(/|$)(.*)
+    # Gatling frontend Angular configuration
     config:
       config-prod.json: |-
         {
-          "version": "gatling-1",
+          "version": "gatling-3",
           "applicationId": "gatling",
           "backendApiUrl": "/api",
           "readmeNode": {
@@ -158,119 +185,180 @@ frontend:
           "expectedRoles": ["USER"]
         }
 
+### DOCUMENTATION CONFIGURATION ###
+
 documentation:
+  # Documentation image configuration
   image:
     repository: octoperf/kraken-documentation
     tag: *default_tag
-    pullPolicy: IfNotPresent
+    pullPolicy: *default_pull_policy
+  # NGinx port
   port: 80
+  # Service configuration
   service:
+    # Exposed port
     port: 80
+  # Documentation Ingress configuration, redirects calls from /doc/** to /**
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /doc(/|$)(.*)
 
+### GRAFANA CONFIGURATION ###
+
+# Grafana display load tests results
 grafana:
+  # Enables the Grafana stack (Pod, Service, Ingress, etc.) You can disable it if you want to use an existing Grafana server.
   enabled: true
+  # Grafana image configuration
   image:
     repository: grafana/grafana
     tag: 6.7.1
     pullPolicy: *default_pull_policy
+  # Grafana server port
   port: 3000
+  # Service configuration
   service:
+    # Exposed port
     port: 80
+  # Default Administrator user login and password (also used by the backend to create/update/delete users, organizations and dashboards)
   admin:
     username: *default_admin_username
     password: *default_admin_password
+  # Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
     storageClassName: *default_storage_class_name
+    # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
+    # existingClaim: grafana-data
+  # Ingress configuration, redirects /grafana/** to /**
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /grafana(/|$)(.*)
+  # Plugins configuration, these plugins are used by the default Gatling dashboard
   plugins: grafana-piechart-panel, blackmirror1-singlestat-math-panel
   ## Allows the specification of additional environment variables
   extraEnv:
 #    - name: "KEY"
 #      value: "value"
 
+### INFLUXDB CONFIGURATION ###
+
+# Influxdb stores load tests performance metrics
 influxdb:
+  # Enables the Grafana stack (Pod, Service, Ingress, etc.) You can disable it if you want to use an existing Influxdb server.
   enabled: true
   image:
     repository: influxdb
     tag: 1.7.4
     pullPolicy: *default_pull_policy
+  # Influxdb server port
   port: 8086
+  # Service configuration
   service:
+    # Exposed port
     port: 8086
+  # Influxdb administration credentials (also used by the backend to create/delete databases and users)
   admin:
     username: *default_admin_username
     password: *default_admin_password
+  # Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
     storageClassName: *default_storage_class_name
+    # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
+    # existingClaim: influxdb-data
+  # Ingress configuration, redirects /influxdb/** to /**
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /influxdb(/|$)(.*)
-  ## Allows the specification of additional environment variables
+  # Allows the specification of additional environment variables
   extraEnv:
 #    - name: "KEY"
 #      value: "value"
 
+### POSTGRES CONFIGURATION ###
+
+# The postgres database is used by Grafana and Keycloak to store their data
 postgres:
+  # Enables the Postgres stack (Pod, Service etc.) You can disable it if you want to use an existing Postgres server.
   enabled: true
+  # Postgres Image configuration
   image:
     repository: postgres
     tag: 12.2
     pullPolicy: *default_pull_policy
+  # Postgres server port
   port: 5432
+  # Service configuration
   service:
+    # Exposed port
     port: 5432
+  # Postgres administration configuration
   admin:
+    # Keycloak database name
     databaseKeycloak: keycloak
+    # Grafana database name
     databaseGrafana: grafana
+    # Credentials to access both databases
     username: *default_admin_username
     password: *default_admin_password
+  # Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
     storageClassName: *default_storage_class_name
-  ## Allows the specification of additional environment variables
+    # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
+    # existingClaim: postgres-data
+  # Allows the specification of additional environment variables
   extraEnv:
 #    - name: "KEY"
 #      value: "value"
 
+### KEYCLOAK CONFIGURATION ###
+
+# Keycloak is used to manage users connecting to Kraken
 keycloak:
+  # Enables the Postgres stack (Pod, Service etc.) You can disable it if you want to use an existing Keycloak server.
   enabled: true
+  # Keycloak image configuration
   image:
     repository: octoperf/kraken-keycloak
     tag: *default_tag
     pullPolicy: *default_pull_policy
-  port: 9080 #Do not change without updating the command in keycloak-deployment.yaml
+  # Keycloak port /!\ Do not change without updating the command in keycloak-deployment.yaml /!\
+  port: 9080
+  # Service configuration
   service:
+    # Exposed port
     port: 80
+  # Keycloak default administrator credentials
   admin:
     username: *default_admin_username
     password: *default_admin_password
+  # Keycloak Ingress configuration: matches all requests starting with /auth (no need to redirect to /** as the Keycloak server already answers at the /auth path out of the box)
   ingress:
     path: /auth
-  ## Allows the specification of additional environment variables
+  # Allows the specification of additional environment variables
   extraEnv:
   #    - name: "KEY"
   #      value: "value"
+  # Keycloak Kraken realm configuration
   config:
+    # Google recaptcha configuration (used to prevent bots from registering accounts). You may replace the key/secret pair with your own (https://www.google.com/recaptcha)
     recaptcha:
       enabled: false
       key: 6LcPAvkUAAAAAIBM3Ei6mS74W1BUyG4aNFUSpswC
       secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
+    # SMTP configuration
     mail:
       enabled: false
     #      password: pwd
@@ -283,6 +371,8 @@ keycloak:
     #      fromDisplayName: Kraken
     #      ssl: null
     #      user: test@mail.com
+
+    # OAuth clients configurations. Also used by the backend to connect to Keycloak in order to manage users.
     client:
       web:
         secret: ed5974bb-e711-4b8b-9315-6ad315361f32
