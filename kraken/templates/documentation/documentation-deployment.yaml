@@ -18,6 +18,10 @@ spec:
       labels:
         app: {{ template "name" . }}-documentation
     spec:
+{{- with .Values.documentation.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.documentation.image.repository }}:{{ .Values.documentation.image.tag }}"
           imagePullPolicy: {{ .Values.documentation.image.pullPolicy }}

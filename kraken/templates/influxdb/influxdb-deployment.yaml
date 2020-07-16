@@ -19,6 +19,10 @@ spec:
       labels:
         app: {{ template "name" . }}-influxdb
     spec:
+{{- with .Values.influxdb.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
           imagePullPolicy: {{ .Values.influxdb.image.pullPolicy }}

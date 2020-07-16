@@ -19,6 +19,10 @@ spec:
       labels:
         app: {{ template "name" . }}-postgres
     spec:
+{{- with .Values.postgres.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
           - image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
             imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}

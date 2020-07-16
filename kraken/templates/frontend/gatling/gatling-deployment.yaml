@@ -18,6 +18,10 @@ spec:
       labels:
         app: {{ template "name" . }}-gatling-ui
     spec:
+{{- with .Values.frontend.gatling.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.frontend.gatling.image.repository }}:{{ .Values.frontend.gatling.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.gatling.image.pullPolicy }}

@@ -18,6 +18,10 @@ spec:
       labels:
         app: {{ template "name" . }}-administration-ui
     spec:
+{{- with .Values.frontend.administration.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.frontend.administration.image.repository }}:{{ .Values.frontend.administration.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.administration.image.pullPolicy }}

@@ -21,6 +21,10 @@ spec:
 {{- if .Values.rbac.create }}
       serviceAccountName: {{ template "name" . }}-backend
 {{- end }}
+{{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}

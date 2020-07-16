@@ -55,6 +55,9 @@ backend:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Backend Ingress configuration, redirects calls from /api/** to /**
   ingress:
     annotations:
@@ -96,6 +99,9 @@ frontend:
     service:
       # Exposed port
       port: 80
+    # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    #  nodeSelector:
+    #    kubernetes.io/hostname: kraken-1
     # Administration frontend Ingress configuration, redirects calls from /administration/** to /**
     ingress:
       annotations:
@@ -136,6 +142,9 @@ frontend:
     service:
       # Exposed port
       port: 80
+    # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    #  nodeSelector:
+    #    kubernetes.io/hostname: kraken-1
     # Gatling frontend Ingress configuration, redirects calls from /gatling/** to /**
     ingress:
       annotations:
@@ -199,6 +208,9 @@ documentation:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Documentation Ingress configuration, redirects calls from /doc/** to /**
   ingress:
     annotations:
@@ -222,6 +234,9 @@ grafana:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Default Administrator user login and password (also used by the backend to create/update/delete users, organizations and dashboards)
   admin:
     username: *default_admin_username
@@ -262,6 +277,9 @@ influxdb:
   service:
     # Exposed port
     port: 8086
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Influxdb administration credentials (also used by the backend to create/delete databases and users)
   admin:
     username: *default_admin_username
@@ -301,6 +319,9 @@ postgres:
   service:
     # Exposed port
     port: 5432
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Postgres administration configuration
   admin:
     # Keycloak database name
@@ -340,6 +361,9 @@ keycloak:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # Keycloak default administrator credentials
   admin:
     username: *default_admin_username

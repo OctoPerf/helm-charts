@@ -19,6 +19,10 @@ spec:
       labels:
         app: {{ template "name" . }}-grafana
     spec:
+{{- with .Values.grafana.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - image: "{{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}"
           imagePullPolicy: {{ .Values.grafana.image.pullPolicy }}
