@@ -14,7 +14,7 @@ data:
     set -e
 
     psql -v ON_ERROR_STOP=1 --username "{{ .Values.postgres.admin.username }}" --dbname "{{ .Values.postgres.admin.databaseKeycloak }}" <<-EOSQL
-        CREATE DATABASE {{ .Values.postgres.admin.databaseGrafana }};
-        GRANT ALL PRIVILEGES ON DATABASE {{ .Values.postgres.admin.databaseGrafana }} TO {{ .Values.postgres.admin.username }};
+        CREATE DATABASE "{{ .Values.postgres.admin.databaseGrafana }}";
+        GRANT ALL PRIVILEGES ON DATABASE "{{ .Values.postgres.admin.databaseGrafana }}" TO "{{ .Values.postgres.admin.username }}";
     EOSQL
 {{- end }}
