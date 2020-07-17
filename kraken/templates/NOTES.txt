@@ -11,7 +11,7 @@ An ingress controller is required to use Kraken on K8S: https://kubernetes.io/do
 
 Applications are available at:
 
-- Gatling: http://{{ .Values.host.name }}/gatling/
-- Administration: http://{{ .Values.host.name }}/administration/
-- User Management (KeyCloak): http://{{ .Values.host.name }}/auth/
-- Documentation: http://{{ .Values.host.name }}/doc/
+- Gatling: {{ .Values.host.scheme }}://{{ .Values.host.name }}/gatling/
+- Administration: {{ .Values.host.scheme }}://{{ .Values.host.name }}/administration/
+- User Management (KeyCloak): {{ .Values.host.scheme }}://{{ .Values.host.name }}/auth/
+- Documentation: {{ .Values.host.scheme }}://{{ .Values.host.name }}/doc/

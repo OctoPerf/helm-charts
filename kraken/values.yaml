@@ -29,6 +29,7 @@ rbac:
 host:
   name: ""
   ip: ""
+  scheme: "http"
 # https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   # Create Ingress rules for enabled services
