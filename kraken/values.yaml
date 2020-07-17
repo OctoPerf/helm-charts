@@ -13,9 +13,7 @@ default:
   ## If undefined (the default) or set to null, no storageClassName spec is
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
-  # storageClass: "-"
   - &default_storage_class null
-  - &default_storage_class_name null
 
 # nameOverride: kraken
 
@@ -73,7 +71,6 @@ backend:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
-    storageClassName: *default_storage_class_name
     # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
     # existingClaim: backend-data
   k8s:
@@ -246,7 +243,6 @@ grafana:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
-    storageClassName: *default_storage_class_name
     # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
     # existingClaim: grafana-data
   # Ingress configuration, redirects /grafana/** to /**
@@ -289,7 +285,6 @@ influxdb:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
-    storageClassName: *default_storage_class_name
     # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
     # existingClaim: influxdb-data
   # Ingress configuration, redirects /influxdb/** to /**
@@ -336,7 +331,6 @@ postgres:
     accessMode: ReadWriteOnce
     size: 8Gi
     storageClass: *default_storage_class
-    storageClassName: *default_storage_class_name
     # Use an existing PVC instead of creating one (can be used when upgrading Kraken to a newer version)
     # existingClaim: postgres-data
   # Allows the specification of additional environment variables
