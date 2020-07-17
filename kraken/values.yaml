@@ -225,9 +225,7 @@ documentation:
   #    kubernetes.io/hostname: kraken-1
   # Documentation Ingress configuration, redirects calls from /doc/** to /**
   ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
-    path: /doc(/|$)(.*)
+    path: /doc
 # HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
 #    tls:
 #      - hosts:
