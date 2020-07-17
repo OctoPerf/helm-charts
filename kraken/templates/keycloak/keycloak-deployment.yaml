@@ -35,6 +35,7 @@ spec:
             - "-Djboss.socket.binding.port-offset=1000"
             - "-Dkeycloak.profile=preview"
             - "-Dkeycloak.import=/opt/jboss/keycloak/imports/kraken-realm.json"
+            - "-Dkeycloak.frontendUrl={{ .Values.host.scheme }}://{{ .Values.host.name }}/auth"
           env:
             - name: DB_VENDOR
               value: "POSTGRES"
