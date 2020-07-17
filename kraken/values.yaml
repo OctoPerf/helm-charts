@@ -54,19 +54,24 @@ backend:
     # Exposed port
     port: 80
   # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-  #  nodeSelector:
-  #    kubernetes.io/hostname: kraken-1
+#  nodeSelector:
+#    kubernetes.io/hostname: kraken-1
   # Backend Ingress configuration, redirects calls from /api/** to /**
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
       nginx.ingress.kubernetes.io/proxy-body-size: "200m"
     path: /api(/|$)(.*)
-  # License file content
-  #  licenseFile: |
-  #    # kraken community 2.0.0 community License (id: 1574693532324)
-  #    eyJraWQiOiJrcmFrZW4iLCJhb..zacBZd8ohVArx4g1bYFmou7AEDqO6z9PSgPGkdJIiyFgU67Zbg
-  # Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#    tls:
+#      - hosts:
+#          - example.example.com
+#        secretName: quickstart-example-tls
+# License file content
+#  licenseFile: |
+#    # kraken community 2.0.0 community License (id: 1574693532324)
+#    eyJraWQiOiJrcmFrZW4iLCJhb..zacBZd8ohVArx4g1bYFmou7AEDqO6z9PSgPGkdJIiyFgU67Zbg
+# Persistence configuration (@see the top of this file for details regarding the storageClass and storageClassName values)
   persistence:
     accessMode: ReadWriteOnce
     size: 8Gi
@@ -104,6 +109,11 @@ frontend:
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /$2
       path: /administration(/|$)(.*)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#      tls:
+#        - hosts:
+#            - example.example.com
+#          secretName: quickstart-example-tls
     # Administration frontend Angular configuration
     config:
       config-prod.json: |-
@@ -147,6 +157,11 @@ frontend:
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /$2
       path: /gatling(/|$)(.*)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#      tls:
+#        - hosts:
+#            - example.example.com
+#          secretName: quickstart-example-tls
     # Gatling frontend Angular configuration
     config:
       config-prod.json: |-
@@ -213,6 +228,11 @@ documentation:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /doc(/|$)(.*)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#    tls:
+#      - hosts:
+#          - example.example.com
+#        secretName: quickstart-example-tls
 
 ### GRAFANA CONFIGURATION ###
 
@@ -250,6 +270,11 @@ grafana:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /grafana(/|$)(.*)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#    tls:
+#      - hosts:
+#          - example.example.com
+#        secretName: quickstart-example-tls
   # Plugins configuration, these plugins are used by the default Gatling dashboard
   plugins: grafana-piechart-panel, blackmirror1-singlestat-math-panel
   ## Allows the specification of additional environment variables
@@ -292,6 +317,11 @@ influxdb:
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /influxdb(/|$)(.*)
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#    tls:
+#      - hosts:
+#          - example.example.com
+#        secretName: quickstart-example-tls
   # Allows the specification of additional environment variables
   extraEnv:
 #    - name: "KEY"
@@ -365,6 +395,11 @@ keycloak:
   # Keycloak Ingress configuration: matches all requests starting with /auth (no need to redirect to /** as the Keycloak server already answers at the /auth path out of the box)
   ingress:
     path: /auth
+# HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+#    tls:
+#      - hosts:
+#          - example.example.com
+#        secretName: quickstart-example-tls
   # Allows the specification of additional environment variables
   extraEnv:
   #    - name: "KEY"

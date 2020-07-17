@@ -16,6 +16,10 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+{{- with .Values.frontend.administration.ingress.tls }}
+  tls:
+{{ toYaml . | indent 4 }}
+{{- end }}
   rules:
     - http:
         paths:

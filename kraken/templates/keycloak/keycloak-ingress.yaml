@@ -17,6 +17,10 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+{{- with .Values.keycloak.ingress.tls }}
+  tls:
+{{ toYaml . | indent 4 }}
+{{- end }}
   rules:
     - http:
         paths:
