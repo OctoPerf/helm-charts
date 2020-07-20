@@ -19,9 +19,13 @@ spec:
       labels:
         app: {{ template "name" . }}-influxdb
     spec:
-{{- with .Values.influxdb.nodeSelector }}
+{{- if .Values.influxdb.affinity }}
+      affinity:
+{{ toYaml .Values.influxdb.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.influxdb.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.influxdb.nodeSelector | indent 8 }}
 {{- end }}
       containers:
         - image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"

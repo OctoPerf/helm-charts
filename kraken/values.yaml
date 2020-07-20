@@ -54,15 +54,19 @@ backend:
   service:
     # Exposed port
     port: 80
+# Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+#  nodeSelector:
+#    kubernetes.io/hostname: kraken-1
 # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Backend Ingress configuration, redirects calls from /api/** to /**
   ingress:
     annotations:
@@ -108,15 +112,19 @@ frontend:
     service:
       # Exposed port
       port: 80
+    # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    #  nodeSelector:
+    #    kubernetes.io/hostname: kraken-1
     # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
     affinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: *default_affinity_key
-                operator: In
-                values:
-                  - *default_affinity_value
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: *default_affinity_key
+                  operator: In
+                  values:
+                    - *default_affinity_value
     # Administration frontend Ingress configuration, redirects calls from /administration/** to /**
     ingress:
       annotations:
@@ -162,15 +170,19 @@ frontend:
     service:
       # Exposed port
       port: 80
+    # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    #  nodeSelector:
+    #    kubernetes.io/hostname: kraken-1
     # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
     affinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: *default_affinity_key
-                operator: In
-                values:
-                  - *default_affinity_value
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: *default_affinity_key
+                  operator: In
+                  values:
+                    - *default_affinity_value
     # Gatling frontend Ingress configuration, redirects calls from /gatling/** to /**
     ingress:
       annotations:
@@ -239,15 +251,19 @@ documentation:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Documentation Ingress configuration, redirects calls from /doc/** to /**
   ingress:
     path: /doc
@@ -274,15 +290,19 @@ grafana:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Default Administrator user login and password (also used by the backend to create/update/delete users, organizations and dashboards)
   admin:
     username: *default_admin_username
@@ -327,15 +347,19 @@ influxdb:
   service:
     # Exposed port
     port: 8086
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Influxdb administration credentials (also used by the backend to create/delete databases and users)
   admin:
     username: *default_admin_username
@@ -379,15 +403,19 @@ postgres:
   service:
     # Exposed port
     port: 5432
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Postgres administration configuration
   admin:
     # Keycloak database name
@@ -426,15 +454,19 @@ keycloak:
   service:
     # Exposed port
     port: 80
+  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  #  nodeSelector:
+  #    kubernetes.io/hostname: kraken-1
   # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
   affinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: *default_affinity_key
-              operator: In
-              values:
-                - *default_affinity_value
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: *default_affinity_key
+                operator: In
+                values:
+                  - *default_affinity_value
   # Keycloak default administrator credentials
   admin:
     username: *default_admin_username

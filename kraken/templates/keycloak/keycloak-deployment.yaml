@@ -19,9 +19,13 @@ spec:
       labels:
         app: {{ template "name" . }}-keycloak
     spec:
-{{- with .Values.keycloak.nodeSelector }}
+{{- if .Values.keycloak.affinity }}
+      affinity:
+{{ toYaml .Values.keycloak.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.keycloak.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.keycloak.nodeSelector | indent 8 }}
 {{- end }}
       containers:
         - image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag }}"

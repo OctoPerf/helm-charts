@@ -18,9 +18,13 @@ spec:
       labels:
         app: {{ template "name" . }}-administration-ui
     spec:
-{{- with .Values.frontend.administration.nodeSelector }}
+{{- if .Values.frontend.administration.affinity }}
+      affinity:
+{{ toYaml .Values.frontend.administration.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.frontend.administration.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.frontend.administration.nodeSelector | indent 8 }}
 {{- end }}
       containers:
         - image: "{{ .Values.frontend.administration.image.repository }}:{{ .Values.frontend.administration.image.tag }}"

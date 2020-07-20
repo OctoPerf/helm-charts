@@ -19,9 +19,13 @@ spec:
       labels:
         app: {{ template "name" . }}-postgres
     spec:
-{{- with .Values.postgres.nodeSelector }}
+{{- if .Values.postgres.affinity }}
+      affinity:
+{{ toYaml .Values.postgres.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.postgres.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.postgres.nodeSelector | indent 8 }}
 {{- end }}
       containers:
           - image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"

@@ -18,9 +18,13 @@ spec:
       labels:
         app: {{ template "name" . }}-documentation
     spec:
-{{- with .Values.documentation.nodeSelector }}
+{{- if .Values.documentation.affinity }}
+      affinity:
+{{ toYaml .Values.documentation.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.documentation.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.documentation.nodeSelector | indent 8 }}
 {{- end }}
       containers:
         - image: "{{ .Values.documentation.image.repository }}:{{ .Values.documentation.image.tag }}"
