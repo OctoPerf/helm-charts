@@ -58,7 +58,7 @@ spec:
             - name: KRAKEN_SECURITY_URL
               value: "{{ .Values.host.scheme }}://{{ .Values.host.name }}/auth"
             - name: KRAKEN_URLS
-              value: "{{ .Values.host.scheme }}://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}/user-events"
+              value: "http://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}/user-events"
             - name: KRAKEN_SECURITY_API_ID
               value: "kraken-api"
             - name: KRAKEN_SECURITY_API_SECRET

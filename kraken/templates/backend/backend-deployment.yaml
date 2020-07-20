@@ -51,7 +51,7 @@ spec:
             - name: KRAKEN_SECURITY_API_SECRET
               value: "{{ .Values.keycloak.config.client.api.secret }}"
             - name: KRAKEN_GRAFANA_URL
-              value: "{{ .Values.host.scheme }}://{{ template "name" . }}-grafana:{{ .Values.grafana.service.port }}"
+              value: "http://{{ template "name" . }}-grafana:{{ .Values.grafana.service.port }}"
             - name: KRAKEN_GRAFANA_PUBLISHED_URL
               value: "{{ .Values.host.scheme }}://{{ .Values.host.name }}/grafana"
             - name: KRAKEN_GRAFANA_USER
@@ -59,9 +59,9 @@ spec:
             - name: KRAKEN_GRAFANA_PASSWORD
               value: "{{ .Values.grafana.admin.password }}"
             - name: KRAKEN_INFLUXDB_URL
-              value: "{{ .Values.host.scheme }}://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
+              value: "http://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
             - name: KRAKEN_INFLUXDB_PUBLISHED_URL
-              value: "{{ .Values.host.scheme }}://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
+              value: "http://{{ template "name" . }}-influxdb:{{ .Values.influxdb.service.port }}"
             - name: KRAKEN_INFLUXDB_USER
               value: "{{ .Values.influxdb.admin.username }}"
             - name: KRAKEN_INFLUXDB_PASSWORD
