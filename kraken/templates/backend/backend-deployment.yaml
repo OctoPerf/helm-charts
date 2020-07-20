@@ -43,7 +43,7 @@ spec:
             - name: KRAKEN_VERSION
               value: "{{ .Values.backend.image.tag }}"
             - name: KRAKEN_BACKEND_URL
-              value: "{{ .Values.host.scheme }}://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}"
+              value: "http://{{ template "name" . }}-backend:{{ .Values.backend.service.port }}"
             - name: KRAKEN_SECURITY_URL
               value: "{{ .Values.host.scheme }}://{{ .Values.host.name }}/auth"
             - name: KRAKEN_SECURITY_CONTAINER_SECRET
@@ -88,7 +88,7 @@ spec:
 {{- end }}
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 20
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 5
             httpGet:
@@ -96,7 +96,7 @@ spec:
               port: {{ .Values.backend.port }}
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 90
             periodSeconds: 10
             timeoutSeconds: 5
             httpGet:
