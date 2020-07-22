@@ -12,7 +12,7 @@ This chart launches the whole **Kraken** stack inside your Kubernetes Cluster. I
 - **KeyCloak**: the identity and access management solution that handles Kraken users,
 - **Postgres**: the database used by both Grafana and KeyCloak.
 
-For a more comprehensive understanding, see [the Kraken repository](https://github.com/OctoPerf/kraken#run-the-application-from-the-source-code).
+For more information, see [the Kraken repository](https://github.com/OctoPerf/kraken#run-the-application-from-the-source-code).
 
 ## Installation
 
@@ -32,7 +32,11 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 
 ### Post Installation Steps
 
-TODO update kraken-admin pwd
+The Kraken administrator account has a default password and email. After installing the Kraken Helm chart:
+
+* Connect to the administration application (http://your-cluster-hostname/administration) as `kraken-admin`/`kraken`,
+* Access your account from the upper rihgt menu > _My Account_,
+* Update the email address and password.
 
 ## Versions
 
