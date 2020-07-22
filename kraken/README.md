@@ -48,6 +48,10 @@ TODO update kraken-admin pwd
 
 The default [configuration file](https://github.com/OctoPerf/helm-charts/blob/master/kraken/values.yaml) is commented. Check it out to see what configuration can be overridden.  
 
+### Node Affinity
+
+TODO
+
 ### Persistence Configuration
 
 TODO
