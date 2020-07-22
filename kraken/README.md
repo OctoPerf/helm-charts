@@ -30,6 +30,10 @@ helm install --namespace octoperf --name kraken octoperf/kraken --version 1.0.0
 
 Please refer to [Kraken's documentation for a complete installation guide](http://kraken.octoperf.com/install/kubernetes/).
 
+### Post Installation Steps
+
+TODO update kraken-admin pwd
+
 ## Versions
 
 | Helm Chart Version | Kraken Version |
@@ -44,3 +48,26 @@ Please refer to [Kraken's documentation for a complete installation guide](http:
 
 The default [configuration file](https://github.com/OctoPerf/helm-charts/blob/master/kraken/values.yaml) is commented. Check it out to see what configuration can be overridden.  
 
+### Persistence Configuration
+
+TODO
+
+### Ingress Configuration
+
+TODO
+
+### Keycloak Configuration
+
+TODO
+
+#### Client IDs and Secrets
+
+TODO
+
+#### SMTP Settings
+
+TODO
+
+#### Google Recaptcha
+
+TODO
