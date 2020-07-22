@@ -50,7 +50,25 @@ The default [configuration file](https://github.com/OctoPerf/helm-charts/blob/ma
 
 ### License Setup
 
-TODO
+Contact [sales@octoperf.com](mailto:sales@octoperf.com) to get a multi-hosts license for Kraken Kubernetes.
+
+```yaml
+backend:
+  licenseFile: |
+    eyJraWQiOiJrcm.yourLicenseKeyHere.IiyFgU67Zbg
+``` 
+
+You can display logs for the Kraken backend container to check for the license capacity:
+
+```sh
+> kubectl logs kraken-backend-94c44fc48-ccr8x -n octoperf
+HOME=/home/kraken
+JAVA_OPTS=-Xmx256m
+[...]
+2020-01-23 18:11:42.423  INFO 8 --- [           main] com.kraken.u                             : Your license allows you to run tasks on 10 host(s)
+[...]
+2020-01-23 18:11:43.574  INFO 8 --- [           main] com.kraken.Application                   : Started Application in 5.137 seconds (JVM running for 5.675)
+```
 
 ### Node Affinity
 
