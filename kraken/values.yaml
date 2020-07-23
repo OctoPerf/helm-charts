@@ -488,8 +488,8 @@ keycloak:
     # Google recaptcha configuration (used to prevent bots from registering accounts). You may replace the key/secret pair with your own (https://www.google.com/recaptcha)
     recaptcha:
       enabled: false
-      key: 6LcPAvkUAAAAAIBM3Ei6mS74W1BUyG4aNFUSpswC
-      secret: 6LcPAvkUAAAAABONZ8ztd8K9RIDA26j21EUNMn8o
+      key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # SMTP configuration
     mail:
       enabled: false
@@ -507,8 +507,8 @@ keycloak:
     # OAuth clients configurations. Also used by the backend to connect to Keycloak in order to manage users.
     client:
       web:
-        secret: ed5974bb-e711-4b8b-9315-6ad315361f32
+        secret: ed5974bb-e711-4b8b-9315-xxxxxxxxxxxx
       api:
-        secret: c1ab32c0-0ba7-4289-b6c9-0ea1aa5ad1d4
+        secret: c1ab32c0-0ba7-4289-b6c9-xxxxxxxxxxxx
       container:
-        secret: 6caa811c-5a41-4a53-aa5d-51c575330146
+        secret: 6caa811c-5a41-4a53-aa5d-xxxxxxxxxxxx

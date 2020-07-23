@@ -74,30 +74,220 @@ JAVA_OPTS=-Xmx256m
 2020-01-23 18:11:43.574  INFO 8 --- [           main] com.kraken.Application                   : Started Application in 5.137 seconds (JVM running for 5.675)
 ```
 
+### Node Tags
+
+All nodes with the label `com.octoperf/hostId=some-id` are usable to start pods to execute tasks.
+As load tests can put a strain on the server hosting the injectors, you may want to avoid using all the nodes of your cluster as injectors (especially the ones hosting the Kraken servers). 
+
+By default, the Kraken backend tags all nodes of the cluster on startup. You can disable this behavior by setting the following configuration:
+
+```yaml
+backend:
+  k8s:
+    patchHosts: false
+```
+
 ### Node Affinity
 
-TODO
+Kraken is not HA ready [yet](https://github.com/OctoPerf/kraken/issues/92).
+
+The backend server can currently only on be deployed on a single node. By default, the node must have the label `com.octoperf/node-name=kraken-1`.
+
+You can either:
+ 
+* Attach a label to a node with the command `kubectl label nodes <node-name> <label-key>=<label-value>`,
+* Update the Kraken helm chart configuration to set a different [node affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity):
+
+```yaml
+backend:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - my-node
+```
+
+This configuration can be applied to:
+
+* `backend`,
+* `frontend.administration`,
+* `frontend.gatling`,
+* `documentation`,
+* `grafana`,
+* `influxdb`,
+* `postgres`,
+* `keycloak`.
 
 ### Persistence Configuration
 
-TODO
+The persistence configuration allows you to set:
+
+* The [access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes),
+* The allocated size,
+* The [storage class](https://kubernetes.io/docs/concepts/storage/storage-classes/) (Here using [Rancher local path provisioner](https://github.com/rancher/local-path-provisioner)).
+
+```yaml
+backend:
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    storageClass: lcoal-path
+    # existingClaim: backend-data
+```
+
+You can also tell the chart to use an existing persistent volume claim (`existingClaim: backend-data`). 
+All other settings are ignored in this case.
+
+This configuration can be applied to:
+
+* `backend`,
+* `grafana`,
+* `influxdb`,
+* `postgres`.
 
 ### Ingress Configuration
 
-TODO
+The global host configuration allows you to specify the hostname opf your kubernetes cluster:
+
+```yaml
+host:
+  name: mydomain.com
+```
+
+The global [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) configuration allows you to:
+
+* Completely disable all Ingress rules (`enabled: false`),
+* Set global annotations.
+
+Here is the default configuration:
+
+```yaml
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "12h"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+```
+
+You can also configure annotations for specific containers:
+
+* `backend`,
+* `frontend.administration`,
+* `frontend.gatling`,
+* `documentation`,
+* `grafana`,
+* `influxdb`,
+* `keycloak`.
+
+For example, set the following configuration to redirect `/` to `/doc`:
+
+```yaml
+documentation:
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/server-snippet: |
+        location = / {
+           return 301 https://kraken.octoperf.com/doc/;
+        }
+```
+
+#### HTTPS
+
+To configure Kraken to use HTTPS, start by setting the following configurations:
+
+```yaml
+host:
+  scheme: https
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect:	"true"
+```
+
+These will set the URLs to `https://` and redirect all calls made to `http://` to HTTPS.
+
+Then, specific Ingress configuration must be made for each container open to the outside world:
+
+* `backend`,
+* `frontend.administration`,
+* `frontend.gatling`,
+* `documentation`,
+* `grafana`,
+* `keycloak`.
+
+For example with the backend container, assuming your cluster is accessible at _mydomain.com_ and you have [configured an SSL certificate issuer](https://cert-manager.io/docs/tutorials/acme/ingress/) named _letsencrypt-prod_:
+
+```yaml
+backend:
+  ingress:
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+          - mydomain.com
+        secretName: kraken-backend-tls
+```
+
+Note that the `secretName` must be unique to each service. The cert manager will create a secret containing the SSL certificate for each container.
 
 ### Keycloak Configuration
 
-TODO
-
 #### Client IDs and Secrets
 
-TODO
+The first you may want to configure with KeyCloak is the OAuth client secrets:
+
+```yaml
+keycloak:
+    client:
+      web:
+        secret: ed5974bb-e711-4b8b-9315-xxxxxxxxxxxx
+      api:
+        secret: c1ab32c0-0ba7-4289-b6c9-xxxxxxxxxxxx
+      container:
+        secret: 6caa811c-5a41-4a53-aa5d-xxxxxxxxxxxx
+```
+
+These secrets are also used by the Kraken backend container to authenticate users. 
+Keeping the default values is a security issue.
 
 #### SMTP Settings
 
-TODO
+In case you want KeyCloak to be able to send mails (for example when a user wants to reset his password), you can activate it in the configuration:
 
-#### Google Recaptcha
+```yaml
+keycloak:
+  config:
+    mail:
+      enabled: true
+      password: pwd
+      starttls: true/false
+      auth: true/false
+      port: 587
+      host: smtp.gamil.com
+      replyTo: test@mail.com
+      from: test@mail.com
+      fromDisplayName: Kraken
+      ssl: null
+      user: test@mail.com
+```
 
-TODO
+#### Google reCAPTCHA
+
+Finally, you can activate [Google reCAPTCHA](https://www.google.com/recaptcha) with the following configuration: 
+
+```yaml
+keycloak:
+  config:
+    recaptcha:
+      enabled: true
+      key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+You need to create a [reCAPTCHA V2](https://developers.google.com/recaptcha/docs/display) as KeyCloak does not support V3.
