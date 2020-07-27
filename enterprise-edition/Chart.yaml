@@ -5,6 +5,6 @@ maintainers:
   name: OctoPerf
   url: https://octoperf.com
 name: enterprise-edition
-version: "11.9.1"
-appVersion: "11.9.1"
+version: "11.9.2"
+appVersion: "11.9.2"
 icon: https://octoperf.com/img/octoperf-logo-text.svg

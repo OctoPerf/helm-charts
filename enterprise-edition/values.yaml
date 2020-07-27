@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "11.9.1"
+version: "11.9.2"
 
 imagePullPolicy: IfNotPresent
 imagePullSecrets: []
@@ -111,22 +111,21 @@ backend:
   # licenseFile: |-
  
   readinessProbe:
-    tcpSocket:
-      port: http-port
-    initialDelaySeconds: 30
     failureThreshold: 3
+    initialDelaySeconds: 20
     periodSeconds: 5
-    successThreshold: 1
     timeoutSeconds: 5
-
+    httpGet:
+      path: /actuator/health/readiness
+      port: http-port
   livenessProbe:
-    tcpSocket:
-      port: http-port
-    initialDelaySeconds: 30
     failureThreshold: 3
-    periodSeconds: 5
-    successThreshold: 1
+    initialDelaySeconds: 30
+    periodSeconds: 10
     timeoutSeconds: 5
+    httpGet:
+      path: /actuator/health/liveness
+      port: http-port
 
   # scheduler name
   # schedulerName: ""
