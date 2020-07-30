@@ -282,7 +282,7 @@ grafana:
   # Grafana image configuration
   image:
     repository: grafana/grafana
-    tag: 6.7.1
+    tag: 7.1.1
     pullPolicy: *default_pull_policy
   # Grafana server port
   port: 3000
@@ -339,7 +339,7 @@ influxdb:
   enabled: true
   image:
     repository: influxdb
-    tag: 1.7.4
+    tag: 1.8.1
     pullPolicy: *default_pull_policy
   # Influxdb server port
   port: 8086
