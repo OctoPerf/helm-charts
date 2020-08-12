@@ -42,6 +42,7 @@ The Kraken administrator account has a default password and email. After install
 
 | Helm Chart Version | Kraken Version |
 | ------ | ------ |
+| 3.0.1 | 3.0.1-beta |
 | 3.0.0-beta | 3.0.0-beta |
 | 3.0.0-rc1 | 3.0.0-rc1 |
 | 1.1.1 | 2.1.1-beta |
