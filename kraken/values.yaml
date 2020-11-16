@@ -155,7 +155,8 @@ frontend:
             "realm": "kraken",
             "clientId": "kraken-web"
           },
-          "expectedRoles": ["ADMIN"]
+          "expectedRoles": ["ADMIN"],
+          "sseChannels" : ["STORAGE", "RUNTIME"]
         }
 
   gatling:
@@ -234,7 +235,8 @@ frontend:
             "realm": "kraken",
             "clientId": "kraken-web"
           },
-          "expectedRoles": ["USER"]
+          "expectedRoles": ["USER"],
+          "sseChannels" : ["STORAGE", "RUNTIME"]
         }
 
   project:
