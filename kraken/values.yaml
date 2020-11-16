@@ -237,58 +237,58 @@ frontend:
           "expectedRoles": ["USER"]
         }
 
-project:
-  # Project frontend image configuration
-  image:
-    repository: octoperf/kraken-project-ui
-    tag: *default_tag
-    pullPolicy: *default_pull_policy
-  # NGinx port
-  port: 80
-  # Service configuration
-  service:
-    # Exposed port
+  project:
+    # Project frontend image configuration
+    image:
+      repository: octoperf/kraken-project-ui
+      tag: *default_tag
+      pullPolicy: *default_pull_policy
+    # NGinx port
     port: 80
-  # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-  #  nodeSelector:
-  #    kubernetes.io/hostname: kraken-1
-  # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: *default_affinity_key
-                operator: In
-                values:
-                  - *default_affinity_value
-  # Gatling frontend Ingress configuration, redirects calls from /project/** to /**
-  ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
-    path: /project(/|$)(.*)
-  # HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
-  #      tls:
-  #        - hosts:
-  #            - example.example.com
-  #          secretName: quickstart-example-tls
-  # Gatling frontend Angular configuration
-  config:
-    config-prod.json: |-
-      {
-        "version": "project-1",
-        "applicationId": "project",
-        "backendApiUrl": "/api",
-        "docUrl": "/doc",
-        "keycloakConfiguration": {
-          "url": "/auth",
-          "realm": "kraken",
-          "clientId": "kraken-web"
-        },
-        "expectedRoles": ["USER"],
-        "availableApplications": ["gatling"],
-        "sseChannels" : []
-      }
+    # Service configuration
+    service:
+      # Exposed port
+      port: 80
+    # Node selector https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    #  nodeSelector:
+    #    kubernetes.io/hostname: kraken-1
+    # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: *default_affinity_key
+                  operator: In
+                  values:
+                    - *default_affinity_value
+    # Gatling frontend Ingress configuration, redirects calls from /project/** to /**
+    ingress:
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      path: /project(/|$)(.*)
+    # HTTPS configuration https://cert-manager.io/docs/tutorials/acme/ingress/
+    #      tls:
+    #        - hosts:
+    #            - example.example.com
+    #          secretName: quickstart-example-tls
+    # Gatling frontend Angular configuration
+    config:
+      config-prod.json: |-
+        {
+          "version": "project-1",
+          "applicationId": "project",
+          "backendApiUrl": "/api",
+          "docUrl": "/doc",
+          "keycloakConfiguration": {
+            "url": "/auth",
+            "realm": "kraken",
+            "clientId": "kraken-web"
+          },
+          "expectedRoles": ["USER"],
+          "availableApplications": ["gatling"],
+          "sseChannels" : []
+        }
 
 
 ### DOCUMENTATION CONFIGURATION ###
