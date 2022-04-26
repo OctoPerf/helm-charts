@@ -17,9 +17,8 @@ postgresql:
     tag: "12"
   enabled: true
   auth:
-    username: postgres
-    password: postgres
-    database: postgres
+    postgresPassword: "postgres"
+    database: "postgres"
 
 ingress:
   enabled: true
@@ -115,18 +114,7 @@ backend:
   # licenseFile: |-
 
   # config/application.yml
-  applicationYml: |-
-    server:
-      public:
-        port: 80
-    elasticsearch:
-      hostname: elasticsearch-master-headless
-    spring:
-      datasource:
-        url: "jdbc:postgresql://enterprise-edition-postgresql/postgres"
-        username: "postgres"
-        password: "postgres"
-
+  # applicationYml: |-
  
   readinessProbe:
     failureThreshold: 3

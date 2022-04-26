@@ -19,3 +19,16 @@ postgresql:
 
 ingress:
   enabled: true
+
+backend:
+  env:
+    DEBUG: "true"
+  applicationYml: |-
+    server:
+      public:
+        port: 80
+    elasticsearch:
+      hostname: elasticsearch-master-headless
+    spring:
+      datasource:
+        url: "jdbc:postgresql://enterprise-edition-postgresql-hl/postgres"
