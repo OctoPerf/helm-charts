@@ -19,7 +19,3 @@ postgresql:
 
 ingress:
   enabled: true
-  annotations: {}
-  path: /
-  hosts:
-  - "localhost"
