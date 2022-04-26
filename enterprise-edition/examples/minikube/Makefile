@@ -26,3 +26,6 @@ uninstall:
 
 stop:
 	minikube stop
+
+get-all:
+	kubectl -n octoperf get all

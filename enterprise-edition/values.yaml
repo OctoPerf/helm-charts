@@ -14,7 +14,7 @@ elasticsearch:
 
 postgresql:
   image:
-    tag: 13
+    tag: "12"
   enabled: true
   auth:
     username: postgres
@@ -117,9 +117,16 @@ backend:
   # config/application.yml
   applicationYml: |-
     server:
-      hostname: "localhost"
       public:
         port: 80
+    elasticsearch:
+      hostname: elasticsearch-master-headless
+    spring:
+      datasource:
+        url: "jdbc:postgresql://enterprise-edition-postgresql/postgres"
+        username: "postgres"
+        password: "postgres"
+
  
   readinessProbe:
     failureThreshold: 3

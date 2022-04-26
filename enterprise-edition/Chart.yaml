@@ -8,3 +8,12 @@ name: enterprise-edition
 version: "12.8.0"
 appVersion: "12.8.0"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
+dependencies:
+  - name: elasticsearch
+    version: "7.16.3"
+    repository: https://helm.elastic.co
+    condition: elasticsearch.enabled
+  - name: postgresql
+    version: "11.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled

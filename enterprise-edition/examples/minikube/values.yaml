@@ -23,13 +23,3 @@ ingress:
   path: /
   hosts:
   - "localhost"
-
-backend:
-    # config/application.yml
-  applicationYml: |-
-    server:
-      hostname: "localhost"
-      public:
-        port: 80
-    elasticsearch:
-      hostname: "elasticsearch-master-headless"
