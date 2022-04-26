@@ -1,4 +1,4 @@
-{{ if (.Values.backend.persistentVolume.storageClass) and (eq .Values.backend.persistentVolume.storageClass "local-storage") }}
+{{ if and (.Values.backend.persistentVolume.storageClassName) (eq .Values.backend.persistentVolume.storageClassName "local-storage") }}
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass

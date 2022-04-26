@@ -14,7 +14,7 @@ metadata:
 {{- end -}}
     {{/* This forces a restart if the configmap has changed */}}
     {{- if .Values.backend.env }}
-    configchecksum: {{ include (print .Template.BasePath "/backend-cfg.yaml") . | sha256sum | trunc 63 }}
+    configchecksum: {{ include (print .Template.BasePath "/backend/backend-env.yaml") . | sha256sum | trunc 63 }}
     {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
@@ -69,6 +69,11 @@ spec:
         configMap:
           name: "{{ template "name" . }}-backend-license"
       {{- end }}
+      {{- if .Values.backend.applicationYml }}
+      - name: application-yml
+        configMap:
+          name: "{{ template "name" . }}-backend-application"
+      {{- end }}
       {{- range .Values.backend.secretMounts }}
       - name: {{ .name }}
         secret:
@@ -89,7 +94,7 @@ spec:
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         envFrom:
         - configMapRef:
-            name: {{ template "name" . }}-backend-config
+            name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
@@ -104,6 +109,11 @@ spec:
         - name: license-l4j
           mountPath: "/home/octoperf/license/license.l4j"
           subPath: "license.l4j"
+        {{- end }}
+        {{- if .Values.backend.applicationYml }}
+        - name: application-yml
+          mountPath: "/home/octoperf/config/application.yml"
+          subPath: "application.yml"
         {{- end }}
         ports:
         - name: http-port

@@ -1,14 +1,25 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "11.9.4"
+version: "12.8.0"
 
 imagePullPolicy: IfNotPresent
 imagePullSecrets: []
 # - name: "image-pull-secret"
 
 elasticsearch:
-  image: docker.elastic.co/elasticsearch/elasticsearch-oss
+  enabled: true
+  replicas: 1
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+
+postgresql:
+  image:
+    tag: 13
+  enabled: true
+  auth:
+    username: postgres
+    password: postgres
+    database: postgres
 
 ingress:
   enabled: true
@@ -59,15 +70,15 @@ frontend:
 
   readinessProbe:
     httpGet:
-      path: /actuator/health/readiness
+      path: /app
       port: http-port
-    initialDelaySeconds: 5
+    initialDelaySeconds: 10
     periodSeconds: 5
   livenessProbe:
     httpGet:
-      path: /actuator/health/liveness
+      path: /app
       port: http-port
-    initialDelaySeconds: 5
+    initialDelaySeconds: 10
     periodSeconds: 5
 
   config:
@@ -81,7 +92,7 @@ frontend:
           "register": true
         }
       }
-  
+   
   ## Node labels for backend pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
@@ -94,21 +105,21 @@ frontend:
 backend:
   image: octoperf/enterprise-edition
   replicas: 1
-  maxUnavailable: 1
 
   annotations: {}
 
   env:
-    JAVA_OPTS: "-Xms256m -Xmx256m"
-    server.hostname: "enterprise-edition.local"
-    server.public.port: 80
-    elasticsearch.hostname: elasticsearch-master-headless
-    clustering.driver: hazelcast
-    clustering.quorum: "1"
-
+    JAVA_OPTS: "-Xms1g -Xmx1g"
 
   # License file content  
   # licenseFile: |-
+
+  # config/application.yml
+  applicationYml: |-
+    server:
+      hostname: "localhost"
+      public:
+        port: 80
  
   readinessProbe:
     failureThreshold: 3
@@ -124,7 +135,7 @@ backend:
     periodSeconds: 10
     timeoutSeconds: 5
     httpGet:
-      path: /actuator/health/liveness
+      path: /actuator/health
       port: http-port
 
   # scheduler name
@@ -195,7 +206,7 @@ backend:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: ""
+    storageClassName: ""
 
     ## Subdirectory of backend data Persistent Volume to mount
     ## Useful if the volume's root directory is not empty

@@ -15,7 +15,10 @@ For a more comprehensive understanding, see [How the Enterprise-Edition works](h
 
 ## Dependencies
 
-OctoPerf Enterprise-Edition helm chart depends on [Elasticsearch](https://github.com/elastic/helm-charts/tree/master/elasticsearch) helm chart. To configure Elasticsearch through your own `values.yaml`, prefix elasticsearch configuration with `elasticsearch.`.
+OctoPerf Enterprise-Edition helm chart depends on:
+
+- [Elasticsearch](https://github.com/elastic/helm-charts/tree/master/elasticsearch/),
+- [PostgreSql](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/).
 
 ## Installation
 
@@ -35,16 +38,9 @@ OctoPerf Enterprise-Edition helm chart depends on [Elasticsearch](https://github
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
-| 11.x.x|
+| 12.x.x|
 | ------|
-| 11.9.4|
-| 11.9.2|
-| 11.9.1|
-| 11.9.0|
-| 11.8.0|
-| 11.7.1|
-| 11.6.0|
-| 11.4.1|
+| 12.8.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
@@ -91,7 +87,6 @@ The configuration is splitted in `4` big sections defined by the prefix being us
 | `frontend.nodeSelector`         | Frontend [node selectors](https://kubernetes.io/docs/user-guide/node-selection/)  | `{}`|
 | `frontend.affinity`         | Frontend pod affinity | `{}`|
 | `backend.enabled`         | Enable / Disable Backend StatefulSet | `true`|
-| `backend.maxUnavailable`         | The [maxUnavailable](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#specifying-a-poddisruptionbudget) value for the pod disruption budget. By default this will prevent Kubernetes from having more than 1 unhealthy pod in the node group | `1` |
 | `backend.annotations`      | Annotations that Kubernetes will use for the service | `{}` |
 | `backend.env`      | Backend [Pods environment Variable](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/) stored in a configmap. See [Enterprise-Edition Configuration](https://doc.octoperf.com/enterprise-edition/configuration/#environment-variables) for more settings. | `JAVA_OPTS: "-Xms256m -Xmx256m"`<br>`server.hostname: "enterprise-edition.local"`<br>`server.public.port: 80`<br>`elasticsearch.hostname: elasticsearch-master-headless`<br>`clustering.driver: hazelcast`<br>`clustering.quorum: "1"` |
 | `backend.readinessProbe`         | Backend pods [readinessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)  | `tcpSocket http-port`<br>`initialDelaySeconds: 30`<br>`failureThreshold: 3`<br>`periodSeconds: 5`<br>`successThreshold: 1`<br>`timeoutSeconds: 5` |

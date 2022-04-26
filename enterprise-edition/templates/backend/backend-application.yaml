@@ -1,0 +1,15 @@
+{{- if .Values.backend.applicationYml }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-backend-application
+  labels:
+    app: {{ template "name" . }}-backend-application
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  application.yml: |
+{{ .Values.backend.applicationYml | indent 4 -}}
+{{- end }}

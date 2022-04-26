@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "name" . }}-backend-config
+  name: {{ template "name" . }}-backend-env
   labels:
-    app: {{ template "name" . }}-backend-config
+    app: {{ template "name" . }}-backend-env
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

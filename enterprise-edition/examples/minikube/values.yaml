@@ -1,27 +1,35 @@
 ---
 
 elasticsearch:
-  # Permit co-located instances for solitary minikube virtual machines.
-  antiAffinity: "soft"
-
-  # Shrink default JVM heap.
-  esJavaOpts: "-Xmx128m -Xms128m"
-
+  esJavaOpts: "-Xmx1g -Xms1g"
   # Request smaller persistent volumes.
   volumeClaimTemplate:
     accessModes: [ "ReadWriteOnce" ]
     storageClassName: "standard"
     resources:
       requests:
-        storage: 1Gi
+        storage: 4Gi
+
+postgresql:
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    accessMode: ReadWriteOnce
+    size: 1Gi
 
 ingress:
   enabled: true
   annotations: {}
   path: /
   hosts:
-  - "192.168.99.100.xip.io"
+  - "localhost"
 
 backend:
-  env:
-    server.hostname: "192.168.99.100.xip.io"
+    # config/application.yml
+  applicationYml: |-
+    server:
+      hostname: "localhost"
+      public:
+        port: 80
+    elasticsearch:
+      hostname: "elasticsearch-master-headless"
