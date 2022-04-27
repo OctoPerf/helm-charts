@@ -17,8 +17,8 @@ postgresql:
     tag: "12"
   enabled: true
   auth:
-    postgresPassword: "postgres"
     database: "postgres"
+    postgresPassword: "postgres"
 
 ingress:
   enabled: true
@@ -26,8 +26,9 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
-  hosts:
-    - enterprise-edition.local
+  hosts: []
+    # Possibly define host in /etc/hosts
+    # - enterprise-edition.local
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -71,13 +72,13 @@ frontend:
     httpGet:
       path: /app
       port: http-port
-    initialDelaySeconds: 10
+    initialDelaySeconds: 5
     periodSeconds: 5
   livenessProbe:
     httpGet:
       path: /app
       port: http-port
-    initialDelaySeconds: 10
+    initialDelaySeconds: 5
     periodSeconds: 5
 
   config:
@@ -114,11 +115,19 @@ backend:
   # licenseFile: |-
 
   # config/application.yml
-  # applicationYml: |-
+  applicationYml: |-
+    server:
+      public:
+        port: 80
+    elasticsearch:
+      hostname: elasticsearch-master-headless
+    spring:
+      datasource:
+        url: "jdbc:postgresql://enterprise-edition-postgresql-hl/postgres"
  
   readinessProbe:
     failureThreshold: 3
-    initialDelaySeconds: 20
+    initialDelaySeconds: 30
     periodSeconds: 5
     timeoutSeconds: 5
     httpGet:

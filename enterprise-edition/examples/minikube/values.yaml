@@ -17,18 +17,10 @@ postgresql:
     accessMode: ReadWriteOnce
     size: 1Gi
 
-ingress:
-  enabled: true
-
 backend:
   env:
-    DEBUG: "true"
-  applicationYml: |-
-    server:
-      public:
-        port: 80
-    elasticsearch:
-      hostname: elasticsearch-master-headless
-    spring:
-      datasource:
-        url: "jdbc:postgresql://enterprise-edition-postgresql-hl/postgres"
+    SERVER_HOSTNAME: 192.168.49.2.xip.io
+
+ingress:
+  hosts:
+    - 192.168.49.2.xip.io

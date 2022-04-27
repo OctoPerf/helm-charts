@@ -15,7 +15,7 @@ dry-run:
 start:
 	minikube start
 
-install: configure start
+install: start configure
 	helm install $(HELM_PARAMS) --create-namespace ../../
 
 get-all:
@@ -26,3 +26,9 @@ uninstall:
 
 stop:
 	minikube stop
+
+delete:
+	minikube delete
+
+%.logs:
+	kubectl -n $(NAMESPACE) logs -f pod/enterprise-edition-$*-0
