@@ -1,7 +1,7 @@
 NAMESPACE ?= octoperf
 CHART ?= enterprise-edition
 HELM_PARAMS=--name $(CHART) --namespace $(NAMESPACE)
-HELM_REPO="https://helm.octoperf.com"
+HELM_REPO=https://helm.octoperf.com
 
 default: debug
 
@@ -17,12 +17,10 @@ lint:
 debug:
 	helm install --debug --dry-run --namespace $(NAMESPACE) $(CHART) ./$(CHART) > debug.log
 
+repo-add:
+	helm repo add octoperf $(HELM_REPO) --force-update --username jloisel --password-stdin
 
 # helm repo add octoperf https://myuser:mypass@helm.octoperf.com
-push:
+push: package
 	-helm plugin install https://github.com/chartmuseum/helm-push
-	helm push --force $(CHART)/ octoperf
-
-install:
-	-kubectl create namespace $(NAMESPACE)
-	helm install --namespace $(NAMESPACE) $(CHART) ./$(CHART)
+	helm cm-push $(CHART)/ octoperf
