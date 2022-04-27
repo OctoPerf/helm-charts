@@ -17,10 +17,8 @@ lint:
 debug:
 	helm install --debug --dry-run --namespace $(NAMESPACE) $(CHART) ./$(CHART) > debug.log
 
-repo-add:
-	helm repo add octoperf $(HELM_REPO) --force-update --username jloisel --password-stdin
-
 # helm repo add octoperf https://myuser:mypass@helm.octoperf.com
 push: package
 	-helm plugin install https://github.com/chartmuseum/helm-push
-	helm cm-push $(CHART)/ octoperf
+	helm cm-push $(CHART)/ octoperf --force
+	rm enterprise-edition-*.gz
