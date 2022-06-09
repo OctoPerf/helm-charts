@@ -50,7 +50,7 @@ spec:
         configMap:
           name: "{{ template "name" . }}-frontend-beta-config"
       containers:
-      - name: {{ template "name" . }}-frontend
+      - name: {{ template "name" . }}-frontend-beta
         image: "{{ .Values.registry }}/{{ .Values.frontend-beta.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         ports:
