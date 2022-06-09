@@ -8,7 +8,8 @@ This chart launches the whole **OctoPerf Enterprise-Edition** stack inside your 
 
 - **Elasticsearch**: the main database used to store most of the data,
 - **Backend**: the backend server which serves OctoPerf REST API,
-- **Frontend**: the Web UI which consumes the REST API exposed by the backend. It's made of static web html/js/css files served by a NGinx server,
+- **Frontend**: the Web UI which consumes the REST API exposed by the backend. It's made of static web html/js/css files served by a NGinx server on `/app`,
+- **Frontend Beta**: the Beta Web UI which consumes the REST API exposed by the backend. It's made of static web html/js/css files served by a NGinx server on `/ui`,
 - **Documentation**: static web documentation served by a NGinx server.
 
 For a more comprehensive understanding, see [How the Enterprise-Edition works](https://doc.octoperf.com/enterprise-edition/).
@@ -40,6 +41,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 12.x.x|
 | ------|
+| 12.9.1|
 | 12.8.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.

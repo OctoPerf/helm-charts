@@ -1,0 +1,17 @@
+{{- if .Values.frontend-beta.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-frontend-beta-config
+  labels:
+    app: {{ template "name" . }}-frontend-beta-config
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+{{- range $path, $config := .Values.frontend-beta.config }}
+  {{ $path }}: |
+{{ $config | indent 4 -}}
+{{- end }}
+{{- end }}

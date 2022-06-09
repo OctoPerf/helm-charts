@@ -38,6 +38,15 @@ spec:
               port: 
                 number: 80
         {{- end }}
+        {{- if $dot.Values.frontend-beta.enabled }}
+        - path: /ui
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "name" $dot }}-frontend-beta
+              port: 
+                number: 80
+        {{- end }}
         {{- if $dot.Values.doc.enabled }}
         - path: /doc
           pathType: Prefix
