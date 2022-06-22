@@ -102,7 +102,7 @@ frontend:
   ##
   affinity: {}
 
-frontend-beta:
+frontendBeta:
   enabled: true
   image: octoperf/octoperf-ui
 

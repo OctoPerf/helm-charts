@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -38,7 +38,7 @@ spec:
               port: 
                 number: 80
         {{- end }}
-        {{- if $dot.Values.frontend-beta.enabled }}
+        {{- if $dot.Values.frontendBeta.enabled }}
         - path: /ui
           pathType: Prefix
           backend:

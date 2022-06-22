@@ -15,12 +15,12 @@ postgresql:
     enabled: true
     storageClass: "standard"
     accessMode: ReadWriteOnce
-    size: 1Gi
+    size: 2Gi
 
 backend:
   env:
-    SERVER_HOSTNAME: 192.168.49.2.xip.io
+    SERVER_HOSTNAME: 192.168.49.1.xip.io
 
 ingress:
   hosts:
-    - 192.168.49.2.xip.io
+    - 192.168.49.1.xip.io

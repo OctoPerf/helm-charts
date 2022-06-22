@@ -1,4 +1,4 @@
-{{- if .Values.frontend-beta.enabled -}}
+{{- if .Values.frontendBeta.enabled }}
 ---
 apiVersion: v1
 kind: Service
