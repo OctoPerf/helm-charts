@@ -1,6 +1,7 @@
 ---
 
 elasticsearch:
+  enabled: true
   esJavaOpts: "-Xmx1g -Xms1g"
   # Request smaller persistent volumes.
   volumeClaimTemplate:
@@ -11,16 +12,31 @@ elasticsearch:
         storage: 4Gi
 
 postgresql:
-  persistence:
+  enabled: true
+  volumePermissions:
     enabled: true
-    storageClass: "standard"
-    accessMode: ReadWriteOnce
-    size: 2Gi
+  primary:
+    persistence:
+      enabled: true
+      storageClass: "standard"
+      accessMode: ReadWriteOnce
+      size: 2Gi
 
 backend:
+  enabled: true
   env:
     SERVER_HOSTNAME: 192.168.49.1.xip.io
 
+frontend:
+  enabled: true
+
+frontendBeta:
+  enabled: true
+
+doc:
+  enabled: true
+
 ingress:
+  enabled: true
   hosts:
     - 192.168.49.1.xip.io

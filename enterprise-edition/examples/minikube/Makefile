@@ -27,8 +27,14 @@ uninstall:
 stop:
 	minikube stop
 
-delete:
+delete-minikube:
 	minikube delete
 
 %.logs:
 	kubectl -n $(NAMESPACE) logs -f pod/enterprise-edition-$*-0
+
+events:
+	kubectl -n $(NAMESPACE) get events --sort-by='.metadata.creationTimestamp' -A
+
+delete-pvc:
+	kubectl -n $(NAMESPACE) delete pvc --all 

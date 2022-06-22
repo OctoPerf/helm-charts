@@ -1,3 +1,4 @@
+{{- if .Values.backend.enabled }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -149,4 +150,5 @@ spec:
 {{- else }}
         - name: octoperf-data
           emptyDir: {}
+{{- end }}
 {{- end }}

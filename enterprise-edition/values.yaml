@@ -13,12 +13,13 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 postgresql:
-  image:
-    tag: "12"
+  createSecret: true
   enabled: true
-  auth:
-    database: "postgres"
-    postgresPassword: "postgres"
+  global:
+    auth:
+      database: "postgres"
+      username: "postgres"
+      postgresPassword: "postgres"
 
 ingress:
   enabled: true
