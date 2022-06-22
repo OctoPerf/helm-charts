@@ -21,4 +21,4 @@ debug:
 push: package
 	-helm plugin install https://github.com/chartmuseum/helm-push
 	helm cm-push $(CHART)/ octoperf --force
-	rm enterprise-edition-*.gz
+	rm enterprise-edition-*.tgz
