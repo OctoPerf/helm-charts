@@ -1,3 +1,4 @@
+{{- if .Values.backend.enabled }}
 {{- if .Values.backend.applicationYml }}
 ---
 apiVersion: v1
@@ -12,4 +13,5 @@ metadata:
 data:
   application.yml: |
 {{ .Values.backend.applicationYml | indent 4 -}}
+{{- end }}
 {{- end }}

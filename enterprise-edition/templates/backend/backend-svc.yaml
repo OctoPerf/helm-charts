@@ -1,3 +1,4 @@
+{{- if .Values.backend.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -35,3 +36,4 @@ spec:
       nodePort: {{ .Values.backend.service.nodePort }}
     {{- end }}
   type: "{{ .Values.backend.service.type }}"
+{{- end }}

@@ -1,7 +1,7 @@
 ---
 
 elasticsearch:
-  enabled: true
+  enabled: false
   esJavaOpts: "-Xmx1g -Xms1g"
   # Request smaller persistent volumes.
   volumeClaimTemplate:
@@ -13,11 +13,9 @@ elasticsearch:
 
 postgresql:
   enabled: true
-  volumePermissions:
-    enabled: true
   primary:
     persistence:
-      enabled: true
+      enabled: false
       storageClass: "standard"
       accessMode: ReadWriteOnce
       size: 2Gi

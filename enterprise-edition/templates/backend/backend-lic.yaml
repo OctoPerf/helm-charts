@@ -1,3 +1,4 @@
+{{- if .Values.backend.enabled }}
 {{- if .Values.backend.licenseFile }}
 ---
 apiVersion: v1
@@ -12,4 +13,5 @@ metadata:
 data:
   license.l4j: |
 {{ .Values.backend.licenseFile | indent 4 -}}
+{{- end }}
 {{- end }}

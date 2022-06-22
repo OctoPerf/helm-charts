@@ -13,13 +13,10 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 postgresql:
-  createSecret: true
   enabled: true
-  global:
-    auth:
-      database: "postgres"
-      username: "postgres"
-      postgresPassword: "postgres"
+  auth:
+    database: "postgres"
+    postgresPassword: "postgres"
 
 ingress:
   enabled: true
