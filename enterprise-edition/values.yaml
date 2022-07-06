@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "12.9.1"
+version: "12.10.0"
 
 imagePullPolicy: IfNotPresent
 imagePullSecrets: []
@@ -11,12 +11,6 @@ elasticsearch:
   enabled: true
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
-
-postgresql:
-  enabled: true
-  auth:
-    database: "postgres"
-    postgresPassword: "postgres"
 
 ingress:
   enabled: true
@@ -159,9 +153,6 @@ backend:
         port: 80
     elasticsearch:
       hostname: elasticsearch-master-headless
-    spring:
-      datasource:
-        url: "jdbc:postgresql://enterprise-edition-postgresql-hl/postgres"
  
   readinessProbe:
     failureThreshold: 3

@@ -18,8 +18,7 @@ For a more comprehensive understanding, see [How the Enterprise-Edition works](h
 
 OctoPerf Enterprise-Edition helm chart depends on:
 
-- [Elasticsearch](https://github.com/elastic/helm-charts/tree/master/elasticsearch/),
-- [PostgreSql](https://github.com/bitnami/charts/tree/master/bitnami/postgresql/).
+- [Elasticsearch](https://github.com/elastic/helm-charts/tree/master/elasticsearch/).
 
 ## Installation
 
@@ -41,6 +40,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 12.x.x|
 | ------|
+| 12.10.0|
 | 12.9.1|
 | 12.8.0|
 

@@ -11,15 +11,6 @@ elasticsearch:
       requests:
         storage: 4Gi
 
-postgresql:
-  enabled: true
-  primary:
-    persistence:
-      enabled: false
-      storageClass: "standard"
-      accessMode: ReadWriteOnce
-      size: 2Gi
-
 backend:
   enabled: true
   env:
