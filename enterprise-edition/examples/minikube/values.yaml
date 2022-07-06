@@ -1,7 +1,7 @@
 ---
 
 elasticsearch:
-  enabled: false
+  enabled: true
   esJavaOpts: "-Xmx1g -Xms1g"
   # Request smaller persistent volumes.
   volumeClaimTemplate:
@@ -14,7 +14,7 @@ elasticsearch:
 backend:
   enabled: true
   env:
-    SERVER_HOSTNAME: 192.168.49.1.xip.io
+    SERVER_HOSTNAME: 192.168.49.2.sslip.io
 
 frontend:
   enabled: true
@@ -28,4 +28,4 @@ doc:
 ingress:
   enabled: true
   hosts:
-    - 192.168.49.1.xip.io
+    - 192.168.49.2.sslip.io
