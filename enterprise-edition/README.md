@@ -40,6 +40,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 12.x.x|
 | ------|
+| 12.12.0|
 | 12.10.0|
 | 12.9.1|
 | 12.8.0|
