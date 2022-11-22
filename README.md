@@ -7,4 +7,4 @@ This functionality is in beta status and may be changed or removed completely in
 Please look in the chart directories for the documentation for each chart. These helm charts are designed to be a lightweight way to configure our official docker images. Links to the relevant docker image documentation has also been added below.
 
 - [Enterprise-Edition Helm Chart](enterprise-edition/README.md)
-- [Kraken Helm Chart](kraken)
+- [Kubernetes Agent](kubernetes-agent/README.md)
