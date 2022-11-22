@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "name" . }}-deploy
+  name: {{ template "name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "name" . }}
@@ -18,12 +18,12 @@ spec:
 {{ toYaml .Values.strategy | indent 4 }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}-deploy
+      app: {{ template "name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}-deploy
+        app: {{ template "name" . }}
         release: {{ .Release.Name }}
 {{- with .Values.podLabels }}
 {{ toYaml . | indent 8 }}

@@ -3,7 +3,7 @@
 # Provided by OctoPerf UI when creating
 # an on-premise agent (AGENT_TOKEN env)
 # See: https://doc.octoperf.com/private-hosts/agents/
-# token: ""
+token: ""
 
 # OctoPerf Server URL
 serverUrl: "https://api.octoperf.com"
@@ -85,7 +85,7 @@ serviceAccount:
   ## @param serviceAccount.name Name of the created ServiceAccount
   ## If not set and create is true, a name is generated using the mysql.fullname template
   ##
-  name: "octoperf"
+  name: "kubernetes-agent"
   ## @param serviceAccount.annotations Annotations for MySQL Service Account
   ##
   annotations: {}
