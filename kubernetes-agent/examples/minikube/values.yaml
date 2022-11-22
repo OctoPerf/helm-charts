@@ -1,0 +1,7 @@
+---
+
+# MANDATORY: agent authentication token
+token: ""
+
+# OctoPerf Server URL
+serverUrl: "https://api.octoperf.com"

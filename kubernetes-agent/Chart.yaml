@@ -1,0 +1,15 @@
+annotations:
+  category: Agent
+description: OctoPerf Kubernetes Agent
+home: https://github.com/OctoPerf/helm-charts/kubernetes-agent
+maintainers:
+- email: support@octoperf.com
+  name: OctoPerf
+  url: https://octoperf.com
+name: kubernetes-agent
+version: "1.0.0"
+appVersion: "12.12.0"
+icon: https://octoperf.com/img/octoperf-logo-text.svg
+keywords:
+  - octoperf
+  - kubernetes
