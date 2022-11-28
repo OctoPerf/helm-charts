@@ -6,6 +6,10 @@ This functionality is in beta status and may be changed or removed completely in
 
 This chart launches the [Kubernetes On-Premise Agent](https://hub.docker.com/r/octoperf/kubernetes-agent).
 
+## Prerequisites
+
+This agent is compatible with OctoPerf Enterprise-Edition `>= 12.11.0`.
+
 ## Installation
 
 * Add the octoperf helm charts repo:
