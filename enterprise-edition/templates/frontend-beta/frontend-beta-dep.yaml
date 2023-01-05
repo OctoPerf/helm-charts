@@ -1,7 +1,7 @@
 {{- if .Values.frontendBeta.enabled }}
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: {{ template "name" . }}-frontend-beta
   labels:
@@ -14,6 +14,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
+  replicas: {{ .Values.fontendBeta.replicas }}
   selector:
     matchLabels:
       app: {{ template "name" . }}-frontend-beta
@@ -53,6 +54,9 @@ spec:
       - name: {{ template "name" . }}-frontend-beta
         image: "{{ .Values.registry }}/{{ .Values.frontendBeta.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "name" . }}-frontend-beta-env
         ports:
           - name: http-port
             containerPort: 80

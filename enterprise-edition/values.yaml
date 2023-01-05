@@ -56,9 +56,13 @@ doc:
 
 frontend:
   enabled: true
+  replicas: 1
   image: octoperf/enterprise-ui
 
   annotations: {}
+
+  # env:
+  #  - NGINX_PORT: 80
 
   readinessProbe:
     httpGet:
@@ -95,10 +99,14 @@ frontend:
   affinity: {}
 
 frontendBeta:
-  enabled: true
+  enabled: false
+  replicas: 1
   image: octoperf/octoperf-ui
 
   annotations: {}
+
+  # env:
+  #  - NGINX_PORT: 80
 
   readinessProbe:
     httpGet:
