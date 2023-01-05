@@ -14,7 +14,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-  replicas: {{ .Values.fontend.replicas }}
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
       app: {{ template "name" . }}-frontend
