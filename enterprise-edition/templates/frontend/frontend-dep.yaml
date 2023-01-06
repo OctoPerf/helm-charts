@@ -50,20 +50,26 @@ spec:
       - name: config-ee
         configMap:
           name: "{{ template "name" . }}-frontend-config"
+      - name: nginx-template
+        configMap:
+          name: "{{ template "name" . }}-frontend-nginx"
       containers:
       - name: {{ template "name" . }}-frontend
         image: "{{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
-        envFrom:
-        - configMapRef:
-            name: {{ template "name" . }}-frontend-env
+        env:
+          - name: NGINX_PORT
+            value: "{{ .Values.frontend.port }}"
         ports:
           - name: http-port
-            containerPort: 80
+            containerPort: {{ .Values.frontend.port }}
         volumeMounts:
           - name: config-ee
             mountPath: /usr/share/nginx/html/app/config-ee.json
             subPath: config-ee.json
+          - name: nginx-template
+            mountPath: /etc/nginx/templates/default.conf.template
+            subPath: default.conf.template
         readinessProbe:
 {{ toYaml .Values.frontend.readinessProbe | indent 10 }}
         livenessProbe:
