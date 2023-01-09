@@ -50,9 +50,6 @@ spec:
       - name: config-ee
         configMap:
           name: "{{ template "name" . }}-frontend-config"
-      - name: nginx-template
-        configMap:
-          name: "{{ template "name" . }}-frontend-nginx"
       containers:
       - name: {{ template "name" . }}-frontend
         image: "{{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.version }}"

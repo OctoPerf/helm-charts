@@ -63,7 +63,7 @@ frontend:
 
   # internal port, can be overrided in case of insufficient right
   # service will still listen to 80.
-  nginx_port: 80
+  port: 80
 
   readinessProbe:
     httpGet:
@@ -106,8 +106,9 @@ frontendBeta:
 
   annotations: {}
 
-  # env:
-  #  - NGINX_PORT: 80
+  # internal port, can be overrided in case of insufficient right
+  # service will still listen to 80.
+  port: 80
 
   readinessProbe:
     httpGet:

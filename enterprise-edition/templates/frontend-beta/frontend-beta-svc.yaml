@@ -15,6 +15,6 @@ spec:
   clusterIP: None
   ports:
   - name: http
-    port: 80
+    port: "{{ .Values.frontendBeta.port }}"
     protocol: TCP
 {{- end }}

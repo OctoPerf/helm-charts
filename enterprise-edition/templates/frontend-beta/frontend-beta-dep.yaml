@@ -54,12 +54,12 @@ spec:
       - name: {{ template "name" . }}-frontend-beta
         image: "{{ .Values.registry }}/{{ .Values.frontendBeta.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
-        envFrom:
-        - configMapRef:
-            name: {{ template "name" . }}-frontend-beta-env
+        env:
+          - name: NGINX_PORT
+            value: "{{ .Values.frontendBeta.port }}"
         ports:
           - name: http-port
-            containerPort: 80
+            containerPort: {{ .Values.frontendBeta.port }}
         volumeMounts:
           - name: config-prod
             mountPath: /usr/share/nginx/html/ui/assets/config-prod.json
