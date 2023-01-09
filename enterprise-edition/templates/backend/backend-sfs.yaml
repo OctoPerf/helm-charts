@@ -80,15 +80,10 @@ spec:
         secret:
           secretName: {{ .secretName }}
       {{- end }}
+      {{- if .Values.backend.initContainers }}
       initContainers:
-      - name: chown-data
-        image: busybox
-        command: ["chown", "-R", "9001:9001", "{{ .Values.backend.persistentVolume.mountPath }}"]
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: octoperf-data
-          mountPath: {{ .Values.backend.persistentVolume.mountPath }}
+      {{ toYaml .Values.backend.initContainers | indent 2 }}
+      {{- end }}
       containers:
       - name: {{ template "name" . }}-backend
         image: "{{ .Values.registry -}}/{{ .Values.backend.image }}:{{ .Values.version }}"

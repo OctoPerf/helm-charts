@@ -150,6 +150,8 @@ backend:
 
   annotations: {}
 
+  initContainers: {}
+
   env:
     JAVA_OPTS: "-Xms1g -Xmx1g"
 
