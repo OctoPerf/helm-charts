@@ -64,9 +64,6 @@ spec:
           - name: config-ee
             mountPath: /usr/share/nginx/html/app/config-ee.json
             subPath: config-ee.json
-          - name: nginx-template
-            mountPath: /etc/nginx/templates/default.conf.template
-            subPath: default.conf.template
         readinessProbe:
 {{ toYaml .Values.frontend.readinessProbe | indent 10 }}
         livenessProbe:
