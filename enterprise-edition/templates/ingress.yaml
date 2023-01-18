@@ -36,7 +36,7 @@ spec:
             service:
               name: {{ include "name" $dot }}-frontend
               port: 
-                number: {{ .Values.frontend.port }}
+                number: {{ $dot.Values.frontend.port }}
         {{- end }}
         {{- if $dot.Values.frontendBeta.enabled }}
         - path: /ui
@@ -45,7 +45,7 @@ spec:
             service:
               name: {{ include "name" $dot }}-frontend-beta
               port: 
-                number: {{ .Values.frontendBeta.port }}
+                number: {{ $dot.Values.frontendBeta.port }}
         {{- end }}
         {{- if $dot.Values.doc.enabled }}
         - path: /doc
