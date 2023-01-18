@@ -10,6 +10,13 @@ This chart launches the [Kubernetes On-Premise Agent](https://hub.docker.com/r/o
 
 This agent is compatible with OctoPerf Enterprise-Edition `>= 12.11.0`.
 
+The agent requires access to the following Kubernetes APIs:
+- pods/log,
+- pods/exec,
+- pods (get, watch, list, create, delete),
+- nodes (get, list),
+- node metrics (get).
+
 ## Installation
 
 * Add the octoperf helm charts repo:
