@@ -153,6 +153,17 @@ backend:
 
   initContainers: {}
 
+  affinity: {}
+  #  podAntiAffinity:
+  #  requiredDuringSchedulingIgnoredDuringExecution:
+  #  - labelSelector:
+  #      matchExpressions:
+  #      - key: app
+  #        operator: In
+  #        values:
+  #        - {{ template "name" . }}-backend
+  #    topologyKey: "kubernetes.io/hostname"
+
   env:
     JAVA_OPTS: "-Xms1g -Xmx1g"
 

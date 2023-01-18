@@ -31,16 +31,10 @@ spec:
       labels:
         app: {{ template "name" . }}-backend
     spec:
+    {{- if .Values.backend.affinity }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - {{ template "name" . }}-backend
-            topologyKey: "kubernetes.io/hostname"
+      {{ toYaml .Values.backend.affinity | indent 2 }}
+    {{- end }}
     {{- if .Values.backend.schedulerName }}
       schedulerName: "{{ .Values.backend.schedulerName }}"
     {{- end }}
