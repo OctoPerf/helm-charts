@@ -60,7 +60,7 @@ spec:
     {{- end }}
       volumes:
       {{- if .Values.backend.volumes }}
-      {{ tpl .Values.backend.volumes . | indent 2 }}
+{{ toYaml .Values.backend.volumes | indent 8 }}
       {{- end }}
       {{- if .Values.backend.licenseFile }}
       - name: license-l4j
@@ -79,7 +79,7 @@ spec:
       {{- end }}
       {{- if .Values.backend.initContainers }}
       initContainers:
-      {{ toYaml .Values.backend.initContainers | indent 2 }}
+{{ toYaml .Values.backend.initContainers | indent 8 }}
       {{- end }}
       containers:
       - name: {{ template "name" . }}-backend
@@ -90,7 +90,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-        {{ tpl .Values.backend.volumeMounts . | indent 2 }}
+{{ toYaml .Values.backend.volumeMounts . | indent 10 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}

@@ -65,6 +65,10 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
+      {{- if .Values.volumes }}
+      volumes:
+{{ toYaml .Values.volumes | indent 8 }}
+      {{- end }}
       containers:
       - name: {{ template "name" . }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -84,6 +88,6 @@ spec:
 {{ tpl .Values.extraEnvVars . | indent 8 }}
         {{- end }}
         volumeMounts:
-        {{- if .Values.extraVolumeMounts }}
-{{ tpl .Values.extraVolumeMounts . | indent 8 }}
+        {{- if .Values.volumeMounts }}
+{{ tpl .Values.volumeMounts . | indent 10 }}
         {{- end }}
