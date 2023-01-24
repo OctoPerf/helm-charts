@@ -46,9 +46,9 @@ spec:
       nodeSelector:
       {{ toYaml .Values.backend.nodeSelector | indent 2 }}
     {{- end }}
-    {{- if .Values.backend.securityContext }}
-      securityContext:
-      {{ toYaml .Values.backend.securityContext | indent 2 }}
+    {{- with .Values.backend.securityContext }}
+      securityContext: 
+        {{ toYaml . | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.tolerations }}
       tolerations:
@@ -60,7 +60,7 @@ spec:
     {{- end }}
       volumes:
       {{- if .Values.backend.volumes }}
-{{ toYaml .Values.backend.volumes | indent 8 }}
+      {{ toYaml .Values.backend.volumes | indent 2 }}
       {{- end }}
       {{- if .Values.backend.licenseFile }}
       - name: license-l4j

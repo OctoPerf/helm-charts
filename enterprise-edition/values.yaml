@@ -291,9 +291,10 @@ backend:
   ## Security context to be added to backend pods
   ##
   securityContext:
-    runAsUser: 9001
-    rusAsGroup: 9001
     fsGroup: 9001
+    runAsGroup: 9001
+    runAsNonRoot: true
+    runAsUser: 9001
 
   headless:
     annotations: {}
