@@ -46,9 +46,9 @@ spec:
       nodeSelector:
       {{ toYaml .Values.backend.nodeSelector | indent 2 }}
     {{- end }}
-    {{- with .Values.backend.securityContext }}
+    {{- if .Values.backend.securityContext }}
       securityContext: 
-        {{ toYaml . | nindent 8 }}
+      {{ toYaml .Values.backend.securityContext | indent 2 }}
     {{- end }}
     {{- if .Values.backend.tolerations }}
       tolerations:
