@@ -51,10 +51,10 @@ affinity: {}
 tolerations: []
 
 ## Security context
-securityContext:
-  enabled: false
-  runAsUser: 9001
-  fsGroup: 9001
+securityContext: {}
+#  enabled: false
+#  runAsUser: 9001
+#  fsGroup: 9001
 
 
 ## Configure resource requests and limits
