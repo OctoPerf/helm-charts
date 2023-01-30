@@ -19,7 +19,4 @@ rules:
 - apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "watch", "list", "create", "delete"]
-- apiGroups: ["*"]
-  resources: ["nodes"]
-  verbs: ["get", "list"]
 {{- end}}
