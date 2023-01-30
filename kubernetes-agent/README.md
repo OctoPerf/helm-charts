@@ -13,9 +13,9 @@ This agent is compatible with OctoPerf Enterprise-Edition `>= 12.11.0`.
 The agent requires access to the following Kubernetes APIs:
 - pods/log,
 - pods/exec,
-- pods (get, watch, list, create, delete),
-- nodes (get, list),
-- node metrics (get).
+- pods (get, watch, list, create, delete).
+
+Run an agent on every node you would like to use for running JMeter pods. An agent will only schedule JMeter pods on the same node as where it's running.
 
 ## Installation
 
