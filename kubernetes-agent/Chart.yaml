@@ -7,7 +7,7 @@ maintainers:
   name: OctoPerf
   url: https://octoperf.com
 name: kubernetes-agent
-version: "1.0.1"
+version: "1.0.2"
 appVersion: "12.12.0"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
 keywords:
