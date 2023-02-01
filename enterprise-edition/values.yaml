@@ -175,6 +175,8 @@ backend:
   #        - {{ template "name" . }}-backend
   #    topologyKey: "kubernetes.io/hostname"
 
+  tolerations: {}
+
   env:
     JAVA_OPTS: "-Xms1g -Xmx1g"
 
@@ -226,10 +228,6 @@ backend:
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector: {}
-
-  ## Pod affinity
-  ##
-  affinity: {}
 
   # The default is to deploy all pods serially. By setting this to parallel all pods are started at
   # the same time when bootstrapping the cluster

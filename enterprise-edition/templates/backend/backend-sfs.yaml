@@ -12,7 +12,7 @@ metadata:
   annotations:
 {{- with .Values.backend.annotations }}
 {{ toYaml . | indent 4 }}
-{{- end -}}
+{{- end }}
     {{/* This forces a restart if the configmap has changed */}}
     {{- if .Values.backend.env }}
     configchecksum: {{ include (print .Template.BasePath "/backend/backend-env.yaml") . | sha256sum | trunc 63 }}
@@ -83,7 +83,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ template "name" . }}-backend
-        image: "{{ .Values.registry -}}/{{ .Values.backend.image }}:{{ .Values.version }}"
+        image: "{{ .Values.registry }}/{{ .Values.backend.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         envFrom:
         - configMapRef:
