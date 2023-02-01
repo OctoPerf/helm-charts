@@ -11,7 +11,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
 {{- with .Values.doc.annotations }}
   annotations:
-{{- toYaml . | indent 4 }}
+  {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   replicas: {{ .Values.doc.replicas }}
@@ -24,7 +24,7 @@ spec:
         app: {{ template "name" . }}-doc
     spec:
     {{- if .Values.doc.schedulerName }}
-      schedulerName: {{ .Values.doc.schedulerName }}
+      schedulerName: "{{ .Values.doc.schedulerName }}"
     {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -46,19 +46,19 @@ spec:
     {{- end }}
     {{- if .Values.doc.affinity }}
       affinity:
-      {{- toYaml .Values.doc.affinity | indent 2 }}
+      {{- toYaml .Values.doc.affinity | nindent 8 }}
     {{- end }}
       containers:
       - name: {{ template "name" . }}-doc
         image: "{{ .Values.registry }}/{{ .Values.doc.image }}:{{ .Values.version }}"
         env:
         - name: NGINX_PORT
-          value: "{{ .Values.frontendLegacy.port }}"
+          value: "{{ .Values.doc.port }}"
         ports:
         - name: http-port
           containerPort: {{ .Values.doc.port }}
         readinessProbe:
-        {{- toYaml .Values.doc.readinessProbe | indent 2 }}
+        {{- toYaml .Values.doc.readinessProbe | nindent 10 }}
         livenessProbe:
-        {{- toYaml .Values.doc.livenessProbe | indent 2 }}
+        {{- toYaml .Values.doc.livenessProbe | nindent 10 }}
 {{- end }}
