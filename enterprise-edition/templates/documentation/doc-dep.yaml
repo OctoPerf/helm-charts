@@ -11,7 +11,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
 {{- with .Values.doc.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+{{- toYaml . | indent 4 }}
 {{- end }}
 spec:
   replicas: {{ .Values.doc.replicas }}
@@ -24,27 +24,29 @@ spec:
         app: {{ template "name" . }}-doc
     spec:
     {{- if .Values.doc.schedulerName }}
-      schedulerName: "{{ .Values.doc.schedulerName }}"
+      schedulerName: {{ .Values.doc.schedulerName }}
     {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-      {{ toYaml .Values.imagePullSecrets | indent 2 }}
+      {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+      {{- end }}
     {{- end }}
     {{- if .Values.doc.nodeSelector }}
       nodeSelector:
-      {{ toYaml .Values.doc.nodeSelector | indent 2 }}
+      {{- toYaml .Values.doc.nodeSelector | nindent 8 }}
     {{- end }}
     {{- if .Values.doc.securityContext }}
       securityContext:
-      {{ toYaml .Values.doc.securityContext | indent 2 }}
+      {{- toYaml .Values.doc.securityContext | nindent 8 }}
     {{- end }}
     {{- if .Values.doc.tolerations }}
       tolerations:
-      {{ toYaml .Values.doc.tolerations | indent 2 }}
+      {{- toYaml .Values.doc.tolerations | nindent 8 }}
     {{- end }}
     {{- if .Values.doc.affinity }}
       affinity:
-      {{ toYaml .Values.doc.affinity | indent 2 }}
+      {{- toYaml .Values.doc.affinity | indent 2 }}
     {{- end }}
       containers:
       - name: {{ template "name" . }}-doc
@@ -56,7 +58,7 @@ spec:
         - name: http-port
           containerPort: {{ .Values.doc.port }}
         readinessProbe:
-        {{ toYaml .Values.doc.readinessProbe | indent 2 }}
+        {{- toYaml .Values.doc.readinessProbe | indent 2 }}
         livenessProbe:
-        {{ toYaml .Values.doc.livenessProbe | indent 2 }}
+        {{- toYaml .Values.doc.livenessProbe | indent 2 }}
 {{- end }}

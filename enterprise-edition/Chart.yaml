@@ -6,6 +6,7 @@ maintainers:
   url: https://octoperf.com
 name: enterprise-edition
 version: "13.1.0"
+apiVersion: "v2"
 appVersion: "13.0.0"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
 dependencies:

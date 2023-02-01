@@ -15,6 +15,9 @@ dry-run:
 start:
 	minikube start
 
+debug:
+	helm template --debug ../../
+
 install: configure
 	helm install $(HELM_PARAMS) --create-namespace ../../
 

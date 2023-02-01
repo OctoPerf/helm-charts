@@ -145,7 +145,7 @@ frontend:
         "twitter": false,
         "cloud": false
       }
-   
+
   ## Node labels for backend pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
