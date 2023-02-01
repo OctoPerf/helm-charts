@@ -11,7 +11,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
   annotations:
   {{- with .Values.backend.annotations }}
-  {{- toYaml . | indent 2 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
     {{/* This forces a restart if the configmap has changed */}}
     {{- if .Values.backend.env }}
@@ -33,34 +33,34 @@ spec:
     spec:
     {{- if .Values.backend.affinity }}
       affinity:
-      {{- toYaml .Values.backend.affinity | indent 2 }}
+      {{- toYaml .Values.backend.affinity | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.schedulerName }}
       schedulerName: "{{ .Values.backend.schedulerName }}"
     {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-      {{- toYaml .Values.imagePullSecrets | indent 2 }}
+      {{- toYaml .Values.imagePullSecrets | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.nodeSelector }}
       nodeSelector:
-      {{- toYaml .Values.backend.nodeSelector | indent 2 }}
+      {{- toYaml .Values.backend.nodeSelector | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.securityContext }}
       securityContext: 
-      {{- toYaml .Values.backend.securityContext | indent 2 }}
+      {{- toYaml .Values.backend.securityContext | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.tolerations }}
       tolerations:
-      {{- toYaml .Values.backend.tolerations | indent 2 }}
+      {{- toYaml .Values.backend.tolerations | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.affinity }}
       affinity:
-      {{- toYaml .Values.backend.affinity | indent 2 }}
+      {{- toYaml .Values.backend.affinity | nindent 8 }}
     {{- end }}
       volumes:
       {{- if .Values.backend.volumes }}
-      {{- toYaml .Values.backend.volumes | indent 2 }}
+      {{- toYaml .Values.backend.volumes | nindent 8 }}
       {{- end }}
       {{- if .Values.backend.licenseFile }}
       - name: license-l4j
@@ -79,7 +79,7 @@ spec:
       {{- end }}
       {{- if .Values.backend.initContainers }}
       initContainers:
-      {{- toYaml .Values.backend.initContainers | indent 2 }}
+      {{- toYaml .Values.backend.initContainers | nindent 8 }}
       {{- end }}
       containers:
       - name: {{ template "name" . }}-backend
@@ -90,7 +90,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-        {{- toYaml .Values.backend.volumeMounts . | indent 2 }}
+        {{- toYaml .Values.backend.volumeMounts . | nindent 10 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
@@ -115,11 +115,11 @@ spec:
         - name: http-port
           containerPort: {{ .Values.backend.port }}
         readinessProbe:
-        {{- toYaml .Values.backend.readinessProbe | indent 2 }}
+        {{- toYaml .Values.backend.readinessProbe | nindent 10 }}
         livenessProbe:
-        {{- toYaml .Values.backend.livenessProbe | indent 2 }}
+        {{- toYaml .Values.backend.livenessProbe | nindent 10 }}
         resources:
-        {{- toYaml .Values.backend.resources | indent 2 }}
+        {{- toYaml .Values.backend.resources | nindent 10 }}
         
 {{- if .Values.backend.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -127,11 +127,11 @@ spec:
         name: octoperf-data
         {{- if .Values.backend.persistentVolume.annotations }}
         annotations:
-        {{- toYaml .Values.backend.persistentVolume.annotations | indent 2 }}
+        {{- toYaml .Values.backend.persistentVolume.annotations | nindent 10 }}
         {{- end }}
       spec:
         accessModes:
-        {{- toYaml .Values.backend.persistentVolume.accessModes | indent 2 }}
+        {{- toYaml .Values.backend.persistentVolume.accessModes | nindent 10 }}
         resources:
           requests:
             storage: "{{ .Values.backend.persistentVolume.size }}"

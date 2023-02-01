@@ -41,13 +41,13 @@ doc:
 
   readinessProbe:
     httpGet:
-      path: /doc
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
   livenessProbe:
     httpGet:
-      path: /doc
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5

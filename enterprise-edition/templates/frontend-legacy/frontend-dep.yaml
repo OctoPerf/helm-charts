@@ -9,10 +9,10 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-{{- with .Values.frontendLegacy.annotations }}
+  {{- with .Values.frontendLegacy.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.frontendLegacy.replicas }}
   selector:
@@ -28,23 +28,23 @@ spec:
     {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-      {{ toYaml .Values.imagePullSecrets | indent 2 }}
+      {{ toYaml .Values.imagePullSecrets | nindent 8 }}
     {{- end }}
     {{- if .Values.frontendLegacy.nodeSelector }}
       nodeSelector:
-      {{ toYaml .Values.frontendLegacy.nodeSelector | indent 2 }}
+      {{ toYaml .Values.frontendLegacy.nodeSelector | nindent 8 }}
     {{- end }}
     {{- if .Values.frontendLegacy.securityContext }}
       securityContext:
-      {{ toYaml .Values.frontendLegacy.securityContext | indent 2 }}
+      {{ toYaml .Values.frontendLegacy.securityContext | nindent 8 }}
     {{- end }}
     {{- if .Values.frontendLegacy.tolerations }}
       tolerations:
-      {{ toYaml .Values.frontendLegacy.tolerations | indent 2 }}
+      {{ toYaml .Values.frontendLegacy.tolerations | nindent 8 }}
     {{- end }}
     {{- if .Values.frontendLegacy.affinity }}
       affinity:
-      {{ toYaml .Values.frontendLegacy.affinity | indent 2 }}
+      {{ toYaml .Values.frontendLegacy.affinity | nindent 8 }}
     {{- end }}
       volumes:
       - name: config-ee
@@ -55,7 +55,7 @@ spec:
         image: "{{ .Values.registry }}/{{ .Values.frontendLegacy.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         env:
-          - name: NGINX_PORT
+          - name: "NGINX_PORT"
             value: "{{ .Values.frontendLegacy.port }}"
         ports:
           - name: http-port
@@ -65,7 +65,7 @@ spec:
             mountPath: /usr/share/nginx/html/config-ee.json
             subPath: config-ee.json
         readinessProbe:
-{{ toYaml .Values.frontendLegacy.readinessProbe | indent 10 }}
+        {{ toYaml .Values.frontendLegacy.readinessProbe | nindent 10 }}
         livenessProbe:
-{{ toYaml .Values.frontendLegacy.livenessProbe | indent 10 }}
+        {{ toYaml .Values.frontendLegacy.livenessProbe | nindent 10 }}
 {{- end }}

@@ -13,9 +13,9 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- if .Values.backend.headless.labels }}
-{{ toYaml .Values.backend.headless.labels | indent 4 }}
-{{- end }}
+    {{- if .Values.backend.headless.labels }}
+    {{ toYaml .Values.backend.headless.labels | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     app: {{ template "name" . }}-backend
