@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "12.12.3"
+version: "13.0.0"
 
 imagePullPolicy: IfNotPresent
 imagePullSecrets: []
@@ -31,6 +31,9 @@ ingress:
   
 doc:
   enabled: true
+
+  # nginx internal port
+  port: 8080
   replicas: 1
   image: octoperf/enterprise-documentation
 
@@ -58,26 +61,25 @@ doc:
   ##
   affinity: {}
 
-frontend:
-  enabled: true
+frontendLegacy:
+  enabled: false
   replicas: 1
   image: octoperf/enterprise-ui
 
   annotations: {}
 
-  # internal port, can be overrided in case of insufficient right
-  # service will still listen to 80.
-  port: 80
+  # nginx internal port
+  port: 8080
 
   readinessProbe:
     httpGet:
-      path: /app
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
   livenessProbe:
     httpGet:
-      path: /app
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
@@ -103,26 +105,25 @@ frontend:
   ##
   affinity: {}
 
-frontendBeta:
-  enabled: false
+frontend:
+  enabled: true
   replicas: 1
   image: octoperf/octoperf-ui
 
   annotations: {}
 
-  # internal port, can be overrided in case of insufficient right
-  # service will still listen to 80.
-  port: 80
+  # nginx internal port
+  port: 8080
 
   readinessProbe:
     httpGet:
-      path: /ui
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
   livenessProbe:
     httpGet:
-      path: /ui
+      path: /
       port: http-port
     initialDelaySeconds: 5
     periodSeconds: 5
@@ -130,13 +131,19 @@ frontendBeta:
   config:
     config-prod.json: |-
       {
-        "baseUrl": "",
+        "version": "octoperf-13",
+        "backendApiUrl": "",
         "docUrl": "/doc",
+        "oldUiUrl": "/app",
         "adminEmail": "support@octoperf.com",
-        "modules": {
-          "login": true,
-          "register": true
-        }
+        "login": {
+          "@type": "form",
+          "register": true,
+          "activate": false,
+          "forgotPassword": false
+        },
+        "twitter": false,
+        "cloud": false
       }
    
   ## Node labels for backend pod assignment
@@ -151,6 +158,7 @@ frontendBeta:
 backend:
   image: octoperf/enterprise-edition
   replicas: 1
+  port: 8090
 
   annotations: {}
 

@@ -1,4 +1,4 @@
-{{- if .Values.frontendBeta.enabled }}
+{{- if .Values.frontend.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -15,6 +15,7 @@ spec:
   clusterIP: None
   ports:
   - name: http
-    port: {{ .Values.frontendBeta.port }}
+    port: {{ .Values.frontend.port }}
+    targetPort: {{ .Values.frontend.port }}
     protocol: TCP
 {{- end }}

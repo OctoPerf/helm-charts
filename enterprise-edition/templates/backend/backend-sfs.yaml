@@ -79,7 +79,7 @@ spec:
       {{- end }}
       {{- if .Values.backend.initContainers }}
       initContainers:
-{{ toYaml .Values.backend.initContainers | indent 8 }}
+      {{ toYaml .Values.backend.initContainers | indent 2 }}
       {{- end }}
       containers:
       - name: {{ template "name" . }}-backend
@@ -90,7 +90,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-{{ toYaml .Values.backend.volumeMounts . | indent 10 }}
+        {{ toYaml .Values.backend.volumeMounts . | indent 2 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
@@ -113,13 +113,13 @@ spec:
         {{- end }}
         ports:
         - name: http-port
-          containerPort: 8090
+          containerPort: {{ .Values.backend.port }}
         readinessProbe:
-{{ toYaml .Values.backend.readinessProbe | indent 10 }}
+        {{ toYaml .Values.backend.readinessProbe | indent 2 }}
         livenessProbe:
-{{ toYaml .Values.backend.livenessProbe | indent 10 }}
+        {{ toYaml .Values.backend.livenessProbe | indent 2 }}
         resources:
-{{ toYaml .Values.backend.resources | indent 10 }}
+        {{ toYaml .Values.backend.resources | indent 2 }}
         
 {{- if .Values.backend.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -127,11 +127,11 @@ spec:
         name: octoperf-data
         {{- if .Values.backend.persistentVolume.annotations }}
         annotations:
-{{ toYaml .Values.backend.persistentVolume.annotations | indent 10 }}
+        {{ toYaml .Values.backend.persistentVolume.annotations | indent 2 }}
         {{- end }}
       spec:
         accessModes:
-{{ toYaml .Values.backend.persistentVolume.accessModes | indent 10 }}
+        {{ toYaml .Values.backend.persistentVolume.accessModes | indent 2 }}
         resources:
           requests:
             storage: "{{ .Values.backend.persistentVolume.size }}"

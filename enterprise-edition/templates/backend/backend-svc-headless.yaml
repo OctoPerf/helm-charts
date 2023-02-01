@@ -23,7 +23,7 @@ spec:
   publishNotReadyAddresses: {{ .Values.backend.headless.publishNotReadyAddresses }}
   ports:
     - name: http
-      port: 8090
+      port: {{ .Values.backend.port }}
       protocol: TCP
     - name: hazelcast
       port: 5701

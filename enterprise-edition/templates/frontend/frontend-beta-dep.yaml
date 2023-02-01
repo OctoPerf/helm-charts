@@ -1,11 +1,11 @@
-{{- if .Values.frontend.enabled -}}
+{{- if .Values.frontend.enabled }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "name" . }}-frontend
+  name: {{ template "name" . }}-frontend-beta
   labels:
-    app: {{ template "name" . }}-frontend
+    app: {{ template "name" . }}-frontend-beta
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -17,11 +17,11 @@ spec:
   replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}-frontend
+      app: {{ template "name" . }}-frontend-beta
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}-frontend
+        app: {{ template "name" . }}-frontend-beta
     spec:
     {{- if .Values.frontend.schedulerName }}
       schedulerName: "{{ .Values.frontend.schedulerName }}"
@@ -47,11 +47,11 @@ spec:
       {{ toYaml .Values.frontend.affinity | indent 2 }}
     {{- end }}
       volumes:
-      - name: config-ee
+      - name: config-prod
         configMap:
-          name: "{{ template "name" . }}-frontend-config"
+          name: "{{ template "name" . }}-frontend-beta-config"
       containers:
-      - name: {{ template "name" . }}-frontend
+      - name: {{ template "name" . }}-frontend-beta
         image: "{{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         env:
@@ -61,9 +61,9 @@ spec:
           - name: http-port
             containerPort: {{ .Values.frontend.port }}
         volumeMounts:
-          - name: config-ee
-            mountPath: /usr/share/nginx/html/app/config-ee.json
-            subPath: config-ee.json
+          - name: config-prod
+            mountPath: /usr/share/nginx/html/assets/config-prod.json
+            subPath: config-prod.json
         readinessProbe:
 {{ toYaml .Values.frontend.readinessProbe | indent 10 }}
         livenessProbe:

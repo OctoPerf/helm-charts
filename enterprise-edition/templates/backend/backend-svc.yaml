@@ -30,7 +30,7 @@ spec:
 {{- end }}
   ports:
     - name: http
-      port: 8090
+      port: {{ .Values.backend.port }}
       protocol: TCP
     {{- if .Values.backend.service.nodePort }}
       nodePort: {{ .Values.backend.service.nodePort }}

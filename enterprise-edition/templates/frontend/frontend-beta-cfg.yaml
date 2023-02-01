@@ -1,11 +1,11 @@
-{{- if .Values.frontend.enabled -}}
+{{- if .Values.frontend.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "name" . }}-frontend-config
+  name: {{ template "name" . }}-frontend-beta-config
   labels:
-    app: {{ template "name" . }}-frontend-config
+    app: {{ template "name" . }}-frontend-beta-config
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

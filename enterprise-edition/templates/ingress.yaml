@@ -8,10 +8,11 @@ metadata:
     app: {{ template "name" . }}-ingress
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+  {{- with .Values.ingress.annotations }}
+  {{ toYaml . | indent 2 }}
+  {{- end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
@@ -32,39 +33,39 @@ spec:
     - host: {{ . }}
       http:
         paths:
-        {{- if $dot.Values.frontend.enabled }}
-        - path: /app
+        {{- if $dot.Values.frontendLegacy.enabled }}
+        - path: /app(/|$)(.*)
           pathType: Prefix
           backend:
             service:
               name: {{ include "name" $dot }}-frontend
               port: 
-                number: {{ $dot.Values.frontend.port }}
+                number: {{ $dot.Values.frontendLegacy.port }}
         {{- end }}
-        {{- if $dot.Values.frontendBeta.enabled }}
-        - path: /ui
+        {{- if $dot.Values.frontend.enabled }}
+        - path: /ui(/|$)(.*)
           pathType: Prefix
           backend:
             service:
               name: {{ include "name" $dot }}-frontend-beta
               port: 
-                number: {{ $dot.Values.frontendBeta.port }}
+                number: {{ $dot.Values.frontend.port }}
         {{- end }}
         {{- if $dot.Values.doc.enabled }}
-        - path: /doc
+        - path: /doc(/|$)(.*)
           pathType: Prefix
           backend:
             service:
               name: {{ include "name" $dot }}-doc
               port: 
-                number: 80
+                number: {{ $dot.Values.doc.port }}
         {{- end }}
-        - path: /
+        - path: (/|$)(.*)
           pathType: Prefix
           backend:
             service:
               name: {{ include "name" $dot }}-backend
               port: 
-                number: 8090
+                number: {{ $dot.Values.backend.port }}
   {{- end }}
 {{- end }}

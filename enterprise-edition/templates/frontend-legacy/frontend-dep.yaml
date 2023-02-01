@@ -1,0 +1,71 @@
+{{- if .Values.frontendLegacy.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}-frontend
+  labels:
+    app: {{ template "name" . }}-frontend
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{- with .Values.frontendLegacy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  replicas: {{ .Values.frontendLegacy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-frontend
+    spec:
+    {{- if .Values.frontendLegacy.schedulerName }}
+      schedulerName: "{{ .Values.frontendLegacy.schedulerName }}"
+    {{- end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{ toYaml .Values.imagePullSecrets | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontendLegacy.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.frontendLegacy.nodeSelector | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontendLegacy.securityContext }}
+      securityContext:
+      {{ toYaml .Values.frontendLegacy.securityContext | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontendLegacy.tolerations }}
+      tolerations:
+      {{ toYaml .Values.frontendLegacy.tolerations | indent 2 }}
+    {{- end }}
+    {{- if .Values.frontendLegacy.affinity }}
+      affinity:
+      {{ toYaml .Values.frontendLegacy.affinity | indent 2 }}
+    {{- end }}
+      volumes:
+      - name: config-ee
+        configMap:
+          name: "{{ template "name" . }}-frontend-config"
+      containers:
+      - name: {{ template "name" . }}-frontend
+        image: "{{ .Values.registry }}/{{ .Values.frontendLegacy.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        env:
+          - name: NGINX_PORT
+            value: "{{ .Values.frontendLegacy.port }}"
+        ports:
+          - name: http-port
+            containerPort: {{ .Values.frontendLegacy.port }}
+        volumeMounts:
+          - name: config-ee
+            mountPath: /usr/share/nginx/html/config-ee.json
+            subPath: config-ee.json
+        readinessProbe:
+{{ toYaml .Values.frontendLegacy.readinessProbe | indent 10 }}
+        livenessProbe:
+{{ toYaml .Values.frontendLegacy.livenessProbe | indent 10 }}
+{{- end }}
