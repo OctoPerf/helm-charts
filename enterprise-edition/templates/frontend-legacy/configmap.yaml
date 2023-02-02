@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "name" . }}-frontend-config
+  name: {{ template "name" . }}-frontend-legacy-config
   labels:
-    app: {{ template "name" . }}-frontend-config
+    app: {{ template "name" . }}-frontend-legacy-config
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

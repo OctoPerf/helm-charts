@@ -3,15 +3,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "name" . }}-frontend-beta
+  name: {{ template "name" . }}-frontend
   labels:
-    app: {{ template "name" . }}-frontend-beta
+    app: {{ template "name" . }}-frontend
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   selector:
-    app: "{{ template "name" . }}-frontend-beta"
+    app: "{{ template "name" . }}-frontend"
   clusterIP: None
   ports:
   - name: http

@@ -3,7 +3,7 @@
 registry: "registry.hub.docker.com"
 version: "13.0.0"
 
-imagePullPolicy: IfNotPresent
+imagePullPolicy: Always
 imagePullSecrets: []
 # - name: "image-pull-secret"
 
@@ -28,132 +28,7 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-  
-doc:
-  enabled: true
 
-  # nginx internal port
-  port: 8080
-  replicas: 1
-  image: octoperf/enterprise-documentation
-
-  annotations: {}
-
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-
-  ## Node labels for backend pod assignment
-  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-
-  ## Pod affinity
-  ##
-  affinity: {}
-
-frontendLegacy:
-  enabled: false
-  replicas: 1
-  image: octoperf/enterprise-ui
-
-  annotations: {}
-
-  # nginx internal port
-  port: 8080
-
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-
-  config:
-    config-ee.json: |-
-      {
-        "baseUrl": "",
-        "docUrl": "/doc",
-        "adminEmail": "support@octoperf.com",
-        "modules": {
-          "login": true,
-          "register": true
-        }
-      }
-   
-  ## Node labels for backend pod assignment
-  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-
-  ## Pod affinity
-  ##
-  affinity: {}
-
-frontend:
-  enabled: true
-  replicas: 1
-  image: octoperf/octoperf-ui
-
-  annotations: {}
-
-  # nginx internal port
-  port: 8080
-
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-
-  config:
-    config-prod.json: |-
-      {
-        "version": "octoperf-13",
-        "backendApiUrl": "",
-        "docUrl": "/doc",
-        "oldUiUrl": "/app",
-        "adminEmail": "support@octoperf.com",
-        "login": {
-          "@type": "form",
-          "register": true,
-          "activate": false,
-          "forgotPassword": false
-        },
-        "twitter": false,
-        "cloud": false
-      }
-
-  ## Node labels for backend pod assignment
-  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-
-  ## Pod affinity
-  ##
-  affinity: {}
 
 backend:
   image: octoperf/enterprise-edition
@@ -320,3 +195,130 @@ backend:
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     # nodePort: 30000
+
+doc:
+  enabled: true
+
+  # nginx internal port
+  port: 8080
+  replicas: 1
+  image: octoperf/enterprise-documentation
+
+  annotations: {}
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+frontend:
+  enabled: true
+  replicas: 1
+  image: octoperf/octoperf-ui
+
+  annotations: {}
+
+  # nginx internal port
+  port: 8080
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  config:
+    config-prod.json: |-
+      {
+        "version": "octoperf-13",
+        "backendApiUrl": "",
+        "docUrl": "/doc",
+        "oldUiUrl": "/app",
+        "adminEmail": "support@octoperf.com",
+        "login": {
+          "@type": "form",
+          "register": true,
+          "activate": false,
+          "forgotPassword": false
+        },
+        "twitter": false,
+        "cloud": false
+      }
+
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+
+frontendLegacy:
+  enabled: false
+  replicas: 1
+  image: octoperf/enterprise-ui
+
+  annotations: {}
+
+  # nginx internal port
+  port: 8080
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  config:
+    config-ee.json: |-
+      {
+        "baseUrl": "",
+        "docUrl": "/doc",
+        "adminEmail": "support@octoperf.com",
+        "modules": {
+          "login": true,
+          "register": true
+        }
+      }
+   
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}

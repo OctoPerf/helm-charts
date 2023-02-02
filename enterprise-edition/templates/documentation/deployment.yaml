@@ -51,6 +51,7 @@ spec:
       containers:
       - name: {{ template "name" . }}-doc
         image: "{{ .Values.registry }}/{{ .Values.doc.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         env:
         - name: "NGINX_PORT"
           value: "{{ .Values.doc.port }}"

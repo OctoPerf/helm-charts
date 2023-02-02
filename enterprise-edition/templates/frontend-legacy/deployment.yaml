@@ -3,9 +3,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "name" . }}-frontend
+  name: {{ template "name" . }}-frontend-legacy
   labels:
-    app: {{ template "name" . }}-frontend
+    app: {{ template "name" . }}-frontend-legacy
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -17,11 +17,11 @@ spec:
   replicas: {{ .Values.frontendLegacy.replicas }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}-frontend
+      app: {{ template "name" . }}-frontend-legacy
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}-frontend
+        app: {{ template "name" . }}-frontend-legacy
     spec:
     {{- if .Values.frontendLegacy.schedulerName }}
       schedulerName: "{{ .Values.frontendLegacy.schedulerName }}"
@@ -49,9 +49,9 @@ spec:
       volumes:
       - name: config-ee
         configMap:
-          name: "{{ template "name" . }}-frontend-config"
+          name: "{{ template "name" . }}-frontend-legacy-config"
       containers:
-      - name: {{ template "name" . }}-frontend
+      - name: {{ template "name" . }}-frontend-legacy
         image: "{{ .Values.registry }}/{{ .Values.frontendLegacy.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
         env:
