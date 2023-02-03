@@ -4,7 +4,6 @@ metadata:
   name: {{ template "name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    name: octoperf-kubernetes-agent
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"

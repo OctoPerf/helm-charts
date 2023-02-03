@@ -55,13 +55,13 @@ tolerations: []
 
 # See https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 # Have only one agent per node
-topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: DoNotSchedule
-    labelSelector:
-      matchLabels:
-        name: octoperf-kubernetes-agent
+topologySpreadConstraints: []
+#  - maxSkew: 1
+#    topologyKey: kubernetes.io/hostname
+#    whenUnsatisfiable: DoNotSchedule
+#    labelSelector:
+#      matchLabels:
+#        name: octoperf-kubernetes-agent
 
 ## Security context
 securityContext: {}
