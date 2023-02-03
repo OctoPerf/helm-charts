@@ -1,7 +1,7 @@
 ---
 
 # MANDATORY: agent authentication token
-token: ""
+token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvY3RvcGVyZiIsImlhdCI6MTY3NTQxNzA4NiwiaW5mbyI6IntcImRvY2tlckltYWdlXCI6XCJvY3RvcGVyZi9kb2NrZXItYWdlbnQ6MTIuMTEuMFwiLFwiaWRcIjpcIlwiLFwibmFtZVwiOlwidGFuX2FuZHJlX25pdHpzY2hlXCIsXCJwcm92aWRlcklkXCI6XCJHNUhDZVlNQnFnQ0JwcmlKekNHUFwiLFwicmVnaW9uXCI6XCJkZWZhdWx0XCIsXCJ0eXBlXCI6XCJNQU5VQUxcIixcInpvbmVcIjpcImRlZmF1bHRcIn0ifQ.aSwlX_a-nBupyy4p6LhP7gzuPw31j8wj_QQal1NFd8s"
 
 # OctoPerf Server URL
 serverUrl: "https://api.octoperf.com"

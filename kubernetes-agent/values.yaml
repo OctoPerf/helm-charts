@@ -8,12 +8,15 @@ token: ""
 # OctoPerf Server URL
 serverUrl: "https://api.octoperf.com"
 
+# Deploy one agent per node to use as load-generator
+replicas: 1
+
 ## OctoPerf Kubernetes Agent Image
 ## ref: https://hub.docker.com/r/octoperf/kubernetes-agent
 image:
   registry: docker.io
   repository: octoperf/kubernetes-agent
-  tag: 12.12.0
+  tag: 13.0.0
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -50,6 +53,16 @@ affinity: {}
 ##
 tolerations: []
 
+# See https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+# Have only one agent per node
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        name: octoperf-kubernetes-agent
+
 ## Security context
 securityContext: {}
 #  enabled: false
@@ -62,7 +75,7 @@ securityContext: {}
 ##
 resources:
   requests:
-    memory: 256Mi
+    memory: 384Mi
     cpu: 200m
 
 ## @param extraEnvVars Extra environment variables to be set on agent container
