@@ -47,7 +47,7 @@ spec:
       {{- toYaml .Values.backend.nodeSelector | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.securityContext }}
-      securityContext: 
+      securityContext:
       {{- toYaml .Values.backend.securityContext | nindent 8 }}
     {{- end }}
     {{- if .Values.backend.tolerations }}
@@ -60,7 +60,7 @@ spec:
     {{- end }}
       volumes:
       {{- if .Values.backend.volumes }}
-      {{- toYaml .Values.backend.volumes | nindent 8 }}
+      {{- toYaml .Values.backend.volumes | nindent 6 }}
       {{- end }}
       {{- if .Values.backend.licenseFile }}
       - name: license-l4j
@@ -90,7 +90,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-        {{- toYaml .Values.backend.volumeMounts . | nindent 10 }}
+        {{- toYaml .Values.backend.volumeMounts . | nindent 8 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
