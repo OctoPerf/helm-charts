@@ -14,7 +14,7 @@ elasticsearch:
 
 ingress:
   enabled: true
-  
+
   # className: myClassName
 
   annotations: {}
@@ -142,7 +142,7 @@ backend:
 
     ## backend data Persistent Volume size
     ##
-    size: 1Gi
+    size: 10Gi
 
     ## backend data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
