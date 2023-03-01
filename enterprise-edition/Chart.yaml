@@ -5,9 +5,9 @@ maintainers:
   name: OctoPerf
   url: https://octoperf.com
 name: enterprise-edition
-version: "13.1.1"
+version: "13.1.2"
 apiVersion: "v2"
-appVersion: "13.0.0"
+appVersion: "13.0.1"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
 dependencies:
   - name: elasticsearch
