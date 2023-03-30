@@ -33,8 +33,6 @@ image:
   ##
   debug: false
 
-namespace: "octoperf"
-
 extraInitContainers: |
   # - name: do-something
   #   image: busybox

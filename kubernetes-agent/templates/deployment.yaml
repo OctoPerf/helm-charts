@@ -72,6 +72,8 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         resources: {{ toYaml .Values.resources | nindent 10 }}
         env:
+        - name: OCTOPERF_KUBERNETES_NAMESPACE
+          value: "{{ .Release.Namespace }}"
         - name: AGENT_TOKEN
           value: {{ default "" .Values.token | quote }}
         - name: SERVER_URL
