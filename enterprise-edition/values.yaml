@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "13.0.1"
+version: "13.1.0"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -314,6 +314,40 @@ frontendLegacy:
         }
       }
    
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+utilityServer:
+  enabled: false
+  replicas: 1
+  image: octoperf/utility-server
+
+  annotations: {}
+
+  env:
+    JAVA_OPTS: "-Xms1g -Xmx1g"
+
+  port: 8080
+
+  readinessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
   ## Node labels for backend pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##

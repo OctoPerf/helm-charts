@@ -25,6 +25,9 @@ frontendBeta:
 doc:
   enabled: true
 
+utilityServer:
+  enabled: true
+
 ingress:
   enabled: true
   hosts:

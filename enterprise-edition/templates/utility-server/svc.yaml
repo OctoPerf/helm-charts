@@ -1,0 +1,21 @@
+{{- if .Values.utilityServer.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "name" . }}-utility-server
+  labels:
+    app: {{ template "name" . }}-utility-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    app: "{{ template "name" . }}-utility-server"
+  clusterIP: None
+  ports:
+  - name: http
+    port: {{ .Values.utilityServer.port }}
+    targetPort: {{ .Values.utilityServer.port }}
+    protocol: TCP
+{{- end }}

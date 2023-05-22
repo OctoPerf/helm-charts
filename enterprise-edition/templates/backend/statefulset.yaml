@@ -18,7 +18,7 @@ metadata:
     configchecksum: {{ include (print .Template.BasePath "/backend/configmap-env.yaml") . | sha256sum | trunc 63 }}
     {{- end }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.backend.replicas }}
   serviceName: {{ template "name" . }}-backend-headless
   selector:
     matchLabels:

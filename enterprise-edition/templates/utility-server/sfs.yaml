@@ -1,0 +1,96 @@
+{{- if .Values.utilityServer.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "name" . }}-utility-server
+  labels:
+    app: {{ template "name" . }}-utility-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+  {{- with .Values.utilityServer.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.utilityServer.replicas }}
+  serviceName: {{ template "name" . }}-utility-server-headless
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-utility-server
+  podManagementPolicy: {{ .Values.utilityServer.podManagementPolicy }}
+  updateStrategy:
+    type: {{ .Values.utilityServer.updateStrategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-utility-server
+    spec:
+    {{- if .Values.utilityServer.affinity }}
+      affinity:
+      {{- toYaml .Values.utilityServer.affinity | nindent 8 }}
+    {{- end }}
+    {{- if .Values.utilityServer.schedulerName }}
+      schedulerName: "{{ .Values.utilityServer.schedulerName }}"
+    {{- end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+    {{- end }}
+    {{- if .Values.utilityServer.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.utilityServer.nodeSelector | nindent 8 }}
+    {{- end }}
+    {{- if .Values.utilityServer.securityContext }}
+      securityContext:
+      {{- toYaml .Values.utilityServer.securityContext | nindent 8 }}
+    {{- end }}
+    {{- if .Values.utilityServer.tolerations }}
+      tolerations:
+      {{- toYaml .Values.utilityServer.tolerations | nindent 8 }}
+    {{- end }}
+    {{- if .Values.utilityServer.affinity }}
+      affinity:
+      {{- toYaml .Values.utilityServer.affinity | nindent 8 }}
+    {{- end }}
+      volumes:
+      {{- if .Values.utilityServer.volumes }}
+      {{- toYaml .Values.utilityServer.volumes | nindent 6 }}
+      {{- end }}
+      {{- range .Values.utilityServer.secretMounts }}
+      - name: {{ .name }}
+        secret:
+          secretName: {{ .secretName }}
+      {{- end }}
+      {{- if .Values.utilityServer.initContainers }}
+      initContainers:
+      {{- toYaml .Values.utilityServer.initContainers | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ template "name" . }}-utility-server
+        image: "{{ .Values.registry }}/{{ .Values.utilityServer.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "name" . }}-utility-server-env
+        volumeMounts:
+        {{- if .Values.utilityServer.volumeMounts }}
+        {{- toYaml .Values.utilityServer.volumeMounts . | nindent 8 }}
+        {{- end }}
+        {{- range .Values.utilityServer.secretMounts }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
+        {{- end }}
+        ports:
+        - name: http-port
+          containerPort: {{ .Values.utilityServer.port }}
+        readinessProbe:
+        {{- toYaml .Values.utilityServer.readinessProbe | nindent 10 }}
+        livenessProbe:
+        {{- toYaml .Values.utilityServer.livenessProbe | nindent 10 }}
+        resources:
+        {{- toYaml .Values.utilityServer.resources | nindent 10 }}
+{{- end }}

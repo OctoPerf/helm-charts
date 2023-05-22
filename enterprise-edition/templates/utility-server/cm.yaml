@@ -1,0 +1,17 @@
+{{- if .Values.utilityServer.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-utility-server-env
+  labels:
+    app: {{ template "name" . }}-utility-server-env
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+{{- range $path, $config := .Values.utilityServer.env }}
+  {{ $path }}: |
+{{ $config | indent 4 -}}
+{{- end }}
+{{- end }}
