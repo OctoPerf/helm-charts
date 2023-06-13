@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "13.1.0"
+version: "13.2.0"
 
 imagePullPolicy: Always
 imagePullSecrets: []
