@@ -90,7 +90,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-        {{- toYaml .Values.backend.volumeMounts . | nindent 8 }}
+        {{- toYaml .Values.backend.volumeMounts | nindent 8 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
