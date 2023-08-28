@@ -38,6 +38,8 @@ backend:
 
   annotations: {}
 
+  # serviceAccountName: "myServiceAccount"
+
   initContainers: []
 
   affinity: {}

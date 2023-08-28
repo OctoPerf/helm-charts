@@ -31,6 +31,9 @@ spec:
       labels:
         app: {{ template "name" . }}-backend
     spec:
+    {{- if .Values.backend.serviceAccountName }}
+      serviceAccountName: "{{ template .Values.backend.serviceAccountName . }}"
+    {{- end }}
     {{- if .Values.backend.affinity }}
       affinity:
       {{- toYaml .Values.backend.affinity | nindent 8 }}
