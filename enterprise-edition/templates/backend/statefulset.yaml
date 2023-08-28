@@ -32,7 +32,7 @@ spec:
         app: {{ template "name" . }}-backend
     spec:
     {{- if .Values.backend.serviceAccountName }}
-      serviceAccountName: "{{ template .Values.backend.serviceAccountName . }}"
+      serviceAccountName: "{{ .Values.backend.serviceAccountName . }}"
     {{- end }}
     {{- if .Values.backend.affinity }}
       affinity:
