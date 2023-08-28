@@ -49,7 +49,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- if .Values.extraInitContainers }}
-      initContainers: {{ tpl .Values.extraInitContainers . | nindent 8 }}
+      initContainers: {{ tpl .Values.extraInitContainers | nindent 8 }}
       {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
@@ -87,8 +87,8 @@ spec:
           value: "-Dorg.slf4j.simpleLogger.defaultLogLevel=debug"
         {{- end }}
         {{- if .Values.extraEnvVars }}
-        {{ tpl .Values.extraEnvVars . | nindent 8 }}
+        {{ tpl .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         {{- if .Values.volumeMounts }}
-        volumeMounts: {{ tpl .Values.volumeMounts . | nindent 10 }}
+        volumeMounts: {{ tpl .Values.volumeMounts | nindent 10 }}
         {{- end }}
