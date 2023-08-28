@@ -37,7 +37,7 @@ backend:
 
   annotations: {}
 
-  initContainers: {}
+  initContainers: []
 
   affinity: {}
   #  podAntiAffinity:
@@ -116,8 +116,8 @@ backend:
   # schedulerName:
 
   # Custom backend volumes
-  volumes: {}
-  volumeMounts: {}
+  volumes: []
+  volumeMounts: []
 
   persistentVolume:
     ## If true, backend will create/use a Persistent Volume Claim
