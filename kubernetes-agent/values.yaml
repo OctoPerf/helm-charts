@@ -16,7 +16,7 @@ replicas: 1
 image:
   registry: docker.io
   repository: octoperf/kubernetes-agent
-  tag: 13.0.1
+  tag: 13.2.0
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -33,13 +33,8 @@ image:
   ##
   debug: false
 
-namespace: "octoperf"
-
-extraInitContainers: |
-  # - name: do-something
-  #   image: busybox
-  #   command: ['do', 'something']
-
+extraInitContainers: []
+  
 ## Node selector
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -85,6 +80,8 @@ resources:
 ##    value: "Europe/Paris"
 ##
 extraEnvVars: []
+
+volumeMounts: []
 
 ## @section RBAC parameters
 

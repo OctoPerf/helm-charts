@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "13.0.1"
+version: "14.0.0"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -31,13 +31,16 @@ ingress:
 
 
 backend:
+  enabled: true
   image: octoperf/enterprise-edition
   replicas: 1
   port: 8090
 
   annotations: {}
 
-  initContainers: {}
+  # serviceAccountName: "myServiceAccount"
+
+  initContainers: []
 
   affinity: {}
   #  podAntiAffinity:
@@ -116,8 +119,8 @@ backend:
   # schedulerName:
 
   # Custom backend volumes
-  volumes: {}
-  volumeMounts: {}
+  volumes: []
+  volumeMounts: []
 
   persistentVolume:
     ## If true, backend will create/use a Persistent Volume Claim
@@ -314,6 +317,40 @@ frontendLegacy:
         }
       }
    
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+utilityServer:
+  enabled: false
+  replicas: 1
+  image: octoperf/utility-server
+
+  annotations: {}
+
+  env:
+    JAVA_OPTS: "-Xms1g -Xmx1g"
+
+  port: 8080
+
+  readinessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http-port
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
   ## Node labels for backend pod assignment
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##

@@ -18,7 +18,7 @@ metadata:
     configchecksum: {{ include (print .Template.BasePath "/backend/configmap-env.yaml") . | sha256sum | trunc 63 }}
     {{- end }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.backend.replicas }}
   serviceName: {{ template "name" . }}-backend-headless
   selector:
     matchLabels:
@@ -31,6 +31,9 @@ spec:
       labels:
         app: {{ template "name" . }}-backend
     spec:
+    {{- if .Values.backend.serviceAccountName }}
+      serviceAccountName: "{{ .Values.backend.serviceAccountName . }}"
+    {{- end }}
     {{- if .Values.backend.affinity }}
       affinity:
       {{- toYaml .Values.backend.affinity | nindent 8 }}
@@ -90,7 +93,7 @@ spec:
             name: {{ template "name" . }}-backend-env
         volumeMounts:
         {{- if .Values.backend.volumeMounts }}
-        {{- toYaml .Values.backend.volumeMounts . | nindent 8 }}
+        {{- toYaml .Values.backend.volumeMounts | nindent 8 }}
         {{- end }}
         {{- range .Values.backend.secretMounts }}
         - name: {{ .name }}
