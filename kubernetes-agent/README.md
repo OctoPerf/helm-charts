@@ -35,6 +35,10 @@ Run an agent on every node you would like to use for running JMeter pods. An age
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 14.x.x|
+| ------|
+| 14.1.0|
+
 | 13.x.x|
 | ------|
 | 13.2.0|
