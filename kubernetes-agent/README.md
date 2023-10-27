@@ -37,11 +37,8 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 14.x.x|
 | ------|
-<<<<<<< HEAD
 | 14.1.0|
-=======
 | 14.0.0|
->>>>>>> ba6a10c6238862838dad20d70284756bc848e8a9
 
 | 13.x.x|
 | ------|
