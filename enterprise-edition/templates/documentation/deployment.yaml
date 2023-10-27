@@ -28,9 +28,7 @@ spec:
     {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-      {{- range .Values.imagePullSecrets }}
-        - name: {{ . }}
-      {{- end }}
+      {{- toYaml .Values.imagePullSecrets | nindent 8 }}
     {{- end }}
     {{- if .Values.doc.nodeSelector }}
       nodeSelector:
