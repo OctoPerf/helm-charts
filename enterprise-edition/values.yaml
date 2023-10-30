@@ -15,7 +15,8 @@ elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 ingress:
-  enabled: true
+  # Before enabling, make sure to provide hosts / tls below
+  enabled: false
 
   # className: myClassName
 
