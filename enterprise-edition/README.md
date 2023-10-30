@@ -78,7 +78,7 @@ The configuration is split in `4` big sections defined by the prefix being used:
 - **frontend.** prefix: frontend configuration settings,
 - **doc.** prefix: documentation configuration settings.
 
-**An example of configuration values can be found [here](./examples/minikube/values.yml).**
+**An example of configuration values can be found [here](./examples/minikube/values.yaml).**
 
 | Parameter | Description | Default |
 | ----------|-------------|---------|
