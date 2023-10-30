@@ -70,13 +70,15 @@ Examples of installing older major versions can be found in the [examples](./exa
 
 ## Configuration
 
-The configuration is splitted in `4` big sections defined by the prefix being used:
+The configuration is split in `4` big sections defined by the prefix being used:
 
 - **No prefix**: global configuration settings such as Docker registry,
 - **ingress.** prefix: ingress configuration settings,
 - **backend.** prefix: backend configuration settings,
 - **frontend.** prefix: frontend configuration settings,
 - **doc.** prefix: documentation configuration settings.
+
+**An example of configuration values can be found [here](./examples/minikube/values.yml).**
 
 | Parameter | Description | Default |
 | ----------|-------------|---------|
