@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "14.0.0"
+version: "14.1.0"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -9,11 +9,14 @@ imagePullSecrets: []
 
 elasticsearch:
   enabled: true
+  image: "elasticsearch"
+  imageTag: "7.17.13"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 ingress:
-  enabled: true
+  # Before enabling, make sure to provide hosts / tls below
+  enabled: false
 
   # className: myClassName
 

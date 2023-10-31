@@ -37,6 +37,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 14.x.x|
 | ------|
+| 14.1.0|
 | 14.0.0|
 
 | 13.x.x|
