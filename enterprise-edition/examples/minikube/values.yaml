@@ -19,13 +19,7 @@ backend:
 frontend:
   enabled: true
 
-frontendBeta:
-  enabled: true
-
 doc:
-  enabled: true
-
-utilityServer:
   enabled: true
 
 ingress:
