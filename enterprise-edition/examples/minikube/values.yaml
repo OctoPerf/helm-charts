@@ -12,15 +12,8 @@ elasticsearch:
         storage: 4Gi
 
 backend:
-  enabled: true
   env:
     SERVER_HOSTNAME: 192.168.49.2.sslip.io
-
-frontend:
-  enabled: true
-
-doc:
-  enabled: true
 
 ingress:
   enabled: true
