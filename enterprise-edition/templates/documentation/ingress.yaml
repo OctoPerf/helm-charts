@@ -13,9 +13,9 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: "/$2"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^([^.?]*[^/])$ $1/ redirect;
-  {{- with .Values.ingress.annotations }}
-  {{ toYaml . | indent 2 }}
-  {{- end }}
+{{- with .Values.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
