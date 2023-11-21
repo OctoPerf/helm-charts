@@ -65,6 +65,10 @@ spec:
       {{- if .Values.backend.volumes }}
       {{- toYaml .Values.backend.volumes | nindent 6 }}
       {{- end }}
+      {{- if .Values.backend.volumes }}
+       - name: octoperf-data
+          emptyDir: {}
+      {{- end }}
       {{- if .Values.backend.licenseFile }}
       - name: license-l4j
         configMap:
@@ -145,8 +149,5 @@ spec:
         storageClassName: "{{ .Values.backend.persistentVolume.storageClass }}"
       {{- end }}
       {{- end }}
-{{- else }}
-        - name: octoperf-data
-          emptyDir: {}
 {{- end }}
 {{- end }}
