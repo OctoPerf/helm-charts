@@ -90,5 +90,5 @@ spec:
         {{ tpl .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         {{- if .Values.volumeMounts }}
-        volumeMounts: {{ tpl .Values.volumeMounts | nindent 10 }}
+        volumeMounts: {{ toYaml .Values.volumeMounts | nindent 10 }}
         {{- end }}
