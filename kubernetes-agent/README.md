@@ -31,6 +31,23 @@ Run an agent on every node you would like to use for running JMeter pods. An age
   helm install --name octoperf-ee octoperf/kubernetes-agent
   ```
 
+## Image Parameters
+
+| Name                       | Description                                                                                                                                                                         | Value                  | Mandatory |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------ |
+| `token` | encrypted authentication token provided by the OctoPerf server to authenticate the agent. | From [Generated Agent Command-Line](https://api.octoperf.com/doc/on-premise-agent/provider-type/on-premise/#start-an-agent) | **yes** |
+| `serverUrl` | OctoPerf Server Url (Example: https://api.octoperf.com when using our saas platform)                                                              | `https://api.octoperf.com` | no (unless using enterprise-edition) |
+| `image.registry`           | Image registry                                                                                                                     | `docker.io`            | no |
+| `image.repository`         | Image repository                                                                                                                   | `octoperf/kubernetes-agent` | no |
+| `image.tag`                | Image tag (immutable tags are recommended)                                                                                         | `12.12.0` | no |
+| `image.digest`             | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                    | `""`                   | no |
+| `image.pullPolicy`         | Image pull policy                                                                                                                  | `Always`         | no |
+| `image.pullSecrets`        | Specify docker-registry secret names as an array                                                                                   | `[]`                   | no |
+| `image.debug`              | Specify if debug logs should be enabled                                                                                            | `false`                | no |
+| `namespace` | The Kubernetes Namespace in which pods are created | `octoperf` | no |
+
+For more advanced settings, see `values.yaml`.
+
 ## Compatibility
 
 This chart is tested with the latest supported versions. The currently tested versions are:
@@ -50,20 +67,3 @@ This chart is tested with the latest supported versions. The currently tested ve
 | 12.x.x|
 | ------|
 | 12.12.0|
-
-### Image Parameters
-
-| Name                       | Description                                                                                                                                                                         | Value                  | Mandatory |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ------ |
-| `token` | encrypted authentication token provided by the OctoPerf server to authenticate the agent. | From [Generated Agent Command-Line](https://api.octoperf.com/doc/on-premise-agent/provider-type/on-premise/#start-an-agent) | **yes** |
-| `serverUrl` | OctoPerf Server Url (Example: https://api.octoperf.com when using our saas platform)                                                              | `https://api.octoperf.com` | no (unless using enterprise-edition) |
-| `image.registry`           | Image registry                                                                                                                     | `docker.io`            | no |
-| `image.repository`         | Image repository                                                                                                                   | `octoperf/kubernetes-agent` | no |
-| `image.tag`                | Image tag (immutable tags are recommended)                                                                                         | `12.12.0` | no |
-| `image.digest`             | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                    | `""`                   | no |
-| `image.pullPolicy`         | Image pull policy                                                                                                                  | `Always`         | no |
-| `image.pullSecrets`        | Specify docker-registry secret names as an array                                                                                   | `[]`                   | no |
-| `image.debug`              | Specify if debug logs should be enabled                                                                                            | `false`                | no |
-| `namespace` | The Kubernetes Namespace in which pods are created | `octoperf` | no |
-
-For more advanced settings, see `values.yaml`.
