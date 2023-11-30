@@ -87,7 +87,7 @@ spec:
           value: "-Dorg.slf4j.simpleLogger.defaultLogLevel=debug"
         {{- end }}
         {{- if .Values.extraEnvVars }}
-        {{ tpl .Values.extraEnvVars | nindent 8 }}
+        {{ toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         {{- if .Values.volumeMounts }}
         volumeMounts: {{ toYaml .Values.volumeMounts | nindent 10 }}
