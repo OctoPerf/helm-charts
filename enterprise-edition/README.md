@@ -40,26 +40,10 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 14.x.x|
 | ------|
+| 14.3.0|
 | 14.2.0|
 | 14.1.0|
 | 14.0.0|
-
-| 13.x.x|
-| ------|
-| 13.2.2|
-| 13.2.0|
-| 13.1.0|
-| 13.0.1|
-| 13.0.0|
-
-| 12.x.x|
-| ------|
-| 12.12.3|
-| 12.12.1|
-| 12.12.0|
-| 12.10.0|
-| 12.9.1|
-| 12.8.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
