@@ -54,9 +54,12 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 14.x.x|
 | ------|
+| 14.4.0|
 | 14.1.1|
 | 14.1.0|
 | 14.0.0|
+
+`14.4.0` is only compatible with OctoPerf Enterprise Edition `14.4.0` or higher.
 
 | 13.x.x|
 | ------|
