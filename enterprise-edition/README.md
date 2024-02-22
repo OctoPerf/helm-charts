@@ -12,7 +12,7 @@ This chart launches the whole **OctoPerf Enterprise-Edition** stack inside your 
 - **Frontend Beta**: the Beta Web UI which consumes the REST API exposed by the backend. It's made of static web html/js/css files served by a NGinx server on `/ui`,
 - **Documentation**: static web documentation served by a NGinx server.
 
-For a more comprehensive understanding, see [How the Enterprise-Edition works](https://doc.octoperf.com/enterprise-edition/).
+For a more comprehensive understanding, see How the [Enterprise-Edition](https://api.octoperf.com/doc/on-premise-infra/) works.
 
 ## Dependencies
 
