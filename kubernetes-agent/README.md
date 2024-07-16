@@ -28,7 +28,7 @@ Run an agent on every node you would like to use for running JMeter pods. An age
 * Install it:
 
   ```
-  helm install --name octoperf-ee octoperf/kubernetes-agent
+  helm install --name kubernetes-agent octoperf/kubernetes-agent
   ```
 
 ## Image Parameters
