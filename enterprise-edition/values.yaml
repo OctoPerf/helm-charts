@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "14.5.1"
+version: "15.0.0"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -284,50 +284,6 @@ frontend:
   ##
   affinity: {}
 
-
-frontendLegacy:
-  enabled: false
-  replicas: 1
-  image: octoperf/enterprise-ui
-
-  annotations: {}
-
-  # nginx internal port
-  port: 8080
-
-  readinessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-  livenessProbe:
-    httpGet:
-      path: /
-      port: http-port
-    initialDelaySeconds: 5
-    periodSeconds: 5
-
-  config:
-    config-ee.json: |-
-      {
-        "baseUrl": "",
-        "docUrl": "/doc",
-        "adminEmail": "support@octoperf.com",
-        "modules": {
-          "login": true,
-          "register": true
-        }
-      }
-   
-  ## Node labels for backend pod assignment
-  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-
-  ## Pod affinity
-  ##
-  affinity: {}
 
 utilityServer:
   enabled: false
