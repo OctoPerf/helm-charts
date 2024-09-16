@@ -52,6 +52,11 @@ For more advanced settings, see `values.yaml`.
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 15.x.x|
+| ------|
+| 15.1.0|
+
+
 | 14.x.x|
 | ------|
 | 14.5.2|
