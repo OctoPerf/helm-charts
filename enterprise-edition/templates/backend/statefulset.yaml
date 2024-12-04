@@ -65,10 +65,10 @@ spec:
       affinity:
       {{- toYaml .Values.backend.affinity | nindent 8 }}
     {{- end }}
-    {{- if .Values.backend.volumes }}
       volumes:
-      {{- toYaml .Values.backend.volumes | nindent 8 }}
-    {{- end }}
+      {{- if .Values.backend.volumes }}
+      {{- toYaml .Values.backend.volumes | nindent 6 }}
+      {{- end }}
       - name: octoperf-data
         emptyDir: {}
       {{- if .Values.backend.licenseFile }}
