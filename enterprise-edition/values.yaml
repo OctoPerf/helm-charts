@@ -41,6 +41,8 @@ backend:
 
   annotations: {}
 
+  podAnnotations: {}
+
   # serviceAccountName: "myServiceAccount"
 
   initContainers: []

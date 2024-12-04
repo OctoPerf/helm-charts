@@ -30,6 +30,10 @@ spec:
     metadata:
       labels:
         app: {{ template "name" . }}-backend
+    {{- if .Values.backend.podAnnotations }}
+      annotations:
+      {{- toYaml .Values.backend.podAnnotations | nindent 8 }}
+    {{- end }}
     spec:
     {{- if .Values.backend.serviceAccountName }}
       serviceAccountName: "{{ .Values.backend.serviceAccountName . }}"
@@ -61,10 +65,10 @@ spec:
       affinity:
       {{- toYaml .Values.backend.affinity | nindent 8 }}
     {{- end }}
+    {{- if .Values.backend.volumes }}
       volumes:
-      {{- if .Values.backend.volumes }}
-      {{- toYaml .Values.backend.volumes | nindent 6 }}
-      {{- end }}
+      {{- toYaml .Values.backend.volumes | nindent 8 }}
+    {{- end }}
       - name: octoperf-data
         emptyDir: {}
       {{- if .Values.backend.licenseFile }}
