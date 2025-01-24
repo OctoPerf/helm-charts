@@ -7,7 +7,7 @@ maintainers:
 name: enterprise-edition
 version: "15.2.2"
 apiVersion: "v2"
-appVersion: "15.2.1"
+appVersion: "15.2.2"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
 dependencies:
   - name: elasticsearch
