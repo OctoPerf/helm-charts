@@ -76,8 +76,8 @@ resources:
 ## @param extraEnvVars Extra environment variables to be set on agent container
 ## E.g.
 ## extraEnvVars:
-##  - name: SERVER_PRIVATEROOTCERTIFICATE
-##    value: "false"
+##   - name: SERVER_PRIVATEROOTCERTIFICATE
+##     value: "false"
 ##
 extraEnvVars: []
 
