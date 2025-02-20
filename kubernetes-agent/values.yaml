@@ -77,7 +77,7 @@ resources:
 ## E.g.
 ## extraEnvVars:
 ##  - name: SERVER_PRIVATEROOTCERTIFICATE
-##    value: "true"
+##    value: "false"
 ##
 extraEnvVars: []
 
