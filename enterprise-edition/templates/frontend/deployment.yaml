@@ -68,4 +68,6 @@ spec:
         {{ toYaml .Values.frontend.readinessProbe | nindent 10 }}
         livenessProbe:
         {{ toYaml .Values.frontend.livenessProbe | nindent 10 }}
+        resources:
+        {{- toYaml .Values.frontend.resources | nindent 10 }}
 {{- end }}

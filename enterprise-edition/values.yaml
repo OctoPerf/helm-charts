@@ -236,6 +236,17 @@ doc:
   ##
   affinity: {}
 
+  ## doc resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 256Mi
+
 frontend:
   enabled: true
   replicas: 1
@@ -285,6 +296,17 @@ frontend:
   ## Pod affinity
   ##
   affinity: {}
+
+  ## frontend resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 256Mi
 
 
 utilityServer:
