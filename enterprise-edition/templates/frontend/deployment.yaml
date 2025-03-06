@@ -65,9 +65,9 @@ spec:
             mountPath: /usr/share/nginx/html/assets/config-prod.json
             subPath: config-prod.json
         readinessProbe:
-        {{ toYaml .Values.frontend.readinessProbe | nindent 10 }}
+        {{- toYaml .Values.frontend.readinessProbe | nindent 10 }}
         livenessProbe:
-        {{ toYaml .Values.frontend.livenessProbe | nindent 10 }}
+        {{- toYaml .Values.frontend.livenessProbe | nindent 10 }}
         resources:
         {{- toYaml .Values.frontend.resources | nindent 10 }}
 {{- end }}
