@@ -10,7 +10,7 @@ imagePullSecrets: []
 elasticsearch:
   enabled: true
   image: "elasticsearch"
-  imageTag: "7.17.23"
+  imageTag: "7.17.28"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
