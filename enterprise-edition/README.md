@@ -40,6 +40,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 15.x.x|
 | ------|
+| 15.4.0|
 | 15.3.0|
 | 15.2.2|
 | 15.2.1|
