@@ -40,6 +40,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 15.x.x|
 | ------|
+| 15.4.1|
 | 15.4.0|
 | 15.3.0|
 | 15.2.2|
@@ -47,17 +48,6 @@ This chart is tested with the latest supported versions. The currently tested ve
 | 15.2.0|
 | 15.1.0|
 | 15.0.0|
-
-| 14.x.x|
-| ------|
-| 14.5.1|
-| 14.5.0|
-| 14.4.1|
-| 14.4.0|
-| 14.3.0|
-| 14.2.0|
-| 14.1.0|
-| 14.0.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
