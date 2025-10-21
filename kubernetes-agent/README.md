@@ -54,6 +54,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 15.x.x|
 | ------|
+| 15.4.2|
 | 15.4.1|
 | 15.2.4|
 | 15.2.1|
