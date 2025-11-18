@@ -5,12 +5,12 @@ maintainers:
   name: OctoPerf
   url: https://octoperf.com
 name: enterprise-edition
-version: "15.4.1"
+version: "16.0.0"
 apiVersion: "v2"
-appVersion: "15.4.1"
+appVersion: "16.0.0"
 icon: https://octoperf.com/img/octoperf-logo-text.svg
 dependencies:
   - name: elasticsearch
-    version: "7.17.3"
+    version: "8.5.1"
     repository: https://helm.elastic.co
     condition: elasticsearch.enabled

@@ -38,6 +38,10 @@ OctoPerf Enterprise-Edition helm chart depends on:
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 16.x.x|
+| ------|
+| 16.0.0|
+
 | 15.x.x|
 | ------|
 | 15.4.1|
