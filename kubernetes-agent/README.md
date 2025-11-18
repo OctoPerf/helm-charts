@@ -52,6 +52,10 @@ For more advanced settings, see `values.yaml`.
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 16.x.x|
+| ------|
+| 16.0.0|
+
 | 15.x.x|
 | ------|
 | 15.4.2|
@@ -60,28 +64,3 @@ This chart is tested with the latest supported versions. The currently tested ve
 | 15.2.1|
 | 15.1.1|
 | 15.1.0|
-
-
-| 14.x.x|
-| ------|
-| 14.5.2|
-| 14.5.1|
-| 14.5.0|
-| 14.4.1|
-| 14.4.0|
-| 14.1.1|
-| 14.1.0|
-| 14.0.0|
-
-`14.4.x` or higher is only compatible with OctoPerf Enterprise Edition `14.4.0` or higher.
-
-| 13.x.x|
-| ------|
-| 13.2.0|
-| 13.1.0|
-| 13.0.1|
-| 13.0.0|
-
-| 12.x.x|
-| ------|
-| 12.12.0|
