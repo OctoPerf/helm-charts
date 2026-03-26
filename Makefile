@@ -15,6 +15,6 @@ HELM_REPO=https://helm.octoperf.com
 
 # helm repo add octoperf https://myuser:mypass@helm.octoperf.com
 %.push: %.package
-	-helm plugin install https://github.com/chartmuseum/helm-push
+	-helm plugin install https://github.com/chartmuseum/helm-push --verify=false
 	helm cm-push $*/ octoperf --force
 	rm *.tgz
