@@ -1,0 +1,45 @@
+{{- if .Values.mcpServer.enabled }}
+{{- if .Values.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "name" . }}-mcp-server-ingress
+  labels:
+    app: {{ template "name" . }}-mcp-server-ingress
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+{{- with .Values.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+{{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- $dot := . }}
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+        - path: /mcp
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "name" $dot }}-mcp-server
+              port: 
+                number: {{ $dot.Values.mcpServer.port }}
+  {{- end }}
+{{- end }}
+{{- end }}

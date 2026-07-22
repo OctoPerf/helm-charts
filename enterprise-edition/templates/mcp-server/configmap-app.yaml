@@ -1,0 +1,17 @@
+{{- if .Values.mcpServer.enabled }}
+{{- if .Values.mcpServer.applicationYml }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}-mcp-server-application
+  labels:
+    app: {{ template "name" . }}-mcp-server-application
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  application.yml: |
+{{ .Values.mcpServer.applicationYml | indent 4 -}}
+{{- end }}
+{{- end }}

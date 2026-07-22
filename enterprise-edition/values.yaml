@@ -204,6 +204,124 @@ backend:
     loadBalancerSourceRanges: []
     # nodePort: 30000
 
+mcpServer:
+  enabled: true
+  image: octoperf/mcp-server
+  replicas: 1
+  port: 8091
+
+  annotations: {}
+
+  podAnnotations: {}
+
+  # serviceAccountName: "myServiceAccount"
+
+  initContainers: []
+
+  affinity: {}
+  #  podAntiAffinity:
+  #  requiredDuringSchedulingIgnoredDuringExecution:
+  #  - labelSelector:
+  #      matchExpressions:
+  #      - key: app
+  #        operator: In
+  #        values:
+  #        - {{ template "name" . }}-backend
+  #    topologyKey: "kubernetes.io/hostname"
+
+  tolerations: {}
+
+  env:
+    JAVA_OPTS: "-Xmx512m"
+
+  # config/application.yml
+  applicationYml: |-
+    server:
+      public:
+        port: 80
+
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+    httpGet:
+      path: /actuator/health/readiness
+      port: http-port
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    httpGet:
+      path: /actuator/health
+      port: http-port
+
+  # scheduler name
+  # schedulerName: ""
+
+  ## Additional backend Secret mounts
+  # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
+  secretMounts: []
+    # - name: secret-files
+    #   mountPath: /etc/secrets
+    #   subPath: ""
+    #   secretName: backend-secret-files
+    #   readOnly: true
+
+  ## Node labels for backend pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Deployment update strategy
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  strategy:
+    type: RollingUpdate
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName:
+
+  # Custom backend volumes
+  volumes: []
+  volumeMounts: []
+
+  ## backend resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 256Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 256Mi
+
+  ## Security context to be added to backend pods
+  ##
+  securityContext: {}
+  #  fsGroup: 9001
+  #  runAsGroup: 9001
+  #  runAsNonRoot: true
+  #  runAsUser: 9001
+
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+
+    ## List of IP addresses at which the backend service is available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    # nodePort: 30000
+    type: ClusterIP
+
 doc:
   enabled: true
 

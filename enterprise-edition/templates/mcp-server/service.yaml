@@ -1,0 +1,39 @@
+{{- if .Values.mcpServer.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "name" . }}-mcp-server
+  labels:
+    app: {{ template "name" . }}-mcp-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    app: {{ template "name" . }}-mcp-server
+{{- if .Values.mcpServer.service.clusterIP }}
+  clusterIP: {{ .Values.mcpServer.service.clusterIP }}
+{{- end }}
+{{- if .Values.mcpServer.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.mcpServer.service.externalIPs | indent 4 }}
+{{- end }}
+{{- if .Values.mcpServer.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.mcpServer.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.mcpServer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .Values.mcpServer.service.loadBalancerSourceRanges }}
+    - {{ $cidr }}
+  {{- end }}
+{{- end }}
+  ports:
+    - name: http
+      port: {{ .Values.mcpServer.port }}
+      protocol: TCP
+    {{- if .Values.mcpServer.service.nodePort }}
+      nodePort: {{ .Values.mcpServer.service.nodePort }}
+    {{- end }}
+  type: "{{ .Values.mcpServer.service.type }}"
+{{- end }}

@@ -1,0 +1,113 @@
+{{- if .Values.mcpServer.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}-mcp-server
+  labels:
+    app: {{ template "name" . }}-mcp-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+  {{- with .Values.mcpServer.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+    {{/* This forces a restart if the configmap has changed */}}
+    {{- if .Values.mcpServer.env }}
+    configchecksum: {{ include (print .Template.BasePath "/mcp-server/configmap-env.yaml") . | sha256sum | trunc 63 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.mcpServer.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-mcp-server
+  {{- if .Values.mcpServer.strategy }}
+  strategy:
+  {{- toYaml .Values.mcpServer.strategy | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}-mcp-server
+    {{- if .Values.mcpServer.podAnnotations }}
+      annotations:
+      {{- toYaml .Values.mcpServer.podAnnotations | nindent 8 }}
+    {{- end }}
+    spec:
+    {{- if .Values.mcpServer.serviceAccountName }}
+      serviceAccountName: "{{ .Values.mcpServer.serviceAccountName }}"
+    {{- end }}
+    {{- if .Values.mcpServer.affinity }}
+      affinity:
+      {{- toYaml .Values.mcpServer.affinity | nindent 8 }}
+    {{- end }}
+    {{- if .Values.mcpServer.schedulerName }}
+      schedulerName: "{{ .Values.mcpServer.schedulerName }}"
+    {{- end }}
+    {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+    {{- end }}
+    {{- if .Values.mcpServer.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.mcpServer.nodeSelector | nindent 8 }}
+    {{- end }}
+    {{- if .Values.mcpServer.securityContext }}
+      securityContext:
+      {{- toYaml .Values.mcpServer.securityContext | nindent 8 }}
+    {{- end }}
+    {{- if .Values.mcpServer.tolerations }}
+      tolerations:
+      {{- toYaml .Values.mcpServer.tolerations | nindent 8 }}
+    {{- end }}
+      volumes:
+      {{- if .Values.mcpServer.volumes }}
+      {{- toYaml .Values.mcpServer.volumes | nindent 6 }}
+      {{- end }}
+      {{- if .Values.mcpServer.applicationYml }}
+      - name: application-yml
+        configMap:
+          name: "{{ template "name" . }}-mcp-server-application"
+      {{- end }}
+      {{- range .Values.mcpServer.secretMounts }}
+      - name: {{ .name }}
+        secret:
+          secretName: {{ .secretName }}
+      {{- end }}
+      {{- if .Values.mcpServer.initContainers }}
+      initContainers:
+      {{- toYaml .Values.mcpServer.initContainers | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ template "name" . }}-mcp-server
+        image: "{{ .Values.registry }}/{{ .Values.mcpServer.image }}:{{ .Values.version }}"
+        imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "name" . }}-mcp-server-env
+        volumeMounts:
+        {{- if .Values.mcpServer.volumeMounts }}
+        {{- toYaml .Values.mcpServer.volumeMounts | nindent 8 }}
+        {{- end }}
+        {{- range .Values.mcpServer.secretMounts }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          subPath: {{ .subPath }}
+          readOnly: {{ .readOnly }}
+        {{- end }}
+        {{- if .Values.mcpServer.applicationYml }}
+        - name: application-yml
+          mountPath: "/home/octoperf/config/application.yml"
+          subPath: "application.yml"
+        {{- end }}
+        ports:
+        - name: http-port
+          containerPort: {{ .Values.mcpServer.port }}
+        readinessProbe:
+        {{- toYaml .Values.mcpServer.readinessProbe | nindent 10 }}
+        livenessProbe:
+        {{- toYaml .Values.mcpServer.livenessProbe | nindent 10 }}
+        resources:
+        {{- toYaml .Values.mcpServer.resources | nindent 10 }}
+{{- end }}
