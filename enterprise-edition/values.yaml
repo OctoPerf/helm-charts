@@ -220,7 +220,7 @@ backend:
     # nodePort: 30000
 
 mcpServer:
-  enabled: true
+  enabled: false
   image: octoperf/mcp-server
   replicas: 1
   port: 8091
@@ -443,7 +443,7 @@ frontend:
 
 
 utilityServer:
-  enabled: true
+  enabled: false
   replicas: 1
   image: octoperf/utility-server
 
