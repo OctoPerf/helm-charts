@@ -9,6 +9,7 @@ imagePullSecrets: []
 
 elasticsearch:
   enabled: true
+  protocol: http
   image: "elasticsearch"
   imageTag: "8.19.17"
   replicas: 1
