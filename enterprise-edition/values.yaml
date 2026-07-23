@@ -17,8 +17,8 @@ elasticsearch:
   createCert: false
   # Change Default Elasticsearch Password Here and below (in backend application.yml)
   secret:
-    enabled: false
-    password: ""
+    enabled: true
+    password: "0ct0P3rf"
   # Turn off TLS inside Elasticsearch itself
   esConfig:
     elasticsearch.yml: |
@@ -87,7 +87,7 @@ backend:
     elasticsearch:
       hostname: elasticsearch-master-headless
       # Must match elasticsearch password
-      password: ""
+      password: "0ct0P3rf"
  
   readinessProbe:
     failureThreshold: 3

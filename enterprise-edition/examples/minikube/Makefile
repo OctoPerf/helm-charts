@@ -19,6 +19,9 @@ dry-run:
 start:
 	minikube start
 
+tunnel:
+	minikube tunnel
+
 debug:
 	helm template --debug ../../
 

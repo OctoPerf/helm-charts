@@ -11,11 +11,32 @@ elasticsearch:
       requests:
         storage: 4Gi
 
+doc:
+  enabled: false
+
+utilityServer:
+  enabled: false
+
+mcpServer:
+  enabled: true
+  applicationYml: |-
+    server:
+      hostname: 127.0.0.1.sslip.io
+      public:
+        port: 80
+
 backend:
-  env:
-    SERVER_HOSTNAME: 192.168.49.2.sslip.io
+  applicationYml: |-
+    server:
+      hostname: 127.0.0.1.sslip.io
+      public:
+        port: 80
+    elasticsearch:
+      hostname: elasticsearch-master-headless
+      # Must match elasticsearch password
+      password: "0ct0P3rf"
 
 ingress:
   enabled: true
   hosts:
-    - 192.168.49.2.sslip.io
+    - 127.0.0.1.sslip.io
