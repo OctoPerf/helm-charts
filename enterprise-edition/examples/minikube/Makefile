@@ -8,6 +8,10 @@ configure:
 	minikube addons enable ingress
 	minikube addons enable default-storageclass
 	minikube addons enable storage-provisioner
+	kubectl -n ingress-nginx wait --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=180s
+	kubectl -n ingress-nginx patch configmap ingress-nginx-controller --type merge --patch-file ingress-nginx-config-patch.yaml
+	kubectl -n ingress-nginx rollout restart deployment ingress-nginx-controller
+	kubectl -n ingress-nginx rollout status deployment ingress-nginx-controller --timeout=180s
 
 dry-run:
 	helm install $(HELM_PARAMS) --dry-run --debug ../../

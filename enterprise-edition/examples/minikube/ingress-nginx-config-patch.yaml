@@ -1,0 +1,16 @@
+# Merge patch for the ingress-nginx controller ConfigMap.
+#
+# Recent ingress-nginx versions (>= 1.9) harden the admission webhook and reject
+# the ingress definitions produced by this chart. These settings relax that so the
+# chart's regex rewrite paths and configuration snippets are accepted.
+#
+# Applied with:
+#   kubectl -n ingress-nginx patch configmap ingress-nginx-controller \
+#     --type merge --patch-file ingress-nginx-config-patch.yaml
+data:
+  # Allow the nginx.ingress.kubernetes.io/configuration-snippet annotation.
+  allow-snippet-annotations: "true"
+  # Snippets are classified as "Critical" risk; raise the accepted level so they pass.
+  annotations-risk-level: "Critical"
+  # Allow regex paths (e.g. /ui(/|$)(.*)) to be used with pathType: Prefix.
+  strict-validate-path-type: "false"
