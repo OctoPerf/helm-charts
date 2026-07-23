@@ -19,6 +19,15 @@ utilityServer:
 
 mcpServer:
   enabled: true
+  # From inside a pod, 127.0.0.1.sslip.io resolves to the pod's own loopback,
+  # so the mcp-server cannot reach the backend's OIDC issuer / REST API.
+  # Point the public hostname at the minikube node (= `minikube ip`, stable at
+  # 192.168.49.2 for the default docker-driver profile), where the ingress
+  # controller is exposed on hostPort 80 and routes this Host to the backend.
+  hostAliases:
+    - ip: 192.168.49.2
+      hostnames:
+        - 127.0.0.1.sslip.io
   applicationYml: |-
     server:
       hostname: 127.0.0.1.sslip.io

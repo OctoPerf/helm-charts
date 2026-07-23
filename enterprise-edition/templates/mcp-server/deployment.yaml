@@ -61,6 +61,10 @@ spec:
       tolerations:
       {{- toYaml .Values.mcpServer.tolerations | nindent 8 }}
     {{- end }}
+    {{- if .Values.mcpServer.hostAliases }}
+      hostAliases:
+      {{- toYaml .Values.mcpServer.hostAliases | nindent 8 }}
+    {{- end }}
       volumes:
       {{- if .Values.mcpServer.volumes }}
       {{- toYaml .Values.mcpServer.volumes | nindent 6 }}

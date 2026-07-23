@@ -220,10 +220,18 @@ backend:
     # nodePort: 30000
 
 mcpServer:
+  # Make sure to configure "hostname: YOUR_PUBLIC_HOSTNAME" below before enabling mcp server (needed to work properly)
   enabled: false
   image: octoperf/mcp-server
   replicas: 1
   port: 8091
+
+  # config/application.yml
+  applicationYml: |-
+    server:
+      hostname: YOUR_PUBLIC_HOSTNAME
+      public:
+        port: 80
 
   annotations: {}
 
@@ -246,14 +254,22 @@ mcpServer:
 
   tolerations: {}
 
+  # Extra /etc/hosts entries injected into the mcp-server pod.
+  # The mcp-server is an OAuth2 resource server: at startup it resolves the
+  # backend's OIDC issuer (server.hostname) to fetch the authorization-server
+  # metadata + JWKS, and it also calls the backend REST API on that same host.
+  # In a real cluster the public hostname already resolves from pods, so this
+  # stays empty. It is only needed when the hostname is not resolvable in-cluster
+  # to the backend/ingress (e.g. the minikube example uses 127.0.0.1.sslip.io).
+  # Example:
+  #   hostAliases:
+  #     - ip: 192.168.49.2
+  #       hostnames:
+  #         - 127.0.0.1.sslip.io
+  hostAliases: []
+
   env:
     JAVA_OPTS: "-Xmx512m"
-
-  # config/application.yml
-  applicationYml: |-
-    server:
-      public:
-        port: 80
 
   readinessProbe:
     failureThreshold: 3
