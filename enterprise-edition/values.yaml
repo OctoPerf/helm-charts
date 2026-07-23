@@ -13,6 +13,18 @@ elasticsearch:
   imageTag: "8.19.17"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  createCert: false
+  # Change Default Elasticsearch Password Here and below (in backend application.yml)
+  secret:
+    enabled: true
+    password: "0ct0P3rf"
+  # Turn off TLS inside Elasticsearch itself
+  esConfig:
+    elasticsearch.yml: |
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: false
+      xpack.security.http.ssl.enabled: false
+      xpack.security.enrollment.enabled: false
 
 ingress:
   # Before enabling, make sure to provide hosts / tls below
@@ -73,6 +85,8 @@ backend:
         port: 80
     elasticsearch:
       hostname: elasticsearch-master-headless
+      # Must match elasticsearch password
+      password: "0ct0P3rf"
  
   readinessProbe:
     failureThreshold: 3
