@@ -70,8 +70,7 @@ securityContext: {}
 ##
 resources:
   requests:
-    memory: 384Mi
-    cpu: 200m
+    memory: 512Mi
 
 ## @param extraEnvVars Extra environment variables to be set on agent container
 ## E.g.
