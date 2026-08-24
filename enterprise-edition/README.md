@@ -40,6 +40,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 16.x.x|
 | ------|
+| 16.2.3|
 | 16.2.2|
 | 16.2.1|
 | 16.1.2|
