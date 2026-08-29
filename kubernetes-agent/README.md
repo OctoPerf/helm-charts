@@ -6,6 +6,29 @@ This functionality is in beta status and may be changed or removed completely in
 
 This chart launches the [Kubernetes On-Premise Agent](https://hub.docker.com/r/octoperf/kubernetes-agent).
 
+## Compatibility
+
+
+This chart is tested with the latest supported versions. The currently tested versions are:
+
+| 17.x.x|
+| ------|
+| 17.0.0|
+
+Older versions are:
+
+| 16.x.x|
+| ------|
+| 16.2.3|
+| 16.2.2|
+| 16.2.1|
+| 16.1.2|
+| 16.1.1|
+| 16.1.0|
+| 16.0.0|
+
+Our Saas platform requires a Kubernetes Agent >= 17.0.0.
+
 ## Prerequisites
 
 This agent is compatible with OctoPerf Enterprise-Edition `>= 12.11.0`.
