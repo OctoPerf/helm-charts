@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "16.2.3"
+version: "17.0.1"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -11,7 +11,7 @@ elasticsearch:
   enabled: true
   protocol: http
   image: "elasticsearch"
-  imageTag: "8.19.17"
+  imageTag: "8.19.20"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
   createCert: false
@@ -422,7 +422,7 @@ frontend:
   config:
     config-prod.json: |-
       {
-        "version": "octoperf-13",
+        "version": "octoperf-17",
         "backendApiUrl": "",
         "docUrl": "/doc",
         "oldUiUrl": "/app",
@@ -431,7 +431,7 @@ frontend:
           "@type": "form",
           "register": true,
           "activate": false,
-          "forgotPassword": false
+          "forgotPassword": true
         },
         "twitter": false,
         "cloud": false
