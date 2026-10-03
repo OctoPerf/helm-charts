@@ -171,10 +171,10 @@ config:
       ## Resources of the launched containers
       resources:
         requests:
-          memory-factor: 2   # memory request = MEMORY_REQUEST_MB x factor
+          memory-factor: 2.5 # memory request = MEMORY_REQUEST_MB x factor
           cpu: ""            # e.g. "1", "500m"; empty = no CPU request
         limits:
-          memory-factor: 2   # memory limit = MEMORY_REQUEST_MB x factor
+          memory-factor: 2.5 # memory limit = MEMORY_REQUEST_MB x factor
           cpu: ""            # e.g. "2"; empty = no CPU limit. Kubernetes uses the limit as the request when no request is set
       ## Tolerations of the launched pods
       tolerations: []

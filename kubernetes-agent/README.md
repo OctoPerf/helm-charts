@@ -93,9 +93,9 @@ A few things to know:
 
 | Key under `config` | Default | Description |
 | --- | --- | --- |
-| `octoperf.container.resources.requests.memory-factor` | `2` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`) times this factor. |
+| `octoperf.container.resources.requests.memory-factor` | `2.5` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`) times this factor. |
 | `octoperf.container.resources.requests.cpu` | `""` | CPU request of a load generator container (e.g. `"1"`, `"500m"`). Empty means none. |
-| `octoperf.container.resources.limits.memory-factor` | `2` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
+| `octoperf.container.resources.limits.memory-factor` | `2.5` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
 | `octoperf.container.resources.limits.cpu` | `""` | CPU limit of a load generator container (e.g. `"2"`). Empty means none. When only the limit is set, Kubernetes uses it as the request too. |
 | `octoperf.container.tolerations` | `[]` | Tolerations of the load generator pods. Each entry takes `key`, `operator`, `value`, `effect` and `seconds` (`tolerationSeconds`). |
 | `octoperf.container.security-context` | `{}` | Container-level security context of the load generator containers. See below. |
@@ -117,10 +117,11 @@ When upgrading the agent to 18.0.0:
 
 - Move any `octoperf.kubernetes.pod.resources.*` setting to `octoperf.container.resources`, including one set as an environment variable through `extraEnvVars` (such as `OCTOPERF_KUBERNETES_POD_RESOURCES_LIMITS_CPU`, now `OCTOPERF_CONTAINER_RESOURCES_LIMITS_CPU`): the agent ignores the old keys.
 - The old `limits.cpu` set both the CPU request and the CPU limit; the new `limits.cpu` sets the limit only. With no `requests.cpu`, Kubernetes uses the limit as the request, so the load generators get the same CPU as before.
+- The default memory factors go from `2` to `2.5`: with no setting, a load generator reserves 25% more memory, e.g. `400Mi` instead of `320Mi` for `MEMORY_REQUEST_MB=160`. To keep the previous sizing, set `memory-factor: 2` under `octoperf.container.resources.requests` and `octoperf.container.resources.limits`.
 
 An agent older than 18.0.0 runs with this chart, but:
 
-- it reads the load generator resources from `octoperf.kubernetes.pod.resources.*` only, and ignores `octoperf.container.resources`. The defaults are the same (memory factors of `2`, no CPU), so nothing changes as long as you keep them. To customize them on such an agent, write the old keys in `config`;
+- it reads the load generator resources from `octoperf.kubernetes.pod.resources.*` only, and ignores `octoperf.container.resources`, including the `2.5` memory factors the chart's default `config` sets: it keeps its own default factor of `2` (and no CPU). To customize them on such an agent, write the old keys in `config`;
 - it ignores both security contexts (`octoperf.container.security-context` and `octoperf.pod.spec.security-context`);
 - it ignores the `effect` of the tolerations.
 
