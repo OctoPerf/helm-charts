@@ -11,11 +11,15 @@ This chart launches the [Kubernetes On-Premise Agent](https://hub.docker.com/r/o
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 18.x.x|
+| ------|
+| 18.0.0|
+
+Older versions are:
+
 | 17.x.x|
 | ------|
 | 17.0.0|
-
-Older versions are:
 
 | 16.x.x|
 | ------|
@@ -62,7 +66,7 @@ Run an agent on every node you would like to use for running JMeter pods. An age
 | `serverUrl` | OctoPerf Server Url (Example: https://api.octoperf.com when using our saas platform)                                                              | `https://api.octoperf.com` | no (unless using enterprise-edition) |
 | `image.registry`           | Image registry                                                                                                                     | `docker.io`            | no |
 | `image.repository`         | Image repository                                                                                                                   | `octoperf/kubernetes-agent` | no |
-| `image.tag`                | Image tag (immutable tags are recommended)                                                                                         | `16.2.2` | no |
+| `image.tag`                | Image tag (immutable tags are recommended)                                                                                         | `18.0.0` | no |
 | `image.digest`             | Image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                    | `""`                   | no |
 | `image.pullPolicy`         | Image pull policy                                                                                                                  | `Always`         | no |
 | `image.pullSecrets`        | Specify docker-registry secret names as an array                                                                                   | `[]`                   | no |
