@@ -64,6 +64,40 @@ securityContext: {}
 #  runAsUser: 9001
 #  fsGroup: 9001
 
+## Security context of the agent container itself (Kubernetes manifest, camelCase).
+## Empty = not set. The load generator pods launched by the agent use config.octoperf.container.security-context.
+## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+containerSecurityContext: {}
+#  # Gatekeeper K8sPSPAllowPrivilegeEscalationContainer
+#  # ("Privilege escalation container is not allowed") only needs:
+#  allowPrivilegeEscalation: false
+#  privileged: false
+#  readOnlyRootFilesystem: false
+#  runAsNonRoot: true
+#  runAsUser: 9001
+#  runAsGroup: 9001
+#  procMount: Default                       # Default | Unmasked
+#  capabilities:
+#    add: []
+#    drop:
+#      - ALL
+#  seccompProfile:
+#    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+#    localhostProfile: ""                   # only with type: Localhost
+#  seLinuxOptions:
+#    level: ""
+#    role: ""
+#    type: ""
+#    user: ""
+#  appArmorProfile:
+#    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+#    localhostProfile: ""                   # only with type: Localhost
+#  windowsOptions:
+#    gmsaCredentialSpec: ""
+#    gmsaCredentialSpecName: ""
+#    hostProcess: false
+#    runAsUserName: ""
+
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -80,7 +114,105 @@ resources:
 ##
 extraEnvVars: []
 
+## Extra volumes and volume mounts for the agent container
+## They are added next to the "config" volume mounted at /home/octoperf/config/application.yml
+volumes: []
+
 volumeMounts: []
+
+## @section Agent configuration
+
+## Rendered verbatim as the agent's application.yml (ConfigMap "<name>-config"),
+## mounted at /home/octoperf/config/application.yml. Spring Boot merges it key by key
+## over the defaults built into the agent. Keys are kebab-case (camelCase is accepted too).
+## The resources and security-context keys below require Kubernetes Agent 18.0.0 or later:
+## older agents ignore them (see "Upgrading to 18.0.0" in README.md).
+config:
+  octoperf:
+    # kubernetes.namespace: set by the OCTOPERF_KUBERNETES_NAMESPACE env var (release namespace), which overrides this file
+    pod:
+      spec:
+        ## Image pull secrets of the launched pods
+        image-pull-secrets: []
+        #  - name: my-registry-secret
+        ## PodSecurityContext of the launched pods. Empty = pods unchanged.
+        ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context
+        security-context: {}
+        #  run-as-user: 1000
+        #  run-as-group: 1000
+        #  run-as-non-root: true
+        #  fs-group: 1000
+        #  fs-group-change-policy: OnRootMismatch   # Always | OnRootMismatch
+        #  supplemental-groups: []
+        #  supplemental-groups-policy: Merge        # Merge | Strict
+        #  seccomp-profile:
+        #    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+        #    localhost-profile: ""                  # only with type: Localhost
+        #  se-linux-options:
+        #    level: ""
+        #    role: ""
+        #    type: ""
+        #    user: ""
+        #  se-linux-change-policy: MountOption      # MountOption | Recursive
+        #  sysctls: []
+        #  #  - name: net.ipv4.ip_local_port_range
+        #  #    value: "1024 65535"
+        #  app-armor-profile:
+        #    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+        #    localhost-profile: ""                  # only with type: Localhost
+        #  windows-options:
+        #    gmsa-credential-spec: ""
+        #    gmsa-credential-spec-name: ""
+        #    host-process: false
+        #    run-as-user-name: ""
+    container:
+      ## Resources of the launched containers
+      resources:
+        requests:
+          memory-factor: 2   # memory request = MEMORY_REQUEST_MB x factor
+          cpu: ""            # e.g. "1", "500m"; empty = no CPU request
+        limits:
+          memory-factor: 2   # memory limit = MEMORY_REQUEST_MB x factor
+          cpu: ""            # e.g. "2"; empty = no CPU limit. Kubernetes uses the limit as the request when no request is set
+      ## Tolerations of the launched pods
+      tolerations: []
+      #  - key: dedicated
+      #    value: load-generator
+      #    operator: Equal          # Equal | Exists
+      #    effect: NoSchedule       # NoSchedule | PreferNoSchedule | NoExecute
+      #    seconds: 10              # tolerationSeconds, NoExecute only
+      ## SecurityContext of the launched containers. Empty = containers unchanged.
+      ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+      security-context: {}
+      #  # Gatekeeper K8sPSPAllowPrivilegeEscalationContainer
+      #  # ("Privilege escalation container is not allowed") only needs:
+      #  allow-privilege-escalation: false
+      #  privileged: false
+      #  read-only-root-filesystem: false
+      #  run-as-non-root: true
+      #  run-as-user: 1000
+      #  run-as-group: 1000
+      #  proc-mount: Default                      # Default | Unmasked
+      #  capabilities:
+      #    add: []
+      #    drop:
+      #      - ALL
+      #  seccomp-profile:
+      #    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+      #    localhost-profile: ""                  # only with type: Localhost
+      #  se-linux-options:
+      #    level: ""
+      #    role: ""
+      #    type: ""
+      #    user: ""
+      #  app-armor-profile:
+      #    type: RuntimeDefault                   # RuntimeDefault | Localhost | Unconfined
+      #    localhost-profile: ""                  # only with type: Localhost
+      #  windows-options:
+      #    gmsa-credential-spec: ""
+      #    gmsa-credential-spec-name: ""
+      #    host-process: false
+      #    run-as-user-name: ""
 
 ## @section RBAC parameters
 
