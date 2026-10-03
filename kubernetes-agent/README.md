@@ -228,23 +228,5 @@ config:
           drop:
             - ALL
 ```
-
-## Compatibility
-
-This chart is tested with the latest supported versions. The currently tested versions are:
-
-| 16.x.x|
-| ------|
-| 16.2.2|
-| 16.1.1|
-| 16.1.0|
-| 16.0.0|
-
-| 15.x.x|
-| ------|
-| 15.4.2|
-| 15.4.1|
-| 15.2.4|
-| 15.2.1|
 | 15.1.1|
 | 15.1.0|
