@@ -155,7 +155,7 @@ config:
 
 #### Example: restricted Pod Security Standard
 
-A namespace labelled `pod-security.kubernetes.io/enforce: restricted` asks for more, on both the pod and the container:
+A namespace labelled `pod-security.kubernetes.io/enforce: restricted` asks for more: no privilege escalation, every capability dropped, a non-root user and the `RuntimeDefault` seccomp profile. This configuration was checked against a running load test:
 
 ```yaml
 config:
@@ -163,18 +163,21 @@ config:
     pod:
       spec:
         security-context:
-          run-as-non-root: true
           seccomp-profile:
             type: RuntimeDefault
     container:
       security-context:
         allow-privilege-escalation: false
+        run-as-non-root: true
+        run-as-user: 9001
         capabilities:
           drop:
             - ALL
 ```
 
-Check that the load generator images run under the user and file permissions you set: a `run-as-user` or `read-only-root-filesystem: true` the image was not built for makes the load generator fail at startup.
+**`run-as-user: 9001` is required as soon as the capabilities are dropped.** The load generator images start as `root` and switch to their `octoperf` user (uid and gid `9001`) with `gosu`, which needs the `SETUID` and `SETGID` capabilities. With `drop: [ALL]` and no `run-as-user`, the switch fails (`failed switching to "octoperf": operation not permitted`) and the load generator stops as soon as it starts. Run directly as `9001`, the image skips the switch. For the same reason, `run-as-non-root: true` alone is refused: the image's default user is `root`.
+
+Keep `9001` for `run-as-user`, `run-as-group` and `fs-group`: the files of the load generator images belong to that user. Another uid, or `read-only-root-filesystem: true`, makes the load generator fail at startup.
 
 To check what the agent sends to Kubernetes, look at a load generator pod while a test runs:
 
@@ -189,12 +192,15 @@ A policy enforced on the agent's namespace applies to the agent pod as well. The
 - `securityContext`: pod-level `fsGroup` and `runAsUser`, rendered when `securityContext.enabled` is `true`.
 - `containerSecurityContext`: the [container `securityContext`](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) of the agent container, rendered verbatim when not empty. `values.yaml` lists its options in comments.
 
-The agent image runs as the `octoperf` user (uid and gid `9001`). For the Gatekeeper constraint above, or a `restricted` namespace, on both the agent and its load generators:
+The agent image runs as the `octoperf` user (uid and gid `9001`), but declares it by name: with `runAsNonRoot: true`, Kubernetes cannot tell that user is not root and refuses to start the container unless `runAsUser` gives the uid.
+
+For the Gatekeeper constraint above, or a `restricted` namespace, on both the agent and its load generators:
 
 ```yaml
 containerSecurityContext:
   allowPrivilegeEscalation: false
   runAsNonRoot: true
+  runAsUser: 9001
   capabilities:
     drop:
       - ALL
@@ -203,15 +209,19 @@ containerSecurityContext:
 
 config:
   octoperf:
+    pod:
+      spec:
+        security-context:
+          seccomp-profile:
+            type: RuntimeDefault
     container:
       security-context:
         allow-privilege-escalation: false
         run-as-non-root: true
+        run-as-user: 9001
         capabilities:
           drop:
             - ALL
-        seccomp-profile:
-          type: RuntimeDefault
 ```
 
 ## Compatibility

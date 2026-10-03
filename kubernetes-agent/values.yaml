@@ -73,6 +73,7 @@ containerSecurityContext: {}
 #  allowPrivilegeEscalation: false
 #  privileged: false
 #  readOnlyRootFilesystem: false
+#  # The image declares its user by name (octoperf): runAsNonRoot needs runAsUser.
 #  runAsNonRoot: true
 #  runAsUser: 9001
 #  runAsGroup: 9001
@@ -138,10 +139,11 @@ config:
         ## PodSecurityContext of the launched pods. Empty = pods unchanged.
         ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context
         security-context: {}
-        #  run-as-user: 1000
-        #  run-as-group: 1000
+        #  # The load generator images run as octoperf (uid/gid 9001) and their files belong to it.
+        #  run-as-user: 9001
+        #  run-as-group: 9001
         #  run-as-non-root: true
-        #  fs-group: 1000
+        #  fs-group: 9001
         #  fs-group-change-policy: OnRootMismatch   # Always | OnRootMismatch
         #  supplemental-groups: []
         #  supplemental-groups-policy: Merge        # Merge | Strict
@@ -189,9 +191,11 @@ config:
       #  allow-privilege-escalation: false
       #  privileged: false
       #  read-only-root-filesystem: false
+      #  # The load generator images start as root and switch to octoperf (9001) with gosu,
+      #  # which needs SETUID/SETGID: dropping ALL capabilities requires run-as-user: 9001.
       #  run-as-non-root: true
-      #  run-as-user: 1000
-      #  run-as-group: 1000
+      #  run-as-user: 9001
+      #  run-as-group: 9001
       #  proc-mount: Default                      # Default | Unmasked
       #  capabilities:
       #    add: []
