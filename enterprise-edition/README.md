@@ -47,7 +47,7 @@ Both are enabled by default on [k3s](https://docs.k3s.io/networking/networking-s
 > On a RKE2 cluster managed by Rancher, set these values in the cluster `chartValues` (Rancher cluster configuration) rather than in a `HelmChartConfig`, otherwise Rancher overwrites them.
 
 > **Prefix matching.** By default (`providers.kubernetesIngress.strictPrefixMatching: false`), Traefik matches `pathType: Prefix` character by character: a `Prefix /doc` path would also catch backend paths such as `/docker/rendezvous/...` or `/docker-engine-api.json`.
-> This chart is not affected: it declares `Exact /doc` + `Prefix /doc/` paths (same for `/ui`, `/mcp` and `/utilities`), and gives the backend `/` catch-all the lowest router priority (`traefik.ingress.kubernetes.io/router.priority: "1"`) so that shorter rules such as `Path(/doc)` still win. Enabling strict matching, as defined by the Kubernetes Ingress specification, is still recommended for other ingresses of the cluster:
+> This chart is not affected: it declares `Exact /doc` + `Prefix /doc/` paths (same for `/ui`, `/mcp` and `/utilities`), and gives the backend `/` catch-all the lowest router priority (`traefik.ingress.kubernetes.io/router.priority: "1"`) so that shorter rules such as `Path(/doc)` still win. Enabling strict matching (available since Traefik v3.5), as defined by the Kubernetes Ingress specification, is still recommended for other ingresses of the cluster:
 >
 > ```yaml
 > providers:
@@ -59,7 +59,7 @@ The chart creates the following Traefik middlewares (when `ingress.traefik.middl
 
 | Ingress | Path | Middlewares (in order) |
 | --------|------|------------------------|
-| Backend | `/` | `compress` |
+| Backend | `/` | `compress` (text types only: HTML, CSS, JavaScript, JSON, XML, SVG) |
 | Frontend | `/ui`, `/ui/` | `compress`, `strip-ui` |
 | Documentation | `/doc`, `/doc/` | `compress`, `doc-trailing-slash` (redirects `/doc` and `/doc/guide` to `/doc/` and `/doc/guide/`), `strip-doc` |
 | Utility server | `/utilities`, `/utilities/` | `compress` |
@@ -124,7 +124,7 @@ The ingress controller changes from ingress-nginx to [Traefik v3](#prerequisites
 - `ingress.className` defaults to `traefik`,
 - ingress-nginx redirected HTTP to HTTPS when `ingress.tls` was set. With Traefik, configure the redirection on the Traefik side (`ports.web.http.redirections.entryPoint` in the Traefik chart values),
 - the `/doc` trailing slash redirection is now permanent (`301` instead of `302`),
-- responses are compressed by Traefik (except `/mcp`).
+- text responses (HTML, CSS, JavaScript, JSON, XML, SVG) are gzip compressed by Traefik (except `/mcp`).
 
 ## Getting Started
 

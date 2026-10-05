@@ -9,7 +9,21 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  compress: {}
+  # Text types only (nginx gzip_types + text/html): images and other binary formats are already compressed
+  compress:
+    includedContentTypes:
+      - text/plain
+      - text/css
+      - text/xml
+      - text/javascript
+      - text/html
+      - application/javascript
+      - application/x-javascript
+      - application/json
+      - application/xml
+      - application/xml+rss
+      - application/vnd.api+json
+      - image/svg+xml
 {{- if .Values.frontend.enabled }}
 ---
 apiVersion: traefik.io/v1alpha1

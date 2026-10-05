@@ -19,6 +19,6 @@ ports:
 
 providers:
   kubernetesIngress:
-    # Match Ingress "Prefix" paths per path element, as required by the Kubernetes spec:
+    # Traefik >= v3.5. Match Ingress "Prefix" paths per path element, as required by the Kubernetes spec:
     # /doc matches /doc and /doc/guide, but not /docker/rendezvous (which goes to the backend).
     strictPrefixMatching: true
