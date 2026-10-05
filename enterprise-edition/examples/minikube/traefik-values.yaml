@@ -3,6 +3,13 @@ ingressClass:
   enabled: true
   isDefaultClass: true
 
+# With hostPort, the new pod cannot start on the single minikube node while the old one holds port 80:
+# replace the pod instead of surging, otherwise `helm upgrade` hangs.
+updateStrategy:
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
 ports:
   web:
     # Expose Traefik on the minikube node port 80 too, so that pods can reach it
