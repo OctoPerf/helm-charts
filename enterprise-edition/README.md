@@ -85,6 +85,10 @@ The chart creates the following Traefik middlewares (when `ingress.traefik.middl
 
 This chart is tested with the latest supported versions. The currently tested versions are:
 
+| 18.x.x|
+| ------|
+| 18.0.0|
+
 | 17.x.x|
 | ------|
 | 17.0.1|
@@ -111,6 +115,16 @@ This chart is tested with the latest supported versions. The currently tested ve
 | 15.0.0|
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
+
+## Upgrading to 18.0.0
+
+The ingress controller changes from ingress-nginx to [Traefik v3](#prerequisites):
+
+- the chart no longer sets any `nginx.ingress.kubernetes.io/*` annotation, and the ones defined in `ingress.annotations` (e.g. `proxy-body-size`, `proxy-read-timeout`) have no effect anymore. Traefik has no request body size limit by default, but its `60s` read timeout must be raised for large uploads (see [Prerequisites](#prerequisites)),
+- `ingress.className` defaults to `traefik`,
+- ingress-nginx redirected HTTP to HTTPS when `ingress.tls` was set. With Traefik, configure the redirection on the Traefik side (`ports.web.http.redirections.entryPoint` in the Traefik chart values),
+- the `/doc` trailing slash redirection is now permanent (`301` instead of `302`),
+- responses are compressed by Traefik (except `/mcp`).
 
 ## Getting Started
 
