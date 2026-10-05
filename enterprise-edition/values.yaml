@@ -437,7 +437,7 @@ frontend:
   config:
     config-prod.json: |-
       {
-        "version": "octoperf-17",
+        "version": "octoperf-18",
         "backendApiUrl": "",
         "docUrl": "/doc",
         "oldUiUrl": "/app",
