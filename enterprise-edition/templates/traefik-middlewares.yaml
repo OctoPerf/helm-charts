@@ -1,0 +1,73 @@
+{{- if and .Values.ingress.enabled .Values.ingress.traefik.middlewares.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "name" . }}-compress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  # Text types only (nginx gzip_types + text/html): images and other binary formats are already compressed
+  compress:
+    includedContentTypes:
+      - text/plain
+      - text/css
+      - text/xml
+      - text/javascript
+      - text/html
+      - application/javascript
+      - application/x-javascript
+      - application/json
+      - application/xml
+      - application/xml+rss
+      - application/vnd.api+json
+      - image/svg+xml
+{{- if .Values.frontend.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "name" . }}-strip-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  stripPrefix:
+    prefixes:
+      - /ui
+{{- end }}
+{{- if .Values.doc.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "name" . }}-strip-doc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  stripPrefix:
+    prefixes:
+      - /doc
+---
+# Redirects /doc and extension-less /doc/... paths to their trailing slash form
+# (/doc -> /doc/, /doc/guide -> /doc/guide/), keeping the query string. Files (/doc/img/logo.png) are left untouched.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "name" . }}-doc-trailing-slash
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  redirectRegex:
+    regex: '^(https?://[^/]+/doc(?:/[^.?]*[^/?])?)(\?.*)?$'
+    replacement: '${1}/${2}'
+    permanent: true
+{{- end }}
+{{- end }}
