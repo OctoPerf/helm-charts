@@ -31,10 +31,25 @@ ingress:
   # Before enabling, make sure to provide hosts / tls below
   enabled: false
 
-  # className: myClassName
+  # Requires Traefik v3 with the kubernetesCRD provider enabled (traefik.io CRDs installed)
+  className: traefik
 
+  traefik:
+    middlewares:
+      # Create the chart Traefik Middlewares (compress, /ui and /doc prefix stripping, /doc trailing slash redirect)
+      # and attach them to the ingress routers
+      enabled: true
+    # Optional router entrypoints, e.g. "websecure" (annotation traefik.ingress.kubernetes.io/router.entrypoints)
+    entrypoints: ""
+    # Additional middlewares appended to every ingress router, after the chart ones.
+    # Format: <namespace>-<name>@kubernetescrd
+    extraMiddlewares: []
+    # - traefik-security-headers@kubernetescrd
+
+  # Keys defined here take precedence over the chart generated ones
+  # (traefik.ingress.kubernetes.io/router.middlewares, traefik.ingress.kubernetes.io/router.entrypoints).
+  # Prefer ingress.traefik.* to configure them.
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts: []

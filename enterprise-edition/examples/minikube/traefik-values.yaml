@@ -1,0 +1,24 @@
+# Values for the official Traefik Helm chart (https://traefik.github.io/charts), used by `make configure`.
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+ports:
+  web:
+    # Expose Traefik on the minikube node port 80 too, so that pods can reach it
+    # through the node IP (see mcpServer.hostAliases in values.yaml).
+    hostPort: 80
+    transport:
+      respondingTimeouts:
+        # Traefik v3 defaults to 60s, which breaks large uploads.
+        readTimeout: 3600s
+  websecure:
+    transport:
+      respondingTimeouts:
+        readTimeout: 3600s
+
+providers:
+  kubernetesIngress:
+    # Match Ingress "Prefix" paths per path element, as required by the Kubernetes spec:
+    # /doc matches /doc and /doc/guide, but not /docker/rendezvous (which goes to the backend).
+    strictPrefixMatching: true
