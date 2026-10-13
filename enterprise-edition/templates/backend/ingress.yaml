@@ -9,10 +9,8 @@ metadata:
     app: {{ template "name" . }}-ingress-backend
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-{{- with .Values.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-{{- end }}
+{{- /* Lowest priority: "/" is the catch-all, every other path (e.g. Exact /doc, shorter than PathPrefix(`/`)) must win */}}
+{{- with include "ingress.annotations" (dict "context" . "middlewares" (list "compress") "priority" 1) }}{{ . | nindent 2 }}{{ end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}

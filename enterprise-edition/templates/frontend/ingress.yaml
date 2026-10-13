@@ -9,11 +9,7 @@ metadata:
     app: {{ template "name" . }}-ingress-frontend
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
-{{- with .Values.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-{{- end }}
+{{- with include "ingress.annotations" (dict "context" . "middlewares" (list "compress" "strip-ui")) }}{{ . | nindent 2 }}{{ end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
@@ -34,7 +30,16 @@ spec:
     - host: {{ . }}
       http:
         paths:
-        - path: /ui(/|$)(.*)
+        # Exact /ui + Prefix /ui/: unlike Prefix /ui, does not catch backend paths such as /uixyz,
+        # even when the Traefik strictPrefixMatching option is disabled
+        - path: /ui
+          pathType: Exact
+          backend:
+            service:
+              name: {{ include "name" $dot }}-frontend
+              port: 
+                number: {{ $dot.Values.frontend.port }}
+        - path: /ui/
           pathType: Prefix
           backend:
             service:

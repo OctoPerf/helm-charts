@@ -9,13 +9,7 @@ metadata:
     app: {{ template "name" . }}-ingress-doc
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^([^.?]*[^/])$ $1/ redirect;
-{{- with .Values.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-{{- end }}
+{{- with include "ingress.annotations" (dict "context" . "middlewares" (list "compress" "doc-trailing-slash" "strip-doc")) }}{{ . | nindent 2 }}{{ end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
@@ -36,7 +30,16 @@ spec:
     - host: {{ . }}
       http:
         paths:
-        - path: /doc(/|$)(.*)
+        # Exact /doc + Prefix /doc/: unlike Prefix /doc, does not catch backend paths such as /docxyz,
+        # even when the Traefik strictPrefixMatching option is disabled
+        - path: /doc
+          pathType: Exact
+          backend:
+            service:
+              name: {{ include "name" $dot }}-doc
+              port: 
+                number: {{ $dot.Values.doc.port }}
+        - path: /doc/
           pathType: Prefix
           backend:
             service:
