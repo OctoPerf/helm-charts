@@ -1,9 +1,5 @@
 # OctoPerf Kubernetes Agent
 
-This functionality is in beta status and may be changed or removed completely in a future release. OctoPerf will take a best effort approach to fix any issues, but beta features are not subject to the support SLA of official GA features.
-
-## Overview
-
 This chart launches the [Kubernetes On-Premise Agent](https://hub.docker.com/r/octoperf/kubernetes-agent).
 
 ## Compatibility
