@@ -9,10 +9,8 @@ metadata:
     app: {{ template "name" . }}-mcp-server-ingress
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  annotations:
-{{- with .Values.ingress.annotations }}
-{{ toYaml . | indent 4 }}
-{{- end }}
+{{- /* No compress middleware: gzip would buffer the Streamable HTTP SSE responses */}}
+{{- with include "ingress.annotations" (dict "context" . "middlewares" (list)) }}{{ . | nindent 2 }}{{ end }}
 spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
@@ -33,7 +31,16 @@ spec:
     - host: {{ . }}
       http:
         paths:
+        # Exact /mcp + Prefix /mcp/: unlike Prefix /mcp, does not catch backend paths such as /mcpxyz,
+        # even when the Traefik strictPrefixMatching option is disabled
         - path: /mcp
+          pathType: Exact
+          backend:
+            service:
+              name: {{ include "name" $dot }}-mcp-server
+              port: 
+                number: {{ $dot.Values.mcpServer.port }}
+        - path: /mcp/
           pathType: Prefix
           backend:
             service:

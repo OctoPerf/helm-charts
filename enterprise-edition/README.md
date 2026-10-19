@@ -20,6 +20,53 @@ OctoPerf Enterprise-Edition helm chart depends on:
 
 - [Elasticsearch](https://github.com/elastic/helm-charts/tree/master/elasticsearch/).
 
+## Prerequisites
+
+When `ingress.enabled` is `true`, the cluster must run [Traefik v3](https://doc.traefik.io/traefik/) as ingress controller, with both providers enabled:
+
+- `kubernetesIngress`: serves the chart `Ingress` resources (ingress class `traefik` by default, see `ingress.className`),
+- `kubernetesCRD`: serves the chart `Middleware` resources (`traefik.io/v1alpha1`). The `traefik.io` CRDs must be installed.
+
+Both are enabled by default on [k3s](https://docs.k3s.io/networking/networking-services#traefik-ingress-controller) and with the official [Traefik Helm chart](https://github.com/traefik/traefik-helm-chart). On [RKE2](https://docs.rke2.io/networking/networking_services), Traefik must be selected as ingress controller and the `kubernetesCRD` provider enabled.
+
+> **Important: request read timeout.** Traefik v3 stops reading requests after `60s` by default, which breaks large uploads (e.g. JMeter projects, CSV files).
+> Raise it in the Traefik chart values, for every entrypoint used:
+>
+> ```yaml
+> ports:
+>   web:
+>     transport:
+>       respondingTimeouts:
+>         readTimeout: 3600s
+>   websecure:
+>     transport:
+>       respondingTimeouts:
+>         readTimeout: 3600s
+> ```
+>
+> On a RKE2 cluster managed by Rancher, set these values in the cluster `chartValues` (Rancher cluster configuration) rather than in a `HelmChartConfig`, otherwise Rancher overwrites them.
+
+> **Prefix matching.** By default (`providers.kubernetesIngress.strictPrefixMatching: false`), Traefik matches `pathType: Prefix` character by character: a `Prefix /doc` path would also catch backend paths such as `/docker/rendezvous/...` or `/docker-engine-api.json`.
+> This chart is not affected: it declares `Exact /doc` + `Prefix /doc/` paths (same for `/ui`, `/mcp` and `/utilities`), and gives the backend `/` catch-all the lowest router priority (`traefik.ingress.kubernetes.io/router.priority: "1"`) so that shorter rules such as `Path(/doc)` still win. Enabling strict matching (available since Traefik v3.5), as defined by the Kubernetes Ingress specification, is still recommended for other ingresses of the cluster:
+>
+> ```yaml
+> providers:
+>   kubernetesIngress:
+>     strictPrefixMatching: true
+> ```
+
+The chart creates the following Traefik middlewares (when `ingress.traefik.middlewares.enabled` is `true`), prefixed by the chart name:
+
+| Ingress | Path | Middlewares (in order) |
+| --------|------|------------------------|
+| Backend | `/` | `compress` (text types only: HTML, CSS, JavaScript, JSON, XML, SVG) |
+| Frontend | `/ui`, `/ui/` | `compress`, `strip-ui` |
+| Documentation | `/doc`, `/doc/` | `compress`, `doc-trailing-slash` (redirects `/doc` and `/doc/guide` to `/doc/` and `/doc/guide/`), `strip-doc` |
+| Utility server | `/utilities`, `/utilities/` | `compress` |
+| MCP server | `/mcp`, `/mcp/` | none: compression would buffer the Streamable HTTP (SSE) responses |
+
+`ingress.traefik.extraMiddlewares` are appended to every ingress, after the chart ones.
+
 ## Installation
 
 * Add the octoperf helm charts repo:
@@ -37,6 +84,10 @@ OctoPerf Enterprise-Edition helm chart depends on:
 ## Compatibility
 
 This chart is tested with the latest supported versions. The currently tested versions are:
+
+| 18.x.x|
+| ------|
+| 18.0.0|
 
 | 17.x.x|
 | ------|
@@ -65,6 +116,16 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
+## Upgrading to 18.0.0
+
+The ingress controller changes from ingress-nginx to [Traefik v3](#prerequisites):
+
+- the chart no longer sets any `nginx.ingress.kubernetes.io/*` annotation, and the ones defined in `ingress.annotations` (e.g. `proxy-body-size`, `proxy-read-timeout`) have no effect anymore. Traefik has no request body size limit by default, but its `60s` read timeout must be raised for large uploads (see [Prerequisites](#prerequisites)),
+- `ingress.className` defaults to `traefik`,
+- ingress-nginx redirected HTTP to HTTPS when `ingress.tls` was set. With Traefik, configure the redirection on the Traefik side (`ports.web.http.redirections.entryPoint` in the Traefik chart values),
+- the `/doc` trailing slash redirection is now permanent (`301` instead of `302`),
+- text responses (HTML, CSS, JavaScript, JSON, XML, SVG) are gzip compressed by Traefik (except `/mcp`).
+
 ## Getting Started
 
 * This repo includes a number of [example](./examples) configurations which can be used as a reference,
@@ -88,8 +149,12 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `registry` | Docker images registry to use | `registry.hub.docker.com` |
 | `imagePullPolicy` | Kubernetes [Image Pull Policy](https://kubernetes.io/docs/concepts/containers/images/#updating-images) | `IfNotPresent` |
 | `imagePullSecrets`         | Configuration for [imagePullSecrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret) so that you can use a private registry for your image | `[]` |
-| `ingress.enabled`         | Enable / Disable Ingress Controller | `true` |
-| `ingress.annotations`         | Configurable [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) applied to all ingress pods  | `{}` |
+| `ingress.enabled`         | Enable / Disable Ingress Controller | `false` |
+| `ingress.className`         | Ingress class name (`spec.ingressClassName`) of the Traefik ingress controller | `traefik` |
+| `ingress.traefik.middlewares.enabled`         | Create the chart Traefik `Middleware` resources and attach them to the ingresses (see [Prerequisites](#prerequisites)) | `true` |
+| `ingress.traefik.entrypoints`         | Traefik entrypoints of the ingress routers (annotation `traefik.ingress.kubernetes.io/router.entrypoints`), e.g. `websecure`. All entrypoints when empty | `""` |
+| `ingress.traefik.extraMiddlewares`         | Additional Traefik middlewares appended to every ingress router, e.g. security headers. Format: `<namespace>-<name>@kubernetescrd` | `[]` |
+| `ingress.annotations`         | Configurable [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) applied to all ingresses. Keys defined here override the ones generated from `ingress.traefik.*`  | `{}` |
 | `ingress.path`         | ingress path  | `/` |
 | `ingress.hosts`         | ingress hosts  | `[enterprise-edition.local]` |
 | `ingress.tls`         | ingress tls secrets to use  | `[]` |
@@ -153,14 +218,22 @@ An example `values.yaml` file for minikube is provided under `examples/`.
 
 In order to properly support the required persistent volume claims for the Elasticsearch `StatefulSet`, the `default-storageclass` and `storage-provisioner` minikube addons must be enabled.
 
-In order to use the provided `ingress` controller, Ingress addon must be enabled too.
+Ingresses are served by Traefik, installed with the official [Traefik Helm chart](https://github.com/traefik/traefik-helm-chart) using [traefik-values.yaml](./examples/minikube/traefik-values.yaml) (default ingress class, `3600s` read timeout, strict prefix matching, `hostPort` 80). The minikube `ingress` addon (ingress-nginx) must be disabled.
 
 ```
-minikube addons enable ingress
-minikube addons enable default-storageclass
-minikube addons enable storage-provisioner
+minikube addons disable ingress
 cd examples/minikube
-make
+make install
+minikube tunnel
 ```
+
+`make install` first runs the `configure` target, which enables the storage addons and installs Traefik:
+
+```
+helm repo add traefik https://traefik.github.io/charts --force-update
+helm upgrade --install traefik traefik/traefik -n traefik --create-namespace -f traefik-values.yaml --wait
+```
+
+The UI is then available on http://127.0.0.1.sslip.io/ui.
 
 Note that if `helm` or `kubectl` timeouts occur, you may consider creating a minikube VM with more CPU cores or memory allocated.
