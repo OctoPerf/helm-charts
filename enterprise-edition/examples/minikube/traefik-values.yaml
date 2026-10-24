@@ -10,10 +10,17 @@ updateStrategy:
     maxUnavailable: 1
     maxSurge: 0
 
+# Traefik is reached on the hostPort of the minikube node (see ports.web below):
+# a LoadBalancer service would stay <pending> without `minikube tunnel`, and
+# `helm upgrade --install --wait` would time out waiting for its external IP.
+service:
+  spec:
+    type: ClusterIP
+
 ports:
   web:
-    # Expose Traefik on the minikube node port 80 too, so that pods can reach it
-    # through the node IP (see mcpServer.hostAliases in values.yaml).
+    # Expose Traefik on port 80 of the minikube node, so that the browser and the
+    # pods both reach it on 192.168.49.2.sslip.io (see values.yaml).
     hostPort: 80
     transport:
       respondingTimeouts:

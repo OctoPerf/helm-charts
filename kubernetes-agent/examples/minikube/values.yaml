@@ -3,5 +3,6 @@
 # MANDATORY: agent authentication token
 token: ""
 
-# OctoPerf Server URL
+# OctoPerf Server URL: https://api.octoperf.com for the SaaS platform,
+# or http://192.168.49.2.sslip.io for the enterprise-edition minikube example
 serverUrl: "https://api.octoperf.com"

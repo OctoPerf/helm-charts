@@ -275,12 +275,12 @@ mcpServer:
   # metadata + JWKS, and it also calls the backend REST API on that same host.
   # In a real cluster the public hostname already resolves from pods, so this
   # stays empty. It is only needed when the hostname is not resolvable in-cluster
-  # to the backend/ingress (e.g. the minikube example uses 127.0.0.1.sslip.io).
+  # to the backend/ingress (e.g. a hostname that only resolves to 127.0.0.1).
   # Example:
   #   hostAliases:
   #     - ip: 192.168.49.2
   #       hostnames:
-  #         - 127.0.0.1.sslip.io
+  #         - octoperf.example.com
   hostAliases: []
 
   env:

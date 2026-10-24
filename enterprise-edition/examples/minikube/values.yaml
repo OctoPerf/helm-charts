@@ -1,4 +1,9 @@
 ---
+# 192.168.49.2.sslip.io resolves to the minikube node (= `minikube ip`, stable at
+# 192.168.49.2 for the default docker-driver profile), where Traefik listens on
+# hostPort 80 (see traefik-values.yaml). It resolves the same way from your browser
+# and from the pods, so no `minikube tunnel` and no mcpServer.hostAliases are needed.
+# With another driver or profile, replace it with `$(minikube ip).sslip.io`.
 
 elasticsearch:
   enabled: true
@@ -19,25 +24,16 @@ utilityServer:
 
 mcpServer:
   enabled: true
-  # From inside a pod, 127.0.0.1.sslip.io resolves to the pod's own loopback,
-  # so the mcp-server cannot reach the backend's OIDC issuer / REST API.
-  # Point the public hostname at the minikube node (= `minikube ip`, stable at
-  # 192.168.49.2 for the default docker-driver profile), where Traefik is
-  # exposed on hostPort 80 (see traefik-values.yaml) and routes this Host to the backend.
-  hostAliases:
-    - ip: 192.168.49.2
-      hostnames:
-        - 127.0.0.1.sslip.io
   applicationYml: |-
     server:
-      hostname: 127.0.0.1.sslip.io
+      hostname: 192.168.49.2.sslip.io
       public:
         port: 80
 
 backend:
   applicationYml: |-
     server:
-      hostname: 127.0.0.1.sslip.io
+      hostname: 192.168.49.2.sslip.io
       public:
         port: 80
     elasticsearch:
@@ -48,4 +44,4 @@ backend:
 ingress:
   enabled: true
   hosts:
-    - 127.0.0.1.sslip.io
+    - 192.168.49.2.sslip.io

@@ -78,7 +78,7 @@ The chart creates the following Traefik middlewares (when `ingress.traefik.middl
 * Install it:
 
   ```
-  helm install --name octoperf-ee octoperf/enterprise-edition
+  helm install octoperf-ee octoperf/enterprise-edition --namespace octoperf --create-namespace
   ```
 
 ## Compatibility
@@ -218,13 +218,14 @@ An example `values.yaml` file for minikube is provided under `examples/`.
 
 In order to properly support the required persistent volume claims for the Elasticsearch `StatefulSet`, the `default-storageclass` and `storage-provisioner` minikube addons must be enabled.
 
-Ingresses are served by Traefik, installed with the official [Traefik Helm chart](https://github.com/traefik/traefik-helm-chart) using [traefik-values.yaml](./examples/minikube/traefik-values.yaml) (default ingress class, `3600s` read timeout, strict prefix matching, `hostPort` 80). The minikube `ingress` addon (ingress-nginx) must be disabled.
+Ingresses are served by Traefik, installed with the official [Traefik Helm chart](https://github.com/traefik/traefik-helm-chart) using [traefik-values.yaml](./examples/minikube/traefik-values.yaml) (default ingress class, `3600s` read timeout, strict prefix matching, `hostPort` 80 on the minikube node, `ClusterIP` service). The minikube `ingress` addon (ingress-nginx) must be disabled.
+
+The example uses the hostname `192.168.49.2.sslip.io`, which resolves to the minikube node (`minikube ip`, `192.168.49.2` with the default docker driver) from your browser and from the pods alike: no `minikube tunnel` is needed. With another driver or profile, replace `192.168.49.2` with the output of `minikube ip` in [values.yaml](./examples/minikube/values.yaml).
 
 ```
 minikube addons disable ingress
 cd examples/minikube
 make install
-minikube tunnel
 ```
 
 `make install` first runs the `configure` target, which enables the storage addons and installs Traefik:
@@ -234,6 +235,6 @@ helm repo add traefik https://traefik.github.io/charts --force-update
 helm upgrade --install traefik traefik/traefik -n traefik --create-namespace -f traefik-values.yaml --wait
 ```
 
-The UI is then available on http://127.0.0.1.sslip.io/ui.
+The UI is then available on http://192.168.49.2.sslip.io/ui.
 
 Note that if `helm` or `kubectl` timeouts occur, you may consider creating a minikube VM with more CPU cores or memory allocated.
