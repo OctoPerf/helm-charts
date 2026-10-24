@@ -11,7 +11,7 @@ elasticsearch:
   enabled: true
   protocol: http
   image: "elasticsearch"
-  imageTag: "8.19.20"
+  imageTag: "8.19.23"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
   createCert: false
