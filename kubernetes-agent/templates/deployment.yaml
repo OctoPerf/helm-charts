@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "name" . }}
+  name: {{ template "fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "name" . }}
@@ -48,7 +48,7 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
         runAsUser: {{ .Values.securityContext.runAsUser }}
       {{- end }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ template "serviceAccountName" . }}
       {{- if .Values.extraInitContainers }}
       initContainers: {{ tpl .Values.extraInitContainers | nindent 8 }}
       {{- end }}
@@ -57,6 +57,15 @@ spec:
       {{- end }}
       {{- if .Values.affinity }}
       affinity: {{ toYaml .Values.affinity | nindent 8 }}
+      {{- else }}
+      # One agent per node: the "app" label is shared by the agents of all releases
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: {{ template "name" . }}
+            topologyKey: kubernetes.io/hostname
       {{- end }}
       {{- if .Values.tolerations }}
       tolerations: {{ toYaml .Values.tolerations | nindent 8 }}
@@ -67,7 +76,7 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: {{ template "name" . }}-config
+          name: {{ template "fullname" . }}-config
       {{- with .Values.volumes }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
