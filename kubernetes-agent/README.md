@@ -40,6 +40,8 @@ The agent requires access to the following Kubernetes APIs:
 
 Run an agent on every node you would like to use for running JMeter pods. An agent will only schedule JMeter pods on the same node as where it's running.
 
+Each agent has its own token, so each agent is its own Helm release: install the chart once per agent, with the command OctoPerf generates for it.
+
 ## Installation
 
 * Add the octoperf helm charts repo:
@@ -48,12 +50,24 @@ Run an agent on every node you would like to use for running JMeter pods. An age
   helm repo add octoperf https://helm.octoperf.com
   ```
  
-* Install it:
+* Install one release per agent, named after the agent, with the token of that agent:
 
   ```
-  helm install kubernetes-agent octoperf/kubernetes-agent --namespace octoperf --create-namespace \
+  helm install <agent name> octoperf/kubernetes-agent --namespace octoperf --create-namespace \
     --set token=<agent token> --set serverUrl=<OctoPerf server URL>
   ```
+
+* Remove an agent:
+
+  ```
+  helm uninstall <agent name> --namespace octoperf
+  ```
+
+### One release per agent
+
+- **Resources are named after the release**: the Deployment, ServiceAccount and ConfigMap (`<release>-config`) in the namespace, and the cluster-scoped ClusterRole (`<release>-role`) and ClusterRoleBinding (`<release>-role-binding`). Two releases share no resource. As ClusterRoles are cluster-scoped, give two releases in two namespaces two different names.
+- **One agent per node**: the agent pods of every release carry the label `app: kubernetes-agent`. By default, a `podAntiAffinity` on that label (`topologyKey: kubernetes.io/hostname`) keeps two agents off the same node, as their load generators would share its CPU and memory. An agent installed when every node already runs one stays `Pending`: `kubectl get events -n octoperf` shows `didn't match pod anti-affinity rules`. Setting `affinity` replaces this default.
+- **Upgrades stop the agent before starting the new one** (`strategy.rollingUpdate.maxSurge: 0`): the new pod could not start on the node still running the old one. A `Pending` agent may take the node freed by an upgrade: the upgraded agent then waits in its turn.
 
 ## Image Parameters
 
@@ -78,7 +92,7 @@ The agent is a Spring Boot application. The `config` block of `values.yaml` is i
 
 ### How it works
 
-1. The chart renders `config` verbatim into a ConfigMap named `kubernetes-agent-config` (`<nameOverride>-config` when `nameOverride` is set), under the key `application.yml`.
+1. The chart renders `config` verbatim into a ConfigMap named `<release name>-config`, under the key `application.yml`.
 2. The ConfigMap is mounted in the agent container at `/home/octoperf/config/application.yml`. Spring Boot loads `./config/application.yml` from the agent's working directory (`/home/octoperf`) at startup.
 3. That file is merged key by key over the configuration built into the agent: a key you leave out keeps its built-in default.
 4. The pod template carries a `checksum/config` annotation, so changing `config` and running `helm upgrade` restarts the agent with the new file.
@@ -102,6 +116,15 @@ A few things to know:
 | `octoperf.container.security-context` | `{}` | Container-level security context of the load generator containers. See below. |
 | `octoperf.pod.spec.image-pull-secrets` | `[]` | Secrets used to pull the load generator images, e.g. `- name: my-registry-secret`. The secrets must exist in the namespace. |
 | `octoperf.pod.spec.security-context` | `{}` | Pod-level security context of the load generator pods. See below. |
+
+### Upgrading to chart 18.0.1
+
+Chart 18.0.1 names the resources after the release, instead of `kubernetes-agent`:
+
+- A release named `kubernetes-agent`, as in the former installation command, keeps the same resource names.
+- A release with another name gets new resources on `helm upgrade`: Helm deletes the old ones and creates the new ones, and the agent restarts.
+- `serviceAccount.name` now defaults to the release name. A values file setting it keeps its value.
+- The agent pods get the one-agent-per-node anti-affinity unless `affinity` is set: with more agents than nodes, the extra agents stay `Pending`.
 
 ### Upgrading to 18.0.0
 

@@ -29,7 +29,7 @@ delete-minikube:
 	minikube delete
 
 logs:
-	kubectl -n $(NAMESPACE) logs -f pod/kubernetes-agent
+	kubectl -n $(NAMESPACE) logs -f deploy/$(RELEASE)
 
 events:
 	kubectl -n $(NAMESPACE) get events --sort-by='.metadata.creationTimestamp' -A

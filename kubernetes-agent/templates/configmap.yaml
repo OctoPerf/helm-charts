@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "name" . }}-config
+  name: {{ template "fullname" . }}-config
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "name" . }}

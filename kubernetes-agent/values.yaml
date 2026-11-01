@@ -8,8 +8,18 @@ token: ""
 # OctoPerf Server URL
 serverUrl: "https://api.octoperf.com"
 
-# Deploy one agent per node to use as load-generator
+# One release per agent: each agent has its own token.
+# Install one agent per node to use as load-generator
 replicas: 1
+
+## Deployment strategy
+## Stop the old agent before starting the new one: with the one-agent-per-node
+## anti-affinity (see affinity), a new pod started first would wait forever for a node without agent
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
 
 ## OctoPerf Kubernetes Agent Image
 ## ref: https://hub.docker.com/r/octoperf/kubernetes-agent
@@ -41,6 +51,10 @@ nodeSelector: {}
 
 ## Affinity
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## Empty = one agent per node: a podAntiAffinity on the "app: kubernetes-agent" label,
+## shared by the agents of all releases, with topologyKey kubernetes.io/hostname.
+## An agent stays Pending when every node already runs one.
+## A non-empty affinity replaces this default.
 affinity: {}
 
 ## Tolerations for pod assignment
@@ -49,14 +63,13 @@ affinity: {}
 tolerations: []
 
 # See https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
-# Have only one agent per node
 topologySpreadConstraints: []
 #  - maxSkew: 1
-#    topologyKey: kubernetes.io/hostname
-#    whenUnsatisfiable: DoNotSchedule
+#    topologyKey: topology.kubernetes.io/zone
+#    whenUnsatisfiable: ScheduleAnyway
 #    labelSelector:
 #      matchLabels:
-#        name: octoperf-kubernetes-agent
+#        app: kubernetes-agent
 
 ## Security context
 securityContext: {}
@@ -123,7 +136,7 @@ volumeMounts: []
 
 ## @section Agent configuration
 
-## Rendered verbatim as the agent's application.yml (ConfigMap "<name>-config"),
+## Rendered verbatim as the agent's application.yml (ConfigMap "<release name>-config"),
 ## mounted at /home/octoperf/config/application.yml. Spring Boot merges it key by key
 ## over the defaults built into the agent. Keys are kebab-case (camelCase is accepted too).
 ## The resources and security-context keys below require Kubernetes Agent 18.0.0 or later:
@@ -224,14 +237,14 @@ config:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
 ##
 serviceAccount:
-  ## @param serviceAccount.create Enable the creation of a ServiceAccount for MySQL pods
+  ## @param serviceAccount.create Enable the creation of a ServiceAccount for the agent pods
   ##
   create: true
-  ## @param serviceAccount.name Name of the created ServiceAccount
-  ## If not set and create is true, a name is generated using the mysql.fullname template
+  ## @param serviceAccount.name Name of the ServiceAccount
+  ## If not set: the release name when create is true, "default" otherwise
   ##
-  name: "kubernetes-agent"
-  ## @param serviceAccount.annotations Annotations for MySQL Service Account
+  name: ""
+  ## @param serviceAccount.annotations Annotations for the agent Service Account
   ##
   annotations: {}
   ## @param serviceAccount.automountServiceAccountToken Automount service account token for the server service account

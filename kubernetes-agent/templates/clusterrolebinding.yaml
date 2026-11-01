@@ -2,7 +2,7 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "name" . }}-role-binding
+  name: {{ template "fullname" . }}-role-binding
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "name" . }}
@@ -11,10 +11,10 @@ metadata:
     heritage: "{{ .Release.Service }}"
 subjects:
   - kind: ServiceAccount
-    name: {{ .Values.serviceAccount.name }}
+    name: {{ template "serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "name" . }}-role
+  name: {{ template "fullname" . }}-role
 {{- end }}
