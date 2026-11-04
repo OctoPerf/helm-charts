@@ -7,6 +7,15 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Storage class of the backend data volume: backend.persistentVolume.storageClass, else storageClassName,
+the key values.yaml documented up to 18.0.0 and installs may still set.
+*/}}
+{{- define "backend.storageClass" -}}
+{{- $volume := .Values.backend.persistentVolume -}}
+{{- $volume.storageClass | default $volume.storageClassName | default "" -}}
+{{- end -}}
+
+{{/*
 Ingress annotations: Traefik router entrypoints and middlewares, merged with .Values.ingress.annotations.
 Chart middlewares are referenced as <namespace>-<name>-<middleware>@kubernetescrd, in the given order,
 followed by .Values.ingress.traefik.extraMiddlewares. Keys set in .Values.ingress.annotations take precedence.

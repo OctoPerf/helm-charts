@@ -144,11 +144,11 @@ spec:
         resources:
           requests:
             storage: "{{ .Values.backend.persistentVolume.size }}"
-      {{- if .Values.backend.persistentVolume.storageClass }}
-      {{- if (eq "-" .Values.backend.persistentVolume.storageClass) }}
+      {{- with include "backend.storageClass" . }}
+      {{- if eq "-" . }}
         storageClassName: ""
       {{- else }}
-        storageClassName: "{{ .Values.backend.persistentVolume.storageClass }}"
+        storageClassName: "{{ . }}"
       {{- end }}
       {{- end }}
 {{- end }}

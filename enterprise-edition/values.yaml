@@ -185,11 +185,13 @@ backend:
     ## backend data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
+    ## If set to "local-storage", the chart also creates the local-storage StorageClass
+    ## If empty (the default), no storageClassName spec is
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
+    ## storageClassName, its name up to 18.0.0, is still read when storageClass is empty
     ##
-    storageClassName: ""
+    storageClass: ""
 
     ## Subdirectory of backend data Persistent Volume to mount
     ## Useful if the volume's root directory is not empty
