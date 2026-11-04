@@ -116,6 +116,25 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
+## Upgrading to 18.0.1
+
+Up to 18.0.0, `values.yaml` named the storage class of the backend data volume `backend.persistentVolume.storageClassName`, while the backend StatefulSet read `backend.persistentVolume.storageClass`: a class set with `storageClassName` had no effect, and the volume claim used the cluster's default class. From 18.0.1, `storageClass` is the documented key, and `storageClassName` is read when `storageClass` is empty.
+
+If your values set `backend.persistentVolume.storageClassName` to a non-empty value, the volume claim template of the backend StatefulSet now changes, and Kubernetes refuses to change it on an existing StatefulSet: `helm upgrade` fails with `spec: Forbidden: updates to statefulset spec for fields other than ...`. Before upgrading, delete the StatefulSet but not its pods nor its volume claims:
+
+```
+kubectl delete statefulset <name>-backend --namespace <namespace> --cascade=orphan
+```
+
+`<name>` is `enterprise-edition`, or your `nameOverride`. `helm upgrade` then recreates the StatefulSet, which adopts the running pod. The existing volume claim, and its data, keep the storage class they were created with: a claim's class never changes after its creation.
+
+If your values set `backend.persistentVolume.storageClass` to `local-storage`, the chart now creates the `local-storage` StorageClass, which only `storageClassName` triggered before. If you created that StorageClass yourself, `helm upgrade` fails because the release does not own it. Before upgrading, let the release adopt it:
+
+```
+kubectl label storageclass local-storage app.kubernetes.io/managed-by=Helm
+kubectl annotate storageclass local-storage meta.helm.sh/release-name=<release> meta.helm.sh/release-namespace=<namespace>
+```
+
 ## Upgrading to 18.0.0
 
 The ingress controller changes from ingress-nginx to [Traefik v3](#prerequisites):
@@ -192,7 +211,7 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `backend.persistentVolume.accessModes`            | backend data Persistent Volume Claim annotations | `{}` |
 | `backend.persistentVolume.mountPath`            | backend data Persistent Volume mount root path inside the pods. | `/home/octoperf/data` |
 | `backend.persistentVolume.size`            | backend data Persistent Volume size | `1Gi` |
-| `backend.persistentVolume.storageClass`            | backend data Persistent Volume storage class | `nil` |
+| `backend.persistentVolume.storageClass`            | backend data Persistent Volume storage class. `-` sets an empty `storageClassName`, which disables dynamic provisioning; `local-storage` also creates the `local-storage` StorageClass. `storageClassName`, its name up to 18.0.0, is still read when `storageClass` is empty | `""` |
 | `backend.persistentVolume.subPath`            | backend data Persistent Volume Subdirectory of backend data Persistent Volume to mount. Useful if the volume's root directory is not empty | `nil` |
 | `backend.resources`            | backend resource requests and limits. Ref: http://kubernetes.io/docs/user-guide/compute-resources/ | `{}` |
 | `backend.securityContext`            | Security context to be added to backend pods | `{}` |
