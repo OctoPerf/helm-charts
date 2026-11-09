@@ -112,9 +112,9 @@ A few things to know:
 
 | Key under `config` | Default | Description |
 | --- | --- | --- |
-| `octoperf.container.resources.requests.memory-factor` | `2` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`) times this factor. |
+| `octoperf.container.resources.requests.memory-factor` | `1.25` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`, its heap plus what the JVM needs beyond it) times this factor. |
 | `octoperf.container.resources.requests.cpu` | `""` | CPU request of a load generator container (e.g. `"1"`, `"500m"`). Empty means none. |
-| `octoperf.container.resources.limits.memory-factor` | `2` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
+| `octoperf.container.resources.limits.memory-factor` | `1.25` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
 | `octoperf.container.resources.limits.cpu` | `""` | CPU limit of a load generator container (e.g. `"2"`). Empty means none. When only the limit is set, Kubernetes uses it as the request too. |
 | `octoperf.container.tolerations` | `[]` | Tolerations of the load generator pods. Each entry takes `key`, `operator`, `value`, `effect` and `seconds` (`tolerationSeconds`). |
 | `octoperf.container.security-context` | `{}` | Container-level security context of the load generator containers. See below. |
@@ -123,6 +123,9 @@ A few things to know:
 
 ### Upgrading to chart 18.1.0
 
+- **This chart needs OctoPerf 18.1.0 or later.** From 18.1.0, `MEMORY_REQUEST_MB` is the whole memory of a load generator: its JVM heap plus 256 MB for what the JVM needs beyond it (metaspace, code cache, thread stacks, native memory). Before, it was the heap alone, and only the factor of `2` left room for the rest of the JVM.
+- The default memory factors go from `2` to `1.25`: a pod is capped 25% above what OctoPerf sized for it, e.g. `500Mi` instead of `288Mi` for a JMeter load generator of 2 virtual users on a provider with a base memory of 128 MB.
+- **With an OctoPerf server older than 18.1.0, keep `memory-factor: 2`** under `octoperf.container.resources.requests` and `octoperf.container.resources.limits`: with `1.25`, a load generator gets 1.25 times its heap and is killed by the OOM killer.
 - The token moves from a plain environment variable of the Deployment to the Secret `<release>-token`, or to `existingSecret` when set. Values setting `token` keep working.
 - Every resource and the agent pod get the `app.kubernetes.io/*` labels and `commonLabels`: the agent restarts on `helm upgrade`.
 - The load generator pods created by the agent do not get these labels: they only carry `vendor: octoperf`. A policy requiring labels on every pod must exclude them, e.g. by that label.
