@@ -9,6 +9,7 @@ metadata:
     app: {{ template "name" . }}-ingress-frontend
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 {{- with include "ingress.annotations" (dict "context" . "middlewares" (list "compress" "strip-ui")) }}{{ . | nindent 2 }}{{ end }}
 spec:
 {{- if .Values.ingress.className }}

@@ -9,6 +9,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
 data:
 {{- range $key, $value := .Values.backend.env }}
   {{ $key }}: {{ quote $value -}}

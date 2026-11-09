@@ -10,6 +10,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
 data:
   application.yml: |
 {{ .Values.mcpServer.applicationYml | indent 4 -}}

@@ -9,6 +9,7 @@ metadata:
     app: {{ template "name" . }}-mcp-server-ingress
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 {{- /* No compress middleware: gzip would buffer the Streamable HTTP SSE responses */}}
 {{- with include "ingress.annotations" (dict "context" . "middlewares" (list)) }}{{ . | nindent 2 }}{{ end }}
 spec:

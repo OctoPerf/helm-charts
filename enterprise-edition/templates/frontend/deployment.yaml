@@ -9,6 +9,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
   {{- with .Values.frontend.annotations }}
   annotations:
     {{ toYaml . | nindent 4 }}
@@ -22,6 +23,7 @@ spec:
     metadata:
       labels:
         app: {{ template "name" . }}-frontend
+        {{- include "labels" . | nindent 8 }}
     spec:
     {{- if .Values.frontend.schedulerName }}
       schedulerName: "{{ .Values.frontend.schedulerName }}"
@@ -54,6 +56,10 @@ spec:
       - name: {{ template "name" . }}-frontend
         image: "{{ .Values.registry }}/{{ .Values.frontend.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        {{- with .Values.frontend.containerSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
           - name: "NGINX_PORT"
             value: "{{ .Values.frontend.port }}"

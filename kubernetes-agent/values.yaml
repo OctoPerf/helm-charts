@@ -5,6 +5,17 @@
 # See: https://doc.octoperf.com/private-hosts/agents/
 token: ""
 
+# Existing Secret holding the token, e.g. synced from Vault: the token then stays out of the values.
+# When set, `token` is ignored. When empty, the chart stores `token` in the Secret "<release name>-token".
+existingSecret: ""
+# Key of the token in existingSecret
+existingSecretKey: token
+
+# Labels added to every resource and to the agent pod, e.g. corporate labels required by a policy:
+# commonLabels:
+#   env: production
+commonLabels: {}
+
 # OctoPerf Server URL
 serverUrl: "https://api.octoperf.com"
 
@@ -258,6 +269,10 @@ rbac:
   ## @param rbac.create Whether to create & use RBAC resources or not
   ##
   create: true
+  ## @param rbac.clusterScoped true: ClusterRole + ClusterRoleBinding.
+  ## false: Role + RoleBinding in the release namespace, which is enough: the agent only reads and creates pods in its own namespace.
+  ##
+  clusterScoped: true
   ## @param rbac.rules Custom RBAC rules to set
   ## e.g:
   ## rules:

@@ -8,6 +8,7 @@ metadata:
   labels:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 spec:
   # Text types only (nginx gzip_types + text/html): images and other binary formats are already compressed
   compress:
@@ -34,6 +35,7 @@ metadata:
   labels:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 spec:
   stripPrefix:
     prefixes:
@@ -49,6 +51,7 @@ metadata:
   labels:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 spec:
   stripPrefix:
     prefixes:
@@ -64,6 +67,7 @@ metadata:
   labels:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 spec:
   redirectRegex:
     regex: '^(https?://[^/]+/doc(?:/[^.?]*[^/?])?)(\?.*)?$'

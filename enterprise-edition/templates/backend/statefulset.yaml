@@ -9,6 +9,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
   annotations:
   {{- with .Values.backend.annotations }}
   {{- toYaml . | nindent 4 }}
@@ -30,6 +31,7 @@ spec:
     metadata:
       labels:
         app: {{ template "name" . }}-backend
+        {{- include "labels" . | nindent 8 }}
     {{- if .Values.backend.podAnnotations }}
       annotations:
       {{- toYaml .Values.backend.podAnnotations | nindent 8 }}
@@ -94,6 +96,10 @@ spec:
       - name: {{ template "name" . }}-backend
         image: "{{ .Values.registry }}/{{ .Values.backend.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        {{- with .Values.backend.containerSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         envFrom:
         - configMapRef:
             name: {{ template "name" . }}-backend-env
