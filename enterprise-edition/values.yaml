@@ -451,9 +451,15 @@ doc:
   securityContext: {}
 
   ## Security context of the documentation container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs nginx as the nginx user (uid and gid 101), declared by name: runAsNonRoot needs runAsUser.
   ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
   containerSecurityContext: {}
   #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 101
+  #  capabilities:
+  #    drop:
+  #      - ALL
   #  seccompProfile:
   #    type: RuntimeDefault
 
@@ -523,9 +529,15 @@ frontend:
   securityContext: {}
 
   ## Security context of the frontend container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs nginx as the nginx user (uid and gid 101), declared by name: runAsNonRoot needs runAsUser.
   ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
   containerSecurityContext: {}
   #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 101
+  #  capabilities:
+  #    drop:
+  #      - ALL
   #  seccompProfile:
   #    type: RuntimeDefault
 
