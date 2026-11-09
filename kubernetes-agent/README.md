@@ -121,15 +121,13 @@ A few things to know:
 | `octoperf.pod.spec.image-pull-secrets` | `[]` | Secrets used to pull the load generator images, e.g. `- name: my-registry-secret`. The secrets must exist in the namespace. |
 | `octoperf.pod.spec.security-context` | `{}` | Pod-level security context of the load generator pods. See below. |
 
-### Upgrading to chart 18.0.2
+### Upgrading to chart 18.1.0
 
 - The token moves from a plain environment variable of the Deployment to the Secret `<release>-token`, or to `existingSecret` when set. Values setting `token` keep working.
 - Every resource and the agent pod get the `app.kubernetes.io/*` labels and `commonLabels`: the agent restarts on `helm upgrade`.
 - The load generator pods created by the agent do not get these labels: they only carry `vendor: octoperf`. A policy requiring labels on every pod must exclude them, e.g. by that label.
 
-### Upgrading to chart 18.0.1
-
-Chart 18.0.1 names the resources after the release, instead of `kubernetes-agent`:
+Chart 18.1.0 names the resources after the release, instead of `kubernetes-agent`:
 
 - A release named `kubernetes-agent`, as in the former installation command, keeps the same resource names.
 - A release with another name gets new resources on `helm upgrade`: Helm deletes the old ones and creates the new ones, and the agent restarts.
