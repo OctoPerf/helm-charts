@@ -126,16 +126,11 @@ A few things to know:
 - **This chart needs OctoPerf 18.1.0 or later.** From 18.1.0, `MEMORY_REQUEST_MB` is the whole memory of a load generator: its JVM heap plus 256 MB for what the JVM needs beyond it (metaspace, code cache, thread stacks, native memory). Before, it was the heap alone, and only the factor of `2` left room for the rest of the JVM.
 - The default memory factors go from `2` to `1.25`: a pod is capped 25% above what OctoPerf sized for it, e.g. `500Mi` instead of `288Mi` for a JMeter load generator of 2 virtual users on a provider with a base memory of 128 MB.
 - **With an OctoPerf server older than 18.1.0, keep `memory-factor: 2`** under `octoperf.container.resources.requests` and `octoperf.container.resources.limits`: with `1.25`, a load generator gets 1.25 times its heap and is killed by the OOM killer.
-
-### Upgrading to chart 18.0.2
-
 - The token moves from a plain environment variable of the Deployment to the Secret `<release>-token`, or to `existingSecret` when set. Values setting `token` keep working.
 - Every resource and the agent pod get the `app.kubernetes.io/*` labels and `commonLabels`: the agent restarts on `helm upgrade`.
 - The load generator pods created by the agent do not get these labels: they only carry `vendor: octoperf`. A policy requiring labels on every pod must exclude them, e.g. by that label.
 
-### Upgrading to chart 18.0.1
-
-Chart 18.0.1 names the resources after the release, instead of `kubernetes-agent`:
+Chart 18.1.0 names the resources after the release, instead of `kubernetes-agent`:
 
 - A release named `kubernetes-agent`, as in the former installation command, keeps the same resource names.
 - A release with another name gets new resources on `helm upgrade`: Helm deletes the old ones and creates the new ones, and the agent restarts.

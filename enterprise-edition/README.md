@@ -116,13 +116,11 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
-## Upgrading to 18.0.2
+## Upgrading to 18.1.0
 
 Every resource and pod gets the `app.kubernetes.io/name`, `instance`, `version` and `managed-by` labels, and `commonLabels`: the pods restart once on `helm upgrade`. Selectors are unchanged.
 
-## Upgrading to 18.0.1
-
-Up to 18.0.0, `values.yaml` named the storage class of the backend data volume `backend.persistentVolume.storageClassName`, while the backend StatefulSet read `backend.persistentVolume.storageClass`: a class set with `storageClassName` had no effect, and the volume claim used the cluster's default class. From 18.0.1, `storageClass` is the documented key, and `storageClassName` is read when `storageClass` is empty.
+Up to 18.0.0, `values.yaml` named the storage class of the backend data volume `backend.persistentVolume.storageClassName`, while the backend StatefulSet read `backend.persistentVolume.storageClass`: a class set with `storageClassName` had no effect, and the volume claim used the cluster's default class. From 18.1.0, `storageClass` is the documented key, and `storageClassName` is read when `storageClass` is empty.
 
 If your values set `backend.persistentVolume.storageClassName` to a non-empty value, the volume claim template of the backend StatefulSet now changes, and Kubernetes refuses to change it on an existing StatefulSet: `helm upgrade` fails with `spec: Forbidden: updates to statefulset spec for fields other than ...`. Before upgrading, delete the StatefulSet but not its pods nor its volume claims:
 
