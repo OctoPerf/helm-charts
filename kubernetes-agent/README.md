@@ -112,14 +112,20 @@ A few things to know:
 
 | Key under `config` | Default | Description |
 | --- | --- | --- |
-| `octoperf.container.resources.requests.memory-factor` | `2` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`) times this factor. |
+| `octoperf.container.resources.requests.memory-factor` | `1.2` | Memory request of a load generator container: the memory OctoPerf reserves for it (`MEMORY_REQUEST_MB`, its heap plus what the JVM needs beyond it) times this factor. |
 | `octoperf.container.resources.requests.cpu` | `""` | CPU request of a load generator container (e.g. `"1"`, `"500m"`). Empty means none. |
-| `octoperf.container.resources.limits.memory-factor` | `2` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
+| `octoperf.container.resources.limits.memory-factor` | `1.2` | Memory limit of a load generator container: `MEMORY_REQUEST_MB` times this factor. |
 | `octoperf.container.resources.limits.cpu` | `""` | CPU limit of a load generator container (e.g. `"2"`). Empty means none. When only the limit is set, Kubernetes uses it as the request too. |
 | `octoperf.container.tolerations` | `[]` | Tolerations of the load generator pods. Each entry takes `key`, `operator`, `value`, `effect` and `seconds` (`tolerationSeconds`). |
 | `octoperf.container.security-context` | `{}` | Container-level security context of the load generator containers. See below. |
 | `octoperf.pod.spec.image-pull-secrets` | `[]` | Secrets used to pull the load generator images, e.g. `- name: my-registry-secret`. The secrets must exist in the namespace. |
 | `octoperf.pod.spec.security-context` | `{}` | Pod-level security context of the load generator pods. See below. |
+
+### Upgrading to chart 18.1.0
+
+- **This chart needs OctoPerf 18.1.0 or later.** From 18.1.0, `MEMORY_REQUEST_MB` is the whole memory of a load generator: its JVM heap plus 256 MB for what the JVM needs beyond it (metaspace, code cache, thread stacks, native memory). Before, it was the heap alone, and only the factor of `2` left room for the rest of the JVM.
+- The default memory factors go from `2` to `1.2`: a pod is capped 20% above what OctoPerf sized for it, e.g. `480Mi` instead of `288Mi` for a JMeter load generator of 2 virtual users on a provider with a base memory of 128 MB.
+- **With an OctoPerf server older than 18.1.0, keep `memory-factor: 2`** under `octoperf.container.resources.requests` and `octoperf.container.resources.limits`: with `1.2`, a load generator gets 1.2 times its heap and is killed by the OOM killer.
 
 ### Upgrading to chart 18.0.2
 
