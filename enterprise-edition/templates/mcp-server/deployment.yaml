@@ -9,6 +9,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
   annotations:
   {{- with .Values.mcpServer.annotations }}
   {{- toYaml . | nindent 4 }}
@@ -30,6 +31,7 @@ spec:
     metadata:
       labels:
         app: {{ template "name" . }}-mcp-server
+        {{- include "labels" . | nindent 8 }}
     {{- if .Values.mcpServer.podAnnotations }}
       annotations:
       {{- toYaml .Values.mcpServer.podAnnotations | nindent 8 }}
@@ -87,6 +89,10 @@ spec:
       - name: {{ template "name" . }}-mcp-server
         image: "{{ .Values.registry }}/{{ .Values.mcpServer.image }}:{{ .Values.version }}"
         imagePullPolicy: {{ quote .Values.imagePullPolicy }}
+        {{- with .Values.mcpServer.containerSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         envFrom:
         - configMapRef:
             name: {{ template "name" . }}-mcp-server-env

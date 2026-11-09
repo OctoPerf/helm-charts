@@ -116,6 +116,10 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 Examples of installing older major versions can be found in the [examples](./examples) directory.
 
+## Upgrading to 18.0.2
+
+Every resource and pod gets the `app.kubernetes.io/name`, `instance`, `version` and `managed-by` labels, and `commonLabels`: the pods restart once on `helm upgrade`. Selectors are unchanged.
+
 ## Upgrading to 18.0.1
 
 Up to 18.0.0, `values.yaml` named the storage class of the backend data volume `backend.persistentVolume.storageClassName`, while the backend StatefulSet read `backend.persistentVolume.storageClass`: a class set with `storageClassName` had no effect, and the volume claim used the cluster's default class. From 18.0.1, `storageClass` is the documented key, and `storageClassName` is read when `storageClass` is empty.
@@ -167,6 +171,9 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | ----------|-------------|---------|
 | `registry` | Docker images registry to use | `registry.hub.docker.com` |
 | `imagePullPolicy` | Kubernetes [Image Pull Policy](https://kubernetes.io/docs/concepts/containers/images/#updating-images) | `IfNotPresent` |
+| `commonLabels` | Labels added to every resource and pod of the chart, e.g. `env: production` | `{}` |
+| `elasticCloud.istio.enabled` | Reach Elastic Cloud through Istio, see [Elastic Cloud through Istio](#elastic-cloud-through-istio) | `false` |
+| `elasticCloud.host` | Elastic Cloud endpoint, without scheme nor port, e.g. `my-deployment.es.europe-west1.gcp.cloud.es.io` | `""` |
 | `imagePullSecrets`         | Configuration for [imagePullSecrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret) so that you can use a private registry for your image | `[]` |
 | `ingress.enabled`         | Enable / Disable Ingress Controller | `false` |
 | `ingress.className`         | Ingress class name (`spec.ingressClassName`) of the Traefik ingress controller | `traefik` |
@@ -185,6 +192,8 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `doc.livenessProbe`         | Documentation pods [livenessProbe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)  | `httpGet /doc`<br>`failureThreshold: 3`<br>`initialDelaySeconds: 5`<br>`periodSeconds: 5`<br>`timeoutSeconds: 5` |
 | `doc.nodeSelector`         | Documentation [node selectors](https://kubernetes.io/docs/user-guide/node-selection/)  | `{}`|
 | `doc.affinity`         | Documentation pod affinity | `{}`|
+| `doc.securityContext`         | Documentation pod security context | `{}`|
+| `doc.containerSecurityContext`         | Documentation container [security context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) | `{}`|
 | `frontend.enabled`         | Enable / Disable frontend DaemonSet | `true`|
 | `frontend.image`         | Enable / Disable frontend DaemonSet | `true`|
 | `frontend.annotations`         | Configurable [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) applied to all frontend pods  | `{}` |
@@ -193,6 +202,8 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `frontend.config.config-ee.json`         | Frontend [configuration file](https://doc.octoperf.com/enterprise-edition/configuration/#gui-frontend-configuration) content. This file is mounted as a volume on frontend pods. | `Json` |
 | `frontend.nodeSelector`         | Frontend [node selectors](https://kubernetes.io/docs/user-guide/node-selection/)  | `{}`|
 | `frontend.affinity`         | Frontend pod affinity | `{}`|
+| `frontend.securityContext`         | Frontend pod security context | `{}`|
+| `frontend.containerSecurityContext`         | Frontend container [security context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) | `{}`|
 | `backend.enabled`         | Enable / Disable Backend StatefulSet | `true`|
 | `backend.annotations`      | Annotations that Kubernetes will use for the service | `{}` |
 | `backend.env`      | Backend [Pods environment Variable](https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/) stored in a configmap. See [Enterprise-Edition Configuration](https://doc.octoperf.com/enterprise-edition/configuration/#environment-variables) for more settings. | `JAVA_OPTS: "-Xms256m -Xmx256m"`<br>`server.hostname: "enterprise-edition.local"`<br>`server.public.port: 80`<br>`elasticsearch.hostname: elasticsearch-master-headless`<br>`clustering.driver: hazelcast`<br>`clustering.quorum: "1"` |
@@ -215,6 +226,7 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `backend.persistentVolume.subPath`            | backend data Persistent Volume Subdirectory of backend data Persistent Volume to mount. Useful if the volume's root directory is not empty | `nil` |
 | `backend.resources`            | backend resource requests and limits. Ref: http://kubernetes.io/docs/user-guide/compute-resources/ | `{}` |
 | `backend.securityContext`            | Security context to be added to backend pods | `{}` |
+| `backend.containerSecurityContext`            | Backend container [security context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1). `mcpServer` and `utilityServer` take the same `securityContext` and `containerSecurityContext` keys. See `values.yaml` for a hardened example | `{}` |
 | `backend.headless.annotations`            | Backend headless service annotations. | `{}` |
 | `backend.headless.labels`            | Backend headless service labels. | `{}` |
 | `backend.headless.publishNotReadyAddresses`            | Whenever non-ready backend IPs are exposed through the headless service. | `true` |
@@ -225,6 +237,38 @@ The configuration is split in `4` big sections defined by the prefix being used:
 | `backend.service.loadBalancerIP`            | Backend service load balancer IP. | `nil` |
 | `backend.service.loadBalancerSourceRanges`            | Backend service load balancer source ranges. | `[]` |
 | `backend.service.nodePort`            | Custom [nodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) port that can be set if you are using `service.type: nodePort` | `[]` |
+
+## Elastic Cloud through Istio
+
+The backend talks to Elasticsearch over plain HTTP. To use Elastic Cloud instead of the bundled Elasticsearch, on a cluster running Istio with a sidecar injected in the backend pods, let Istio originate the TLS connection:
+
+```yaml
+elasticsearch:
+  enabled: false
+
+elasticCloud:
+  istio:
+    enabled: true
+  host: my-deployment.es.europe-west1.gcp.cloud.es.io
+
+backend:
+  applicationYml: |-
+    server:
+      public:
+        port: 80
+    elasticsearch:
+      hostname: enterprise-edition-elastic-cloud-proxy
+      password: "<password of the elastic user>"
+```
+
+The chart creates:
+
+- the Service `<name>-elastic-cloud-proxy` (port `9200`, no pods behind it), the hostname the backend connects to,
+- a `ServiceEntry` declaring `elasticCloud.host` on `443` as a mesh external host,
+- a `VirtualService` sending the proxy traffic to `elasticCloud.host:443`, with that host as `Host` header,
+- a `DestinationRule` originating the TLS connection (`mode: SIMPLE`) for that traffic only.
+
+`<name>` is `enterprise-edition`, or your `nameOverride`.
 
 ## Local development
 

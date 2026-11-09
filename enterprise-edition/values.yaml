@@ -7,6 +7,24 @@ imagePullPolicy: Always
 imagePullSecrets: []
 # - name: "image-pull-secret"
 
+# Labels added to every resource and pod of the chart, e.g. corporate labels required by a policy:
+# commonLabels:
+#   env: production
+commonLabels: {}
+
+# Elastic Cloud (or any Elasticsearch served over HTTPS on 443) reached through Istio, which originates the TLS.
+# Requires the backend pods to run with an Istio sidecar. The chart creates the "<name>-elastic-cloud-proxy"
+# Service (port 9200): Istio sends its plain HTTP traffic to elasticCloud.host on 443, over TLS.
+# Also set elasticsearch.enabled: false, and in backend.applicationYml:
+#   elasticsearch:
+#     hostname: enterprise-edition-elastic-cloud-proxy
+#     password: <Elastic Cloud password of the elastic user>
+elasticCloud:
+  istio:
+    enabled: false
+  # Elastic Cloud endpoint, without scheme nor port, e.g. my-deployment.es.europe-west1.gcp.cloud.es.io
+  host: ""
+
 elasticsearch:
   enabled: true
   protocol: http
@@ -217,6 +235,19 @@ backend:
   #  runAsNonRoot: true
   #  runAsUser: 9001
 
+  ## Security context of the backend container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs as the octoperf user (uid and gid 9001), declared by name: runAsNonRoot needs runAsUser.
+  ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+  containerSecurityContext: {}
+  #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 9001
+  #  capabilities:
+  #    drop:
+  #      - ALL
+  #  seccompProfile:
+  #    type: RuntimeDefault
+
   headless:
     annotations: {}
     labels: {}
@@ -355,6 +386,19 @@ mcpServer:
   #  runAsNonRoot: true
   #  runAsUser: 9001
 
+  ## Security context of the mcp-server container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs as the octoperf user (uid and gid 9001), declared by name: runAsNonRoot needs runAsUser.
+  ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+  containerSecurityContext: {}
+  #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 9001
+  #  capabilities:
+  #    drop:
+  #      - ALL
+  #  seccompProfile:
+  #    type: RuntimeDefault
+
   service:
     annotations: {}
     labels: {}
@@ -401,6 +445,23 @@ doc:
   ## Pod affinity
   ##
   affinity: {}
+
+  ## Security context of the documentation pods
+  ##
+  securityContext: {}
+
+  ## Security context of the documentation container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs nginx as the nginx user (uid and gid 101), declared by name: runAsNonRoot needs runAsUser.
+  ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+  containerSecurityContext: {}
+  #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 101
+  #  capabilities:
+  #    drop:
+  #      - ALL
+  #  seccompProfile:
+  #    type: RuntimeDefault
 
   ## doc resource requests and limits
   ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -463,6 +524,23 @@ frontend:
   ##
   affinity: {}
 
+  ## Security context of the frontend pods
+  ##
+  securityContext: {}
+
+  ## Security context of the frontend container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs nginx as the nginx user (uid and gid 101), declared by name: runAsNonRoot needs runAsUser.
+  ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+  containerSecurityContext: {}
+  #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 101
+  #  capabilities:
+  #    drop:
+  #      - ALL
+  #  seccompProfile:
+  #    type: RuntimeDefault
+
   ## frontend resource requests and limits
   ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
@@ -508,3 +586,24 @@ utilityServer:
   ## Pod affinity
   ##
   affinity: {}
+
+  ## Security context of the utility-server pods
+  ##
+  securityContext: {}
+  #  fsGroup: 9001
+  #  runAsGroup: 9001
+  #  runAsNonRoot: true
+  #  runAsUser: 9001
+
+  ## Security context of the utility-server container (Kubernetes manifest, camelCase). Empty = not set.
+  ## The image runs as the octoperf user (uid and gid 9001), declared by name: runAsNonRoot needs runAsUser.
+  ## ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+  containerSecurityContext: {}
+  #  allowPrivilegeEscalation: false
+  #  runAsNonRoot: true
+  #  runAsUser: 9001
+  #  capabilities:
+  #    drop:
+  #      - ALL
+  #  seccompProfile:
+  #    type: RuntimeDefault

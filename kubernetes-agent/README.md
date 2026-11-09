@@ -65,7 +65,7 @@ Each agent has its own token, so each agent is its own Helm release: install the
 
 ### One release per agent
 
-- **Resources are named after the release**: the Deployment, ServiceAccount and ConfigMap (`<release>-config`) in the namespace, and the cluster-scoped ClusterRole (`<release>-role`) and ClusterRoleBinding (`<release>-role-binding`). Two releases share no resource. As ClusterRoles are cluster-scoped, give two releases in two namespaces two different names.
+- **Resources are named after the release**: the Deployment, ServiceAccount, ConfigMap (`<release>-config`) and token Secret (`<release>-token`) in the namespace, and the cluster-scoped ClusterRole (`<release>-role`) and ClusterRoleBinding (`<release>-role-binding`). Two releases share no resource. As ClusterRoles are cluster-scoped, give two releases in two namespaces two different names, or set `rbac.clusterScoped: false` to get a Role and RoleBinding in the release namespace instead: the agent only reads and creates pods in its own namespace.
 - **One agent per node**: the agent pods of every release carry the label `app: kubernetes-agent`. By default, a `podAntiAffinity` on that label (`topologyKey: kubernetes.io/hostname`) keeps two agents off the same node, as their load generators would share its CPU and memory. An agent installed when every node already runs one stays `Pending`: `kubectl get events -n octoperf` shows `didn't match pod anti-affinity rules`. Setting `affinity` replaces this default.
 - **Upgrades stop the agent before starting the new one** (`strategy.rollingUpdate.maxSurge: 0`): the new pod could not start on the node still running the old one. A `Pending` agent may take the node freed by an upgrade: the upgraded agent then waits in its turn.
 
@@ -83,6 +83,10 @@ Each agent has its own token, so each agent is its own Helm release: install the
 | `image.pullSecrets`        | Specify docker-registry secret names as an array                                                                                   | `[]`                   | no |
 | `image.debug`              | Specify if debug logs should be enabled                                                                                            | `false`                | no |
 | `namespace` | The Kubernetes Namespace in which pods are created | `octoperf` | no |
+| `existingSecret` | Existing Secret holding the token (e.g. synced from Vault). When set, `token` is ignored. When empty, the chart stores `token` in the Secret `<release>-token` | `""` | no |
+| `existingSecretKey` | Key of the token in `existingSecret` | `token` | no |
+| `commonLabels` | Labels added to every resource and to the agent pod, e.g. `env: production`. The resources also carry the `app.kubernetes.io/name`, `instance`, `version` and `managed-by` labels | `{}` | no |
+| `rbac.clusterScoped` | `true`: ClusterRole and ClusterRoleBinding. `false`: Role and RoleBinding in the release namespace | `true` | no |
 
 For more advanced settings, see `values.yaml`.
 
@@ -116,6 +120,12 @@ A few things to know:
 | `octoperf.container.security-context` | `{}` | Container-level security context of the load generator containers. See below. |
 | `octoperf.pod.spec.image-pull-secrets` | `[]` | Secrets used to pull the load generator images, e.g. `- name: my-registry-secret`. The secrets must exist in the namespace. |
 | `octoperf.pod.spec.security-context` | `{}` | Pod-level security context of the load generator pods. See below. |
+
+### Upgrading to chart 18.0.2
+
+- The token moves from a plain environment variable of the Deployment to the Secret `<release>-token`, or to `existingSecret` when set. Values setting `token` keep working.
+- Every resource and the agent pod get the `app.kubernetes.io/*` labels and `commonLabels`: the agent restarts on `helm upgrade`.
+- The load generator pods created by the agent do not get these labels: they only carry `vendor: octoperf`. A policy requiring labels on every pod must exclude them, e.g. by that label.
 
 ### Upgrading to chart 18.0.1
 

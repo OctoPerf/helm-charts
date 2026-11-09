@@ -1,0 +1,90 @@
+{{- if .Values.elasticCloud.istio.enabled }}
+{{- $proxy := printf "%s-elastic-cloud-proxy" (include "name" .) }}
+{{- $host := required "elasticCloud.host is required when elasticCloud.istio.enabled is true" .Values.elasticCloud.host }}
+---
+# Local name the backend connects to over plain HTTP: no selector, the Istio sidecar routes its traffic
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $proxy }}
+  labels:
+    app: {{ $proxy }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
+spec:
+  ports:
+    - name: http-elasticsearch
+      port: 9200
+      protocol: TCP
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: {{ $proxy }}
+  labels:
+    app: {{ $proxy }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
+spec:
+  hosts:
+    - {{ $host }}
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - number: 443
+      name: https
+      protocol: HTTPS
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ $proxy }}
+  labels:
+    app: {{ $proxy }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
+spec:
+  hosts:
+    - {{ $proxy }}
+  http:
+    - match:
+        - port: 9200
+      headers:
+        request:
+          set:
+            # Elastic Cloud routes requests by Host
+            Host: {{ $host }}
+      route:
+        - destination:
+            host: {{ $host }}
+            subset: tls-origination
+            port:
+              number: 443
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {{ $proxy }}
+  labels:
+    app: {{ $proxy }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- include "labels" . | nindent 4 }}
+spec:
+  host: {{ $host }}
+  # A subset, so that only the proxy traffic gets TLS originated: HTTPS sent directly to the host is left as is
+  subsets:
+    - name: tls-origination
+      trafficPolicy:
+        portLevelSettings:
+          - port:
+              number: 443
+            # TLS origination: the sidecar opens the TLS connection to Elastic Cloud
+            tls:
+              mode: SIMPLE
+              sni: {{ $host }}
+{{- end }}

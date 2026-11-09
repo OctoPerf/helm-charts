@@ -48,3 +48,17 @@ annotations:
 {{- toYaml . | nindent 2 }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Labels of every resource: the Kubernetes recommended labels, then .Values.commonLabels (e.g. env: production).
+Never in a selector: changing them must not break an upgrade.
+*/}}
+{{- define "labels" -}}
+app.kubernetes.io/name: {{ include "name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end -}}

@@ -8,6 +8,7 @@ metadata:
     app: {{ template "name" . }}-storage-class
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    {{- include "labels" . | nindent 4 }}
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 {{ end }}
