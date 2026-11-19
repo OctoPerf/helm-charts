@@ -87,6 +87,7 @@ This chart is tested with the latest supported versions. The currently tested ve
 
 | 18.x.x|
 | ------|
+| 18.0.1|
 | 18.0.0|
 
 | 17.x.x|

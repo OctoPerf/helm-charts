@@ -1,7 +1,7 @@
 ---
 
 registry: "registry.hub.docker.com"
-version: "18.0.0"
+version: "18.0.1"
 
 imagePullPolicy: Always
 imagePullSecrets: []
@@ -11,7 +11,7 @@ elasticsearch:
   enabled: true
   protocol: http
   image: "elasticsearch"
-  imageTag: "8.19.23"
+  imageTag: "8.19.25"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
   createCert: false
