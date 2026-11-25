@@ -28,8 +28,8 @@ elasticCloud:
 elasticsearch:
   enabled: true
   protocol: http
-  image: "elasticsearch"
-  imageTag: "8.19.25"
+  image: "docker.elastic.co/elasticsearch/elasticsearch"
+  imageTag: "8.19.26"
   replicas: 1
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
   createCert: false
